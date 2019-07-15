@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
-import MenuIcon from '../components/icons/Menu';
+import BackIcon from '../components/icons/Back';
 
 const styles = StyleSheet.create({
 	container: {
@@ -10,12 +10,12 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	menuBtn: {
+	backBtn: {
 		marginLeft: 7.5
 	}
 });
 
-class LightsScreen extends React.Component {
+class LightsListScreen extends React.Component {
 	static navigationOptions = {
 		title: 'Luminaires',
 		headerStyle: {
@@ -26,7 +26,7 @@ class LightsScreen extends React.Component {
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>
+		headerLeft: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>
 	};
 
 	render() {
@@ -38,4 +38,4 @@ class LightsScreen extends React.Component {
 	}
 }
 
-export default LightsScreen;
+export default LightsListScreen;
