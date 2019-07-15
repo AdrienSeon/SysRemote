@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 
@@ -33,7 +33,7 @@ class BlindsScreen extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-
+				<Text style={styles.baseText}>Stores</Text>
 			</View>
 		);
 	}
