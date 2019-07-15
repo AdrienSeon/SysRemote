@@ -1,5 +1,5 @@
 import React from 'react'
-import Svg, { Rect } from 'react-native-svg'
+import Svg, { Path } from 'react-native-svg'
 
 const Back = props => (
   <Svg width={props.size} height={props.size} fill="none" {...props}>
