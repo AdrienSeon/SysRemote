@@ -3,15 +3,18 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TemperatureIcon from '../components/icons/Temperature';
 import LightsIcon from '../components/icons/Lights';
 import BlindsIcon from '../components/icons/Blinds';
-import Temperature from '../screens/TemperatureScreen';
-import Lights from '../screens/LightsScreen';
-import Blinds from '../screens/BlindsScreen';
+import TemperatureScreen from '../screens/TemperatureScreen';
+import LightsScreen from '../screens/LightsScreen';
+import LightsListScreen from '../screens/LightsListScreen';
+import BlindsScreen from '../screens/BlindsScreen';
+import BlindsListScreen from '../screens/BlindsListScreen';
+import { zoomOut } from 'react-navigation-transitions';
 
 import Colors from '../constants/Colors';
 
 const TemperatureStack = createStackNavigator(
 	{
-		Temperature: Temperature,
+		Temperature: TemperatureScreen,
 	}
 );
 
@@ -25,8 +28,16 @@ TemperatureStack.navigationOptions = {
 
 TemperatureStack.path = '';
 
-const LightsStack = createStackNavigator({
-	Lights: Lights,
+const LightsStack = createStackNavigator(	{
+	Lights: {
+		screen: LightsScreen,
+	},
+	LightsList: {
+		screen: LightsListScreen,
+	},
+},{
+	initialRouteName: 'Lights',
+	//transitionConfig: () => zoomOut(1000),
 });
 
 LightsStack.navigationOptions = {
@@ -39,7 +50,8 @@ LightsStack.navigationOptions = {
 LightsStack.path = '';
 
 const BlindsStack = createStackNavigator({
-	Blinds: Blinds,
+	Blinds: BlindsScreen,
+	BlindsList: BlindsListScreen,
 });
 
 BlindsStack.navigationOptions = {
@@ -56,6 +68,7 @@ const tabNavigator = createBottomTabNavigator({
 	LightsStack,
 	BlindsStack,
 },{
+	resetOnBlur: true,
 	tabBarOptions:{
 		activeTintColor: Colors.primaryBrand,
 		inactiveTintColor: Colors.secondaryBrand,
