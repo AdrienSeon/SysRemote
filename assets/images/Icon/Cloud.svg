@@ -1,0 +1,11 @@
+<svg width="73" height="78" viewBox="0 0 73 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14.0011 45.7501C6.26825 45.7501 -7.73175 28.8489 10.7504 18.5001C12.2356 13.0001 15.9153 9.11645 24.2535 11.0001C38.7682 -8.65108 59.9535 6.04961 58.7613 20.0001C75.2682 20.0001 76.7682 45.5001 60.0116 45.5001C50.7529 45.5001 29.7655 45.819 14.0011 45.7501Z" stroke="#C3CDDF" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="28.7682" cy="72.8489" r="3.5" stroke="#C3CDDF" stroke-width="2"/>
+<path d="M28.7682 46.3489V69.3489" stroke="#C3CDDF" stroke-width="2"/>
+<circle cx="42.7682" cy="72.8489" r="3.5" stroke="#C3CDDF" stroke-width="2"/>
+<path d="M42.7682 46.3489V69.3489" stroke="#C3CDDF" stroke-width="2"/>
+<path d="M18.0021 46.3489V61.75C18.0021 62.3023 17.5543 62.75 17.0021 62.75H8.26819" stroke="#C3CDDF" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="4.76819" cy="62.8489" r="3.5" stroke="#C3CDDF" stroke-width="2"/>
+<path d="M54.2682 46.3489V61.75C54.2682 62.3023 54.7159 62.75 55.2682 62.75H64.0021" stroke="#C3CDDF" stroke-width="2" stroke-linejoin="round"/>
+<circle r="3.5" transform="matrix(-1 0 0 1 67.5021 62.8489)" stroke="#C3CDDF" stroke-width="2"/>
+</svg>
