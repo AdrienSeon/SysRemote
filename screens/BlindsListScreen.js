@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
 	}
 });
 
-
 class BlindsListScreen extends React.Component {
 	static navigationOptions = {
 		title: 'Stores',
@@ -27,7 +26,7 @@ class BlindsListScreen extends React.Component {
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>,
 	};
 
 	render() {
