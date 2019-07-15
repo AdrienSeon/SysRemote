@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 
@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
 	}
 });
 
-
 class BlindsScreen extends React.Component {
 	static navigationOptions = {
 		title: 'Stores',
@@ -27,13 +26,16 @@ class BlindsScreen extends React.Component {
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>
+		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>,
+		headerBackTitle: null,
+		headerTruncatedBackTitle: null,
 	};
 
 	render() {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.baseText}>Stores</Text>
+				<Button title='Liste des stores' onPress={() => this.props.navigation.navigate('BlindsList')}/>
 			</View>
 		);
 	}
