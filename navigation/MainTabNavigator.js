@@ -1,8 +1,5 @@
 import React from 'react';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-
-import TabBarIcon from '../components/TabBarIcon';
-
 import TemperatureIcon from '../components/icons/Temperature';
 import LightsIcon from '../components/icons/Lights';
 import BlindsIcon from '../components/icons/Blinds';
@@ -25,15 +22,6 @@ TemperatureStack.navigationOptions = {
 	),
 };
 
-TemperatureStack.tabBarOptions= {
-  activeTintColor: '#e91e63',
-  labelStyle: {
-    fontSize: 12,
-  },
-  style: {
-    backgroundColor: 'blue',
-  },
-};
 
 TemperatureStack.path = '';
 
