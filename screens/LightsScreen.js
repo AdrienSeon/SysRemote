@@ -32,7 +32,7 @@ class LightsScreen extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-
+				<Text style={styles.baseText}>Luminaires</Text>
 			</View>
 		);
 	}
