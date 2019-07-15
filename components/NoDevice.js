@@ -4,12 +4,6 @@ import CloudIcon from '../components/icons/Cloud';
 import Colors from '../constants/Colors';
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.appBackground,
-		justifyContent: "center",
-		alignItems: "center"
-	},
 	baseText: {
 		marginTop: 10,
 		fontFamily: "OpenSans",
