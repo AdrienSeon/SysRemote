@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 
@@ -26,13 +26,16 @@ class LightsScreen extends React.Component {
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>
+		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>,
+		headerBackTitle: null,
+		headerTruncatedBackTitle: null,
 	};
 
 	render() {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.baseText}>Luminaires</Text>
+				<Button title='Liste des lumintaires' onPress={() => this.props.navigation.navigate('LightsList')}/>
 			</View>
 		);
 	}
