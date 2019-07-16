@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {Platform, SafeAreaView, View, Text, Button, StyleSheet, StatusBar} from 'react-native';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 
@@ -10,13 +10,20 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	mainView: {
+		flex: 1,
+	},
 	menuBtn: {
-		marginLeft: 7.5
+		marginLeft: 16
 	}
 });
 
 class LightsScreen extends React.Component {
-	static navigationOptions = {
+	constructor(props) {
+		super(props);
+	}
+
+	static navigationOptions = ({ navigation }) => ({
 		title: 'Luminaires',
 		headerStyle: {
 			height: 56,
@@ -26,17 +33,30 @@ class LightsScreen extends React.Component {
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>,
+		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32' onPress={() => navigation.openDrawer()}/>,
 		headerBackTitle: null,
 		headerTruncatedBackTitle: null,
-	};
+	});
+
+	componentDidMount() {
+		this._navListener = this.props.navigation.addListener('didFocus', () => {
+			StatusBar.setBarStyle('light-content');
+			if(Platform.OS === "android"){
+				StatusBar.setBackgroundColor('#6a51ae');
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		this._navListener.remove();
+	}
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 				<Text style={styles.baseText}>Luminaires</Text>
-				<Button title='Liste des lumintaires' onPress={() => this.props.navigation.navigate('LightsList')}/>
-			</View>
+				<Button title='Liste des luminaires' onPress={() => this.props.navigation.navigate('LightsList')}/>
+			</SafeAreaView>
 		);
 	}
 }
