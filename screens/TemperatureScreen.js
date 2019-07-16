@@ -1,22 +1,27 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {Platform, SafeAreaView, StyleSheet, Button, StatusBar} from 'react-native';
+import { DrawerActions } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.appBackground,
+		backgroundColor:"#ecf0f1",
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	menuBtn: {
-		marginLeft: 7.5
+		marginLeft: 16
 	}
 });
 
 class TemperatureScreen extends React.Component {
-	static navigationOptions = {
+	constructor(props) {
+		super(props);
+	}
+
+	static navigationOptions = ({ navigation }) => ({
 		title: 'Température',
 		headerStyle: {
 			height: 56,
@@ -26,14 +31,27 @@ class TemperatureScreen extends React.Component {
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>
-	};
+		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32' onPress={() => navigation.openDrawer()}/>
+	});
+
+	componentDidMount() {
+		this._navListener = this.props.navigation.addListener('didFocus', () => {
+			StatusBar.setBarStyle('light-content');
+			if(Platform.OS === "android"){
+				StatusBar.setBackgroundColor('#6a51ae');
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		this._navListener.remove();
+	}
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 
-			</View>
+			</SafeAreaView>
 		);
 	}
 }
