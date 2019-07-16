@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {Platform, SafeAreaView, Text, Button, StyleSheet, StatusBar} from 'react-native';
 import Colors from '../constants/Colors';
-import MenuIcon from '../components/icons/Menu';
+import BackIcon from '../components/icons/Back';
 
 const styles = StyleSheet.create({
 	container: {
@@ -10,30 +10,47 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	menuBtn: {
-		marginLeft: 7.5
+	backBtn: {
+		marginLeft: 16
 	}
 });
 
 class SettingsScreen extends React.Component {
-	static navigationOptions = {
+	constructor(props) {
+		super(props);
+	}
+	
+	static navigationOptions = ({ navigation }) => ({
 		title: 'Paramètres',
 		headerStyle: {
 			height: 56,
 		},
-		headerTransparent: true,
 		headerTintColor: Colors.primaryText,
 		headerTitleStyle: {
 			fontWeight: '600',
 		},
-		headerLeft: <MenuIcon style={styles.menuBtn} color={Colors.primaryText} size='32'/>
-	};
+		headerLeft: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32' onPress={() => navigation.navigate('Temperature')}/>,
+	});
+
+	componentDidMount() {
+		this._navListener = this.props.navigation.addListener('didFocus', () => {
+			StatusBar.setBarStyle('light-content');
+			if(Platform.OS === "android"){
+				StatusBar.setBackgroundColor('#6a51ae');
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		this._navListener.remove();
+	}
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 				<Text style={styles.baseText}>Paramètres</Text>
-			</View>
+				<Button onPress={() => this.props.navigation.navigate('Temperature')} title="Go back home" />
+			</SafeAreaView>
 		);
 	}
 }
