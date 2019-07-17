@@ -1,16 +1,28 @@
 import React from 'react'
+import {TouchableHighlight} from 'react-native';
+import Colors from '../../constants/Colors';
 import Svg, { Path } from 'react-native-svg'
 
-const Back = props => (
-  <Svg width={props.size} height={props.size} fill="none" {...props}>
-    <Path
-      d="M20.75 5L10 15.75 20.75 26.5"
-      stroke={props.color}
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </Svg>
-)
+class Back extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 
-export default Back
+	render() {
+		return (
+			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
+				<Svg width={this.props.size} height={this.props.size} fill="none">
+					<Path
+						d="M20.75 5L10 15.75 20.75 26.5"
+						stroke={this.props.color}
+						strokeWidth={2}
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					/>
+				</Svg>
+			</TouchableHighlight>
+		);
+	}
+}
+
+export default Back;
