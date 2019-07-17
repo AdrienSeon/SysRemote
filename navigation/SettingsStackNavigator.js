@@ -1,20 +1,31 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
-import TemperatureIcon from '../components/icons/Temperature';
 import SettingsScreen from '../screens/SettingsScreen';
 import SettingsIcon from '../components/icons/Settings';
 import Colors from '../constants/Colors';
 
-const SettingsStackNavigator = createStackNavigator(
-{
+const SettingsStackNavigator = createStackNavigator({
 	Settings: SettingsScreen,
 },{
 	initialRouteName: 'Settings',
+	defaultNavigationOptions: {
+		headerStyle: {
+			height: 56,
+		},
+		headerTransparent: true,
+		headerTintColor: Colors.primaryText,
+		headerTitleStyle: {
+			fontFamily: "OpenSans-Semibold",
+			fontSize: 18,
+		},
+		headerBackTitle: null,
+		headerTruncatedBackTitle: null,
+	}
 });
 
 SettingsStackNavigator.navigationOptions = {
 	drawerLabel: 'Paramètres',
-	drawerIcon: <SettingsIcon color={Colors.inverted} size='20'/>,
+	drawerIcon: <SettingsIcon color={Colors.inverted} size='21'/>,
 };
 
 SettingsStackNavigator.path = '';
