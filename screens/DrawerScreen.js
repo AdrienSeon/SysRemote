@@ -2,7 +2,7 @@ import React from 'react';
 import {Platform, SafeAreaView, View, Text, Button, StyleSheet, StatusBar, Image} from 'react-native';
 import { DrawerItems } from 'react-navigation';
 import Colors from '../constants/Colors';
-import AppParameters from '../constants/AppParameters';
+import AppConfig from '../constants/AppConfig';
 import MenuIcon from '../components/icons/Menu';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -60,16 +60,16 @@ class DrawerScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		this._navListener = this.props.navigation.addListener('didFocus', () => {
+/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
 			StatusBar.setBarStyle('light-content');
 			if(Platform.OS === "android"){
 				StatusBar.setBackgroundColor('#6a51ae');
 			}
-		});
+		});*/
 	}
 
 	componentWillUnmount() {
-		this._navListener.remove();
+		//this._navListener.remove();
 	}
 	
 	render() {
@@ -78,8 +78,8 @@ class DrawerScreen extends React.Component {
 				<LinearGradient colors={['rgba(149, 161, 183, 1)', 'rgba(172, 186, 211, 1)']} start={{ x: 1, y: 1 }} end={{ x: 0, y: 0}} style={styles.linearGradient}>
 					<View style={styles.title}>
 						<Image style={styles.logo}/>
-						<Text style={styles.appName}>{AppParameters.appName}</Text>
-						<Text style={styles.buildingName}>{AppParameters.buildingName}</Text>
+						<Text style={styles.appName}>{AppConfig.appName}</Text>
+						<Text style={styles.buildingName}>{AppConfig.buildingName}</Text>
 					</View>
 					<View style={styles.menu}>
 						<DrawerItems {...this.props}/>
