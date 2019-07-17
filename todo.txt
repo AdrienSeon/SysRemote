@@ -1,0 +1,2 @@
+Bugs :
+-next input filed on login on ios no scroll
