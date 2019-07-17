@@ -17,8 +17,7 @@ const BottomTabNavigator = createBottomTabNavigator({
 		inactiveTintColor: Colors.secondaryBrand,
 		labelStyle: {
 			fontSize: 12,
-			fontFamily: "OpenSans",
-			fontWeight: "600",
+			fontFamily: "OpenSans-Semibold",
 			lineHeight: 27,
   			letterSpacing: -0.5
 		},
