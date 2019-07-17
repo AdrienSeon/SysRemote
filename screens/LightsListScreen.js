@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.appBackground,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	backBtn: {
+		marginLeft: Platform.OS === 'ios' ? 10 : 0,
 	}
 });
 
@@ -19,28 +22,20 @@ class LightsListScreen extends React.Component {
 
 	static navigationOptions = {
 		title: 'Luminaires',
-		headerStyle: {
-			height: 56,
-		},
-		headerTransparent: true,
-		headerTintColor: Colors.primaryText,
-		headerTitleStyle: {
-			fontWeight: '600',
-		},
-		headerBackImage: <BackIcon color={Colors.primaryText} size='32'/>,
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>,
 	};
 
 	componentDidMount() {
-		this._navListener = this.props.navigation.addListener('didFocus', () => {
+/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
 			StatusBar.setBarStyle('light-content');
 			if(Platform.OS === "android"){
 				StatusBar.setBackgroundColor('#6a51ae');
 			}
-		});
+		});*/
 	}
 
 	componentWillUnmount() {
-		this._navListener.remove();
+		//this._navListener.remove();
 	}
 
 	render() {
