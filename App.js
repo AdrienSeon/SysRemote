@@ -41,6 +41,7 @@ async function loadResourcesAsync() {
       // remove this if you are not using it in your app
       'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
       'OpenSans': require('./assets/fonts/OpenSans-Regular.ttf'),
+      'OpenSans-Semibold': require('./assets/fonts/OpenSans-Semibold.ttf'),
     }),
   ]);
 }
