@@ -19,28 +19,20 @@ class BlindsListScreen extends React.Component {
 	
 	static navigationOptions = {
 		title: 'Stores',
-		headerStyle: {
-			height: 56,
-		},
-		headerTransparent: true,
-		headerTintColor: Colors.primaryText,
-		headerTitleStyle: {
-			fontWeight: '600',
-		},
 		headerBackImage: <BackIcon color={Colors.primaryText} size='32'/>,
 	};
 
 	componentDidMount() {
-		this._navListener = this.props.navigation.addListener('didFocus', () => {
+/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
 			StatusBar.setBarStyle('light-content');
 			if(Platform.OS === "android"){
 				StatusBar.setBackgroundColor('#6a51ae');
 			}
-		});
+		});*/
 	}
 
 	componentWillUnmount() {
-		this._navListener.remove();
+		//this._navListener.remove();
 	}
 
 	render() {
