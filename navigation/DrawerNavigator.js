@@ -2,6 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from 'react-navigation';
 import BottomTabNavigator from './BottomTabNavigator';
 import SettingsStackNavigator from './SettingsStackNavigator';
+import AuthStackNavigator from './AuthStackNavigator';
 import DrawerScreen from '../screens/DrawerScreen';
 import Colors from '../constants/Colors';
 
@@ -15,6 +16,9 @@ const DrawerNavigator = createDrawerNavigator(
 	},
 	Settings: {
 		screen: SettingsStackNavigator,
+	},
+	Logout: {
+		screen: AuthStackNavigator,
 	}
 },{
 	contentComponent : DrawerScreen,
@@ -27,6 +31,7 @@ const DrawerNavigator = createDrawerNavigator(
 			fontFamily: "OpenSans",
 			fontSize: 14,
 			color: Colors.inverted,
+			lineHeight: 21,
 		}
 	}
 });
