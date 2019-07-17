@@ -6,8 +6,27 @@ import BlindsListScreen from '../screens/BlindsListScreen';
 import Colors from '../constants/Colors';
 
 const BlindsStackNavigator = createStackNavigator({
-	Blinds: BlindsScreen,
-	BlindsList: BlindsListScreen,
+	Blinds: {
+		screen: BlindsScreen,
+	},
+	BlindsList: {
+		screen: BlindsScreen,
+	},
+},{
+	initialRouteName: 'Blinds',
+	defaultNavigationOptions: {
+		headerStyle: {
+			height: 56,
+		},
+		headerTransparent: true,
+		headerTintColor: Colors.primaryText,
+		headerTitleStyle: {
+			fontFamily: "OpenSans-Semibold",
+			fontSize: 18,
+		},
+		headerBackTitle: null,
+		headerTruncatedBackTitle: null,
+	}
 });
 
 BlindsStackNavigator.navigationOptions = {
