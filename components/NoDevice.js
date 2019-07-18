@@ -25,7 +25,7 @@ class NoDevice extends React.Component {
 			<View style={styles.container}>
 				<CloudIcon color={Colors.secondaryBrand} width='73' height='78' />
 				<Text style={styles.baseText}>Aucun automate connecté</Text>
-				<TouchableOpacity onPress={() => {Alert.alert('popup de connexion automate')}} underlayColor={Colors.appBackground}>
+				<TouchableOpacity onPress={() => {Alert.alert('popup de connexion automate')}}>
 					<Text style={styles.linkText}>Se connecter ?</Text>
 				</TouchableOpacity>
 			</View>
