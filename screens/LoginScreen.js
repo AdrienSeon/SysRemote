@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, View, Text, StyleSheet, StatusBar, TextInput, Button, TouchableOpacity, ImageBackground } from 'react-native';
+import {Platform, View, Text, StyleSheet, StatusBar, TextInput, Button, TouchableHighlight, TouchableOpacity, TouchableNativeFeedback, ImageBackground, AsyncStorage } from 'react-native';
 import Colors from '../constants/Colors';
 import AppConfig from '../constants/AppConfig';
 import UserIcon from '../components/icons/User';
@@ -103,8 +103,10 @@ const styles = StyleSheet.create({
 		marginRight:10,
 	},
 	loginBtnContainer: {
-		borderRadius: 5,
 		marginBottom: 20,
+	},
+	loginBtnGradient: {
+		borderRadius: 5,
 		alignItems: 'center',
 	},
 	loginBtn: {
@@ -168,10 +170,18 @@ class LoginScreen extends React.Component {
 	};
 
 	handleLoginPress = () => {
+		this.LoginAsync;
+	};
+
+	LoginAsync = async () => {
+		await AsyncStorage.setItem('userToken', 'abc');
 		this.props.navigation.navigate('Temperature');
 	};
 
 	render() {
+
+		let TouchablePlatformSpecific = Platform.OS === 'ios' ? TouchableHighlight : TouchableNativeFeedback;
+
 		return (
 			<KeyboardShift>
 				{() => (
@@ -211,13 +221,15 @@ class LoginScreen extends React.Component {
 								/>
 								<LockIcon style={styles.passwordInputIcon} color={Colors.secondaryBrand} size='15'/>
 							</View>
-							<TouchableOpacity underlayColor={Colors.appBackground} onPress={this.handleLoginPress}>
-								<LinearGradient style={styles.loginBtnContainer} colors={[Colors.primaryBrandGradientDark, Colors.primaryBrandGradientLight]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0}} >
+							<TouchablePlatformSpecific style={styles.loginBtnContainer} underlayColor={Colors.appBackground} onPress={this.LoginAsync}>
+							<View>
+								<LinearGradient style={styles.loginBtnGradient} colors={[Colors.primaryBrandGradientDark, Colors.primaryBrandGradientLight]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0}} >
 									<Text style={styles.loginBtn}>Se connecter</Text>
 								</LinearGradient>
-							</TouchableOpacity>
+								</View>
+							</TouchablePlatformSpecific>
 							<Text style={styles.noAccount}>Pas encore de compte ?</Text>
-							<TouchableOpacity underlayColor={Colors.appBackground}>
+							<TouchableOpacity>
 								<Text style={styles.contactBuildingManager}>Contactez votre gestionnaire</Text>
 							</TouchableOpacity>
 						</View>
