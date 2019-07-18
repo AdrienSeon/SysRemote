@@ -10,7 +10,6 @@ const BottomTabNavigator = createBottomTabNavigator({
 	LightsStackNavigator,
 	BlindsStackNavigator,
 },{
-	drawerLabel: () => null,
 	resetOnBlur: true,
 	tabBarOptions:{
 		activeTintColor: Colors.primaryBrand,
