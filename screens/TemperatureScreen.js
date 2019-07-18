@@ -1,24 +1,38 @@
 import React from 'react';
-import {Platform, SafeAreaView, StyleSheet, Button, StatusBar} from 'react-native';
+import {Platform, SafeAreaView, View, StyleSheet, Button, StatusBar, Text} from 'react-native';
 import { DrawerActions } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 
+import CircularSlider from '../components/CircularSlider';
+import CircularSlider2 from '../components/CircularSlider2';
+import CircularSlider3 from '../components/CircularSlider3';
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor:"#ecf0f1",
-		justifyContent: "center",
+		backgroundColor: Colors.appBackground,
+		paddingTop:100,
 		alignItems: "center",
 	},
 	menuBtn: {
 		marginLeft: 16
+	},
+	slider3:{
+		transform: [{ rotate: '90deg'}]
 	}
+
 });
 
 class TemperatureScreen extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			startAngle: 20,
+			angleLength: 120,
+			slider1: 270,
+		}
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -39,11 +53,48 @@ class TemperatureScreen extends React.Component {
 		//this._navListener.remove();
 	}
 
-	render() {
-		return (
-			<SafeAreaView style={styles.container}>
+ 
 
-			</SafeAreaView>
+	render() {
+		const { value } = this.state;
+		return (
+			<View style={styles.container}>
+
+				<CircularSlider2 style={styles.slider2}
+					value={90}
+					btnRadius={15}
+					dialRadius={100}
+					dialWidth={15}
+					meterColor={"white"}
+					fillColor={"blue"}
+					textColor={"black"}
+					textSize={16}
+					strokeColor={"yellow"}
+					strokeWidth={5}
+					startCoord={20}
+					startGradient='#01fffc'
+					endGradient='#a200ff'
+					min={0}
+					max={270}
+				/>
+
+				<CircularSlider3 style={styles.slider3}
+					value={0}
+					dialRadius={100}
+					dialWidth={15}
+					knobRadius={15}
+					backgroundColor={'white'}
+					textSize={24}
+					textColor={"black"}
+					startGradient='#01fffc'
+					endGradient='#a200ff'
+					startCoord={0}
+					endCoord={240}
+					min={0}
+					max={240}
+				/>
+				<Text>{this.state.slider1}</Text>
+			</View>
 		);
 	}
 }
