@@ -1,61 +1,176 @@
-import React,{Component} from 'react'
-import {PanResponder,View} from 'react-native'
-import Svg,{Path,Circle,G,Text} from 'react-native-svg'
+import React, {Component} from "react";
+import {PanResponder, View, Dimensions} from "react-native";
+import Svg, {
+	Path,
+	Circle,
+	G,
+	Text,
+	Defs,
+	LinearGradient,
+	Stop,
+	Rect
+} from "react-native-svg";
+import LinearScale from "linear-scale"
 
 class CircularSlider extends Component {
-  constructor(props){
-    super(props)
-    this.handlePanResponderMove = this.handlePanResponderMove.bind(this)
-    this.cartesianToPolar = this.cartesianToPolar.bind(this)
-    this.polarToCartesian = this.polarToCartesian.bind(this)
-    const {width,height} = props
-    const smallestSide = (Math.min(width,height))
-    this.state = {
-      cx: width/2,
-      cy: height/2,
-      r: (smallestSide/2)*0.85
-    }
-  }
-  componentWillMount = () => {
-    this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: this.handlePanResponderMove
-    })
-  }
-  polarToCartesian(angle){
-    const {cx,cy,r} = this.state
-        , a = (angle-270) * Math.PI / 180.0
-        , x = cx + (r * Math.cos(a))
-        , y = cy + (r * Math.sin(a))
-    return {x,y}
-  }
-  cartesianToPolar(x,y){
-    const {cx,cy} = this.state
-    return Math.round((Math.atan((y-cy)/(x-cx)))/(Math.PI/180)+((x>cx) ? 270 : 90))
-  }
-  handlePanResponderMove({nativeEvent:{locationX,locationY}}){
-    this.props.onValueChange(this.cartesianToPolar(locationX,locationY))
-  }
-  render(){
-    const {width,height,value,meterColor,textColor,onValueChange} = this.props
-        , {cx,cy,r} = this.state
-        , startCoord = this.polarToCartesian(0)
-        , endCoord = this.polarToCartesian(value)
-    return (
-      <Svg onLayout={this.onLayout} width={width} height={height}>
-        <Circle cx={cx} cy={cy} r={r} stroke='#eee' strokeWidth={0.5} fill='none'/>
-        <Path stroke={meterColor} strokeWidth={5} fill='none'
-          d={`M${startCoord.x} ${startCoord.y} A ${r} ${r} 0 ${value>180?1:0} 1 ${endCoord.x} ${endCoord.y}`}/>
-        <G x={endCoord.x-7.5} y={endCoord.y-7.5}>
-          <Circle cx={7.5} cy={7.5} r={10} fill={meterColor} {...this._panResponder.panHandlers}/>
-          <Text key={value+''} x={7.5} y={1} fontSize={10} fill={textColor} textAnchor="middle">{value+''}</Text>
-        </G>
-      </Svg>
-    )
-  }
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			angle: this.props.value,
+			xCenter: 0,
+			yCenter: 0,
+			knobRadius: this.props.knobRadius,
+		};
+	}
+
+	componentWillMount() {
+		this._panResponder = PanResponder.create({
+			onStartShouldSetPanResponder: (event, gestureState) => true,
+			onStartShouldSetPanResponderCapture: (event, gestureState) => true,
+			onMoveShouldSetPanResponder: (event, gestureState) => true,
+			onMoveShouldSetPanResponderCapture: (event, gestureState) => true,
+/*			onPanResponderGrant: (evt, gestureState) => {
+				this.setState({knobRadius: this.state.knobRadius + 3});
+			},
+			onPanResponderRelease: (e, { vx, vy }) => {
+				this.setState({knobRadius:  this.state.knobRadius - 3});
+			},*/
+			onPanResponderMove: (event, gestureState) => {
+				let xOrigin = this.state.xCenter - (this.props.dialRadius + this.state.knobRadius);
+				let yOrigin = this.state.yCenter - (this.props.dialRadius + this.state.knobRadius);
+				let a = this.cartesianToPolar(gestureState.moveX - xOrigin, gestureState.moveY - yOrigin);
+
+				if (a < this.props.startCoord) {
+					this.setState({angle: this.props.startCoord});
+				} else if (a > this.props.maxCoord) {
+					this.setState({angle: this.props.maxCoord});
+				} else {
+					this.setState({angle: a});
+				}
+				
+				this.props.onValueChange(this.state.angle)
+			}
+		});
+	}
+
+	polarToCartesian(angle) {
+		let dialRadius = this.props.dialRadius;
+		let hC = this.props.dialRadius + this.state.knobRadius;
+		let a = ((angle - 270) * Math.PI) / 180.0;
+		let x = hC + dialRadius * Math.cos(a);
+		let y = hC + dialRadius * Math.sin(a);
+
+		return {x, y};
+	}
+ 
+	cartesianToPolar(x, y) {
+		let hC = this.props.dialRadius + this.state.knobRadius;
+
+		if (x === 0) {
+			return y > hC ? 0 : 180;
+		} else if (y === 0) {
+			return x > hC ? 90 : 270;
+		} else {
+			return (
+        		Math.round((Math.atan((y-hC)/(x-hC)))/(Math.PI/180)+((x>hC) ? 270 : 90))
+			);
+		}
+	}
+
+	handleMeasure = (ox, oy, width, height, px, py) => {
+		this.setState({
+			xCenter: px + (this.props.dialRadius + this.state.knobRadius),
+			yCenter: py + (this.props.dialRadius + this.state.knobRadius)
+		});
+	}
+
+	onLayout = () => {
+		this.refs.CircularSlider.measure(this.handleMeasure);
+	}
+
+	render() {
+		let width = (this.props.dialRadius + this.state.knobRadius) * 2;
+		let knobRadius = this.state.knobRadius;
+		let dialRadius = this.props.dialRadius;
+		let startCoord = this.polarToCartesian(this.props.startCoord);
+		let maxCoord = this.polarToCartesian(this.props.maxCoord);
+		let endCoord = this.polarToCartesian(this.state.angle);
+		let colorScale = LinearScale([70, 290], [222, 359]);
+
+		return (
+			<View>
+				<Svg onLayout={this.onLayout} ref="CircularSlider" width={width} height={width} viewBox={`0 0 ${width} ${width}`}>
+					<Defs>
+					  <LinearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+						  <Stop offset="0%" stopColor={this.props.startGradient} stopOpacity="1"/>
+						  <Stop offset="100%" stopColor={this.props.endGradient} stopOpacity="1"/>
+					  </LinearGradient>
+					  <LinearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+						  <Stop offset="0%" stopColor={this.props.backgroundColor} stopOpacity="0"/>
+						  <Stop offset="70%" stopColor={this.props.backgroundColor} stopOpacity="1"/>
+					  </LinearGradient>
+					</Defs>
+{/*					<Circle
+					  r={dialRadius}
+					  cx={width / 2}
+					  cy={width / 2}
+					  stroke={this.props.backgroundColor}
+					  strokeWidth={25}
+					  fill="none"
+					/>
+					<Path
+						stroke={"url(#gradient1)"}
+						strokeWidth={this.props.dialWidth}
+						fill="none"
+						strokeLinecap='round'
+						strokeLinejoin='round'
+						d={`M${startCoord.x} ${startCoord.y} A ${dialRadius} ${dialRadius} 0 ${this.state.angle>180+this.props.startCoord?1:0} 1 ${endCoord.x} ${endCoord.y}`}
+					/>*/}
+					<Circle
+					  r={dialRadius}
+					  cx={width / 2}
+					  cy={width / 2}
+					  stroke={"url(#gradient1)"}
+					  strokeWidth={this.props.dialWidth}
+					  fill="none"
+					/>
+					<Rect
+						x="0"
+						y="0"
+						width={width}
+						height={width}
+						fill={"url(#gradient2)"}
+					/>
+					<Circle
+						x={endCoord.x - knobRadius}
+						y={endCoord.y - knobRadius}
+						r={knobRadius}
+						cx={knobRadius}
+						cy={knobRadius}
+						//fill={`hsl(${colorScale(this.state.angle)}, 40%, 91%)`}
+						fill={this.props.knobColor}
+						{...this._panResponder.panHandlers}
+					/>
+				</Svg>
+			</View>
+		);
+	}
 }
 
+CircularSlider.defaultProps = {
+	knobRadius: 13,
+	dialRadius: 130,
+	dialWidth: 25,
+	value: 0,
+	xCenter: Dimensions.get("window").width / 2,
+	yCenter: Dimensions.get("window").height / 2,
+	startGradient: '#12D8FA',
+	endGradient: '#A6FFCB',
+	backgroundColor: 'white',
+	startCoord: 0,
+	maxCoord: 360,
+	onValueChange: x => x
+};
 
-
-export default CircularSlider
+export default CircularSlider;
