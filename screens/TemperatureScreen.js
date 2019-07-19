@@ -88,10 +88,8 @@ class TemperatureScreen extends React.Component {
 					textColor={"black"}
 					startGradient='#01fffc'
 					endGradient='#a200ff'
-					startCoord={0}
-					endCoord={240}
-					min={0}
-					max={240}
+					startCoord={70}
+					maxCoord={290}
 				/>
 				<Text>{this.state.slider1}</Text>
 			</View>
