@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {Component} from "react";
 import {Platform, SafeAreaView, View, StyleSheet, Button, StatusBar, Text} from 'react-native';
 import { DrawerActions } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
-
 import CircularSlider from '../components/CircularSlider';
-import CircularSlider2 from '../components/CircularSlider2';
-import CircularSlider3 from '../components/CircularSlider3';
+import LinearScale from "linear-scale"
 
 const styles = StyleSheet.create({
 	container: {
@@ -14,25 +12,38 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.appBackground,
 		paddingTop:100,
 		alignItems: "center",
+		justifyContent: 'center'
 	},
 	menuBtn: {
 		marginLeft: 16
 	},
-	slider3:{
-		transform: [{ rotate: '90deg'}]
-	}
+	CircularSlider:{
 
+	},
+	setpointValue: {
+		fontFamily: "OpenSans",
+		fontSize: 36,
+		color: Colors.primaryText
+	}
 });
 
-class TemperatureScreen extends React.Component {
+class TemperatureScreen extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			startAngle: 20,
-			angleLength: 120,
-			slider1: 270,
+			setpoint: 20,
+			minSetpoint: 15,
+			maxSetpoint: 30,
+			setpointInRadian: 70,
+			startCoord: 70,
+			maxCoord: 290,
+			sliderValue: 70,
 		}
+
+		this.handleSliderValueChange = this.handleSliderValueChange.bind(this);
+		this.setpointInRadianToDegree = this.setpointInRadianToDegree.bind(this);
+		this.setpointInDegreeToRadian = this.setpointInDegreeToRadian.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -53,45 +64,99 @@ class TemperatureScreen extends React.Component {
 		//this._navListener.remove();
 	}
 
- 
+	handleSliderValueChange(value) {
+		this.setState({setpointInRadian: value});
+		this.setpointInRadianToDegree(value);
+		this.setpointInDegreeToRadian(this.state.setpoint);
+	}
+
+	setpointInRadianToDegree(value) {
+		let setpointInRadianToDegree = LinearScale([this.state.startCoord, this.state.maxCoord], [this.state.minSetpoint, this.state.maxSetpoint])
+		let setpoint = setpointInRadianToDegree(value)
+		setpoint = +setpoint.toFixed(1)
+		this.setState({setpoint: setpoint})
+	}
+
+	setpointInDegreeToRadian(value) {
+		let setpointInDegreeToRadian = LinearScale([this.state.minSetpoint, this.state.maxSetpoint], [this.state.startCoord, this.state.maxCoord])
+		this.setState({setpointInRadian: setpointInDegreeToRadian(value)})
+	}
 
 	render() {
-		const { value } = this.state;
+
 		return (
 			<View style={styles.container}>
+				<View style={{}}>
+					<View style={{
 
-				<CircularSlider2 style={styles.slider2}
-					value={90}
-					btnRadius={15}
-					dialRadius={100}
-					dialWidth={15}
-					meterColor={"white"}
-					fillColor={"blue"}
-					textColor={"black"}
-					textSize={16}
-					strokeColor={"yellow"}
-					strokeWidth={5}
-					startCoord={20}
-					startGradient='#01fffc'
-					endGradient='#a200ff'
-					min={0}
-					max={270}
-				/>
-
-				<CircularSlider3 style={styles.slider3}
-					value={0}
-					dialRadius={100}
-					dialWidth={15}
-					knobRadius={15}
-					backgroundColor={'white'}
-					textSize={24}
-					textColor={"black"}
-					startGradient='#01fffc'
-					endGradient='#a200ff'
-					startCoord={70}
-					maxCoord={290}
-				/>
-				<Text>{this.state.slider1}</Text>
+						//backgroundColor: 'blue'
+					}}
+					>
+						<CircularSlider style={{
+							position: 'relative',
+							top: 0,
+							left: 0,
+						}}
+							value={this.state.sliderValue}
+							dialRadius={130}
+							dialWidth={5}
+							knobRadius={14}
+							knobColor={Colors.inverted}
+							startGradient='#5D87E7'
+							endGradient='#FF7978'
+							startCoord={this.state.startCoord}
+							maxCoord={this.state.maxCoord}
+							backgroundColor={Colors.appBackground}
+							onValueChange={this.handleSliderValueChange}
+						/>
+					</View>
+					<View style={{
+						backgroundColor: Colors.secondaryText,
+						height: 226,
+						width: 1,
+						position: 'absolute',
+						top: 30,
+						left: 143,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+					>
+					</View>
+					<View style={{
+						backgroundColor: Colors.secondaryText,
+						height: 1,
+						width: 226,
+						position: 'absolute',
+						top: 143,
+						left: 30,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+					>
+					</View>
+					<View style={{
+						backgroundColor: Colors.inverted,
+						shadowColor: "rgba(189, 199, 225, 0.5)",
+						shadowOffset: {
+							width: 0,
+							height: 17
+						},
+						shadowRadius: 25,
+						height: 210,
+						width: 210,
+						borderRadius: 100,
+						shadowOpacity: 1,
+						position: 'absolute',
+						top: 38,
+						left: 38,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+					>
+						<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
+						<Text style={{fontSize:12}}>{this.state.setpointInRadian + "rad"}</Text>
+					</View>
+				</View>
 			</View>
 		);
 	}
