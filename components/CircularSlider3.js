@@ -32,10 +32,10 @@ export default class CircleSlider extends Component {
 				let yOrigin = this.state.yCenter - (this.props.dialRadius + this.props.knobRadius);
 				let a = this.cartesianToPolar(gestureState.moveX - xOrigin, gestureState.moveY - yOrigin);
 
-				if (a < this.props.min) {
-					this.setState({angle: this.props.min});
-				} else if (a > this.props.max) {
-					this.setState({angle: this.props.max});
+				if (a < this.props.startCoord) {
+					this.setState({angle: this.props.startCoord});
+				} else if (a > this.props.maxCoord) {
+					this.setState({angle: this.props.maxCoord});
 				} else {
 					this.setState({angle: a});
 				}
@@ -46,13 +46,13 @@ export default class CircleSlider extends Component {
 	polarToCartesian(angle) {
 		let dialRadius = this.props.dialRadius;
 		let hC = this.props.dialRadius + this.props.knobRadius;
-		let a = ((angle - 90) * Math.PI) / 180.0;
+		let a = ((angle - 270) * Math.PI) / 180.0;
 
 		let x = hC + dialRadius * Math.cos(a);
 		let y = hC + dialRadius * Math.sin(a);
 		return {x, y};
 	}
-
+ 
 	cartesianToPolar(x, y) {
 		let hC = this.props.dialRadius + this.props.knobRadius;
 
@@ -62,8 +62,8 @@ export default class CircleSlider extends Component {
 			return x > hC ? 90 : 270;
 		} else {
 			return (
-				Math.round((Math.atan((y - hC) / (x - hC)) * 180) / Math.PI) +
-				(x > hC ? 90 : 270)
+				//Math.round((Math.atan((y - hC) / (x - hC)) * 180) / Math.PI) + (x > hC ? 90 : 270)
+        Math.round((Math.atan((y-hC)/(x-hC)))/(Math.PI/180)+((x>hC) ? 270 : 90))
 			);
 		}
 	}
@@ -136,8 +136,10 @@ export default class CircleSlider extends Component {
 						fill="none"
 						strokeLinecap='round'
 						strokeLinejoin='round'
-						d={`M${startCoord.x} ${startCoord.y} A ${dialRadius} ${dialRadius} 1 ${this.state.angle>180?1:0} 1 ${endCoord.x} ${endCoord.y}`}
+            //d={`M${startCoord.x} ${startCoord.y} A ${r} ${r} 0 ${value>180?1:0} 1 ${endCoord.x} ${endCoord.y}`}/>
+						d={`M${startCoord.x} ${startCoord.y} A ${dialRadius} ${dialRadius} 0 ${this.state.angle>180+this.props.startCoord?1:0} 1 ${endCoord.x} ${endCoord.y}`}
 					/>
+          
 					<Circle
 						x={endCoord.x - knobRadius}
 						y={endCoord.y - knobRadius}
@@ -170,5 +172,6 @@ CircleSlider.defaultProps = {
 	endGradient: '#A6FFCB',
 	backgroundColor: 'white',
 	startCoord: 0,
+	maxCoord: 360,
 	onValueChange: x => x
 };
