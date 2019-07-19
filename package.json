@@ -21,6 +21,7 @@
     "expo-font": "^5.0.0",
     "expo-linear-gradient": "^5.0.1",
     "expo-web-browser": "^5.0.0",
+    "linear-scale": "0.0.2",
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
