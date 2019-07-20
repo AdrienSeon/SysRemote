@@ -48,7 +48,7 @@ class CircularSlider extends Component {
 				} else {
 					this.setState({angle: a});
 				}
-				
+
 				this.props.onValueChange(this.state.angle)
 			}
 		});
@@ -148,6 +148,8 @@ class CircularSlider extends Component {
 						r={knobRadius}
 						cx={knobRadius}
 						cy={knobRadius}
+						stroke='#E2E8F2'
+						strokeWidth={1}
 						//fill={`hsl(${colorScale(this.state.angle)}, 40%, 91%)`}
 						fill={this.props.knobColor}
 						{...this._panResponder.panHandlers}
