@@ -24,7 +24,7 @@ const TemperatureStackNavigator = createStackNavigator({
 });
 
 TemperatureStackNavigator.navigationOptions = {
-	tabBarLabel: 'Temperature',
+	tabBarLabel: 'Température',
 	tabBarIcon: ({ focused }) => (
 		<TemperatureIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size='32' />
 	)
