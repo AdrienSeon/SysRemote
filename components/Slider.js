@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, Animated, Easing, PanResponder } from 'react-native';
+import { View, StyleSheet, Animated, Easing, PanResponder, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-
-const TRACK_SIZE = 4;
-const THUMB_SIZE = 20;
+const TRACK_SIZE = 20;
+const THUMB_SIZE = 25;
 
 const DEFAULT_ANIMATION_CONFIGS = {
 	spring: {
@@ -370,6 +370,17 @@ class Slider extends Component {
 			thumbStyle,
 			debugTouchArea,
 			orientation,
+			gradientColor,
+			gradientlocation,
+			gradientInnerTrack,
+			gradientOuterTrack,
+			fanSpeedBackground,
+			blindsBackground,
+			showValueIndicator,
+			valueIndicatorWidth,
+			valueIndicatorPosition,
+			valueIndicatorTextColor,
+			valueIndicatorStyle,
 			...other
 		} = this.props;
 
@@ -394,8 +405,43 @@ class Slider extends Component {
 			...valueVisibleStyle,
 		};
 
+		const getValueIndicatorPosition = (valueIndicatorPosition) => {
+			switch (valueIndicatorPosition) {
+				case 'left':
+					return ({
+						top: -THUMB_SIZE / 2,
+						right: 20
+					});
+					break;
+				case 'right':
+					return ({
+						top: -THUMB_SIZE / 2,
+						left: 20
+					});
+					break;
+				case 'top':
+					return ({
+						right: -THUMB_SIZE / 2 + 3,
+						bottom: 15
+					});
+					break;
+				case 'bottom':
+					return ({
+						right: -THUMB_SIZE / 2,
+						top: 14
+					});
+					break;
+				default:
+					return ({
+						right: -THUMB_SIZE / 2,
+						bottom: 15
+					});
+			}
+		}
+
 		const thumbStyleTransform = (thumbStyle && thumbStyle.transform) || [];
 		const touchOverflowStyle = this.getTouchOverflowStyle();
+
 		return (
 			<View
 				{...other}
@@ -413,21 +459,136 @@ class Slider extends Component {
 						orientation === 'vertical'
 							? mainStyles.trackVertical
 							: mainStyles.trackHorizontal,
+						gradientOuterTrack||fanSpeedBackground||blindsBackground
+							? mainStyles.overflow
+							: null,
 						trackStyle,
 						{ backgroundColor: maximumTrackTintColor },
 					])}
 					onLayout={this.measureTrack}
-				/>
+				>
+					{this.props.gradientOuterTrack ? (
+						<LinearGradient
+							colors={
+								gradientColor ? gradientColor : ['grey','black']
+							}
+							locations={
+								gradientlocation ? gradientlocation : [0,1]
+							}
+							start={{ x: 0.0, y: 0.0 }}
+							end={{ x: 1.0, y: 1.0 }}
+							style={styles.linearGradient}
+						/>
+					) : null}
+					{this.props.fanSpeedBackground ? (
+						<View
+							style={StyleSheet.flatten([
+								mainStyles.overflow,
+								{flex: 1, flexDirection: 'row'}
+							])}
+						>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0.33)'}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0.66)'}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,1)'}}/>
+						</View>
+					) : null}
+				</View>
 				<Animated.View
 					style={StyleSheet.flatten([
 						mainStyles.track,
 						orientation === 'vertical'
 							? mainStyles.trackVertical
 							: mainStyles.trackHorizontal,
+						gradientInnerTrack||fanSpeedBackground||blindsBackground
+							? mainStyles.overflow
+							: null,
 						trackStyle,
 						minimumTrackStyle,
 					])}
-				/>
+				>
+					{this.props.gradientInnerTrack ? (
+						<LinearGradient
+							colors={
+								gradientColor ? gradientColor : ['grey','black']
+							}
+							locations={
+								gradientlocation ? gradientlocation : [0,1]
+							}
+							start={{ x: 0.0, y: 0.0 }}
+							end={{ x: 1.0, y: 1.0 }}
+							style={styles.linearGradient}
+						/>
+					) : null}
+					{this.props.blindsBackground ? (
+						<View 
+							style={StyleSheet.flatten([
+								mainStyles.overflow,
+								{flex: 1, flexDirection: 'column'}
+							])}
+						>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+							<View style={{flex: 2, backgroundColor:'rgba(71,138,247,1)', minHeight: 8}}/>
+							<View style={{flex: 1, backgroundColor:'rgba(71,138,247,0)', minHeight: 4}}/>
+						</View>
+					) : null}
+				</Animated.View>
 				<Animated.View
 					testID="sliderThumb"
 					onLayout={this.measureThumb}
@@ -446,13 +607,36 @@ class Slider extends Component {
 							...valueVisibleStyle,
 						},
 					])}
-				/>
+				>
+					{this.props.showValueIndicator ? (
+						<View
+								style={StyleSheet.flatten([
+								styles.valueIndicator,
+								{
+									width: valueIndicatorWidth ? valueIndicatorWidth : 48,
+									height: valueIndicatorWidth ? valueIndicatorWidth : 48,
+								},
+								getValueIndicatorPosition(valueIndicatorPosition)
+							])}
+						>
+							<Text
+								style={StyleSheet.flatten([
+									{
+										color: valueIndicatorTextColor ? valueIndicatorTextColor : "#000000",
+									},
+									valueIndicatorStyle
+								])}
+							>
+								test
+							</Text>
+						</View>
+					) : null}
+				</Animated.View>
 				<View
 					style={StyleSheet.flatten([styles.touchArea, touchOverflowStyle])}
 					{...this.panResponder.panHandlers}
 				>
-					{debugTouchArea === true &&
-						this.renderDebugThumbTouchRect(thumbStart)}
+					{debugTouchArea === true &&	this.renderDebugThumbTouchRect(thumbStart)}
 				</View>
 			</View>
 		);
@@ -562,6 +746,56 @@ Slider.propTypes = {
 	 * Used to configure the animation parameters.  These are the same parameters in the Animated library.
 	 */
 	animationConfig: PropTypes.object,
+
+	/**
+	 * Use gradient instead of minimumTrackTintColor
+	 */
+	gradientInnerTrack: PropTypes.bool,
+
+	/**
+	 * Use gradient instead of maximumTrackTintColor
+	 */
+	gradientOuterTrack: PropTypes.bool,
+
+	/**
+	 * Gradient color used if gradientInnerTrack or gradientOuterTrack is true
+	 */
+	gradientColor: PropTypes.arrayOf(PropTypes.string),
+
+	/**
+	 * Position of radient color used if gradientInnerTrack or gradientOuterTrack is true
+	 */
+	gradientlocation: PropTypes.arrayOf(PropTypes.number),
+
+	/**
+	 * Show value indicator next to thumb
+	 */
+	showValueIndicator: PropTypes.bool,
+
+	/**
+	 * Value indicator width
+	 */
+	valueIndicatorWidth: PropTypes.number,
+
+	/**
+	 * Value indicator position
+	 */	
+	valueIndicatorPosition: PropTypes.string,
+
+	/**
+	 * Value indicator text color
+	 */
+	valueIndicatorTextColor: PropTypes.string,
+
+	/**
+	 * special value for personnal purpose application
+	 */
+	fanSpeedBackground: PropTypes.bool,
+
+	/**
+	 * special value for personnal purpose application
+	 */
+	blindsBackground: PropTypes.bool,
 };
 
 Slider.defaultProps = {
@@ -569,8 +803,8 @@ Slider.defaultProps = {
 	minimumValue: 0,
 	maximumValue: 1,
 	step: 0,
-	minimumTrackTintColor: '#3f3f3f',
-	maximumTrackTintColor: '#b3b3b3',
+	minimumTrackTintColor: 'transparent',
+	maximumTrackTintColor: 'transparent',
 	thumbTintColor: 'red',
 	thumbTouchSize: { width: 40, height: 40 },
 	debugTouchArea: false,
@@ -605,10 +839,10 @@ const styles = StyleSheet.create({
 		borderRadius: THUMB_SIZE / 2,
 	},
 	thumbHorizontal: height => ({
-		top: 22 + (height ? (height - 4) / 2 : 0),
+		top: 30 + (height ? (height - 4) / 2 : 0),
 	}),
 	thumbVertical: width => ({
-		left: 22 + (width ? (width - 4) / 2 : 0),
+		left: 30 + (width ? (width - 4) / 2 : 0),
 	}),
 	touchArea: {
 		position: 'absolute',
@@ -623,6 +857,18 @@ const styles = StyleSheet.create({
 		backgroundColor: 'green',
 		opacity: 0.5,
 	},
+	linearGradient: {
+		width: "100%",
+		height: "100%"
+	},
+	overflow: {
+		overflow: "hidden",
+	},
+	valueIndicator: {
+		position: "absolute",
+		alignItems: "center",
+		justifyContent: "center"
+	}
 });
 
 export default Slider;
