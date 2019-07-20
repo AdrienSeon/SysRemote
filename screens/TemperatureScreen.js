@@ -5,25 +5,121 @@ import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import CircularSlider from '../components/CircularSlider';
 import LinearScale from "linear-scale"
+import Slider from '../components/Slider';
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: Colors.appBackground,
 		paddingTop:100,
-		alignItems: "center",
-		justifyContent: 'center'
+		//alignItems: 'center',
+		justifyContent: 'space-around',
 	},
 	menuBtn: {
 		marginLeft: 16
 	},
-	CircularSlider:{
-
+	valuesPanelContainer: {
+		flex: 1,
+		marginLeft: 50,
+		marginRight: 50,
+		borderRadius: 10,
+		backgroundColor: Colors.inverted,
+		shadowColor: "rgba(100, 100, 100, 0.05)",
+		shadowOffset: {
+			width: 0,
+			height: 5
+		},
+		shadowRadius: 15,
+		shadowOpacity: 1,
+	},
+	valuesPanelValueContainer: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	valuesPanelValue: {
+		fontFamily: "OpenSans",
+		fontSize: 22,
+		color: Colors.primaryText,
+	},
+	valuesPanelLabel: {
+		fontFamily: "OpenSans",
+		fontSize: 10,
+		color: Colors.secondaryText,
+	},
+	valuesPanelFirstTopValue: {
+		borderRightWidth: 1,
+		borderRightColor: 'rgba(100, 100, 100, 0.05)',
+	},
+	valuesPanelFirstRow: {
+		flex: 1,
+		flexDirection: 'row',
+		borderBottomWidth: 1,
+		borderBottomColor: 'rgba(100, 100, 100, 0.05)',
+	},
+	thermostat: {
+		flex: 3,
+		alignSelf: 'center',
+		justifyContent:'center'
+	},
+	verticalDash: {
+		backgroundColor: Colors.tertiaryText,
+		height: 226,
+		width: 1,
+		position: 'absolute',
+		top: 30,
+		left: 143,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	horizontalDash: {
+		backgroundColor: Colors.tertiaryText,
+		height: 1,
+		width: 226,
+		position: 'absolute',
+		top: 143,
+		left: 30,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	CircularSlider: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'relative',
+		top: 0,
+		left: 0,
+	},
+	middleThermostat: {
+		backgroundColor: Colors.inverted,
+		shadowColor: "rgba(189, 199, 225, 0.5)",
+		shadowOffset: {
+			width: 0,
+			height: 17
+		},
+		shadowRadius: 25,
+		height: 210,
+		width: 210,
+		borderRadius: 100,
+		shadowOpacity: 1,
+		position: 'absolute',
+		top: 38,
+		left: 38,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	setpointValue: {
 		fontFamily: "OpenSans",
 		fontSize: 36,
 		color: Colors.primaryText
+	},
+	speedSliderKnob: {
+		shadowColor: "rgba(100, 100, 100, 0.2)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 2,
+		shadowOpacity: 1
 	}
 });
 
@@ -38,10 +134,11 @@ class TemperatureScreen extends Component {
 			setpointInRadian: 70,
 			startCoord: 70,
 			maxCoord: 290,
-			sliderValue: 70,
+			ThermostatsliderValue: 70,
+			value:2,
 		}
 
-		this.handleSliderValueChange = this.handleSliderValueChange.bind(this);
+		this.handleThermostatSliderValueChange = this.handleThermostatSliderValueChange.bind(this);
 		this.setpointInRadianToDegree = this.setpointInRadianToDegree.bind(this);
 		this.setpointInDegreeToRadian = this.setpointInDegreeToRadian.bind(this);
 	}
@@ -64,7 +161,7 @@ class TemperatureScreen extends Component {
 		//this._navListener.remove();
 	}
 
-	handleSliderValueChange(value) {
+	handleThermostatSliderValueChange(value) {
 		this.setState({setpointInRadian: value});
 		this.setpointInRadianToDegree(value);
 		this.setpointInDegreeToRadian(this.state.setpoint);
@@ -86,18 +183,26 @@ class TemperatureScreen extends Component {
 
 		return (
 			<View style={styles.container}>
-				<View style={{}}>
-					<View style={{
-
-						//backgroundColor: 'blue'
-					}}
-					>
-						<CircularSlider style={{
-							position: 'relative',
-							top: 0,
-							left: 0,
-						}}
-							value={this.state.sliderValue}
+{/*				<View style={styles.valuesPanelContainer}>
+					<View style={styles.valuesPanelFirstRow}>
+						<View style={[styles.valuesPanelValueContainer, styles.valuesPanelFirstTopValue]}>
+							<Text style={styles.valuesPanelValue}>27.2</Text>
+							<Text style={styles.valuesPanelLabel}>Température extérieure</Text>
+						</View>
+						<View style={styles.valuesPanelValueContainer}>
+							<Text style={styles.valuesPanelValue}>69%</Text>
+							<Text style={styles.valuesPanelLabel}>Humidité extérieure</Text>
+						</View>
+					</View>
+					<View style={styles.valuesPanelValueContainer}>
+						<Text style={styles.valuesPanelValue}>23.1°C</Text>
+						<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
+					</View>
+				</View>
+				<View style={styles.thermostat}>
+					<View style={{position: 'relative'}}>
+						<CircularSlider style={styles.circularSlider}
+							value={this.state.ThermostatsliderValue}
 							dialRadius={130}
 							dialWidth={5}
 							knobRadius={14}
@@ -107,55 +212,38 @@ class TemperatureScreen extends Component {
 							startCoord={this.state.startCoord}
 							maxCoord={this.state.maxCoord}
 							backgroundColor={Colors.appBackground}
-							onValueChange={this.handleSliderValueChange}
+							onValueChange={this.handleThermostatSliderValueChange}
 						/>
+						<View style={styles.verticalDash}></View>
+						<View style={styles.horizontalDash}></View>
+						<View style={styles.middleThermostat}>
+							<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
+						</View>
 					</View>
-					<View style={{
-						backgroundColor: Colors.secondaryText,
-						height: 226,
-						width: 1,
-						position: 'absolute',
-						top: 30,
-						left: 143,
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
-					>
-					</View>
-					<View style={{
-						backgroundColor: Colors.secondaryText,
-						height: 1,
-						width: 226,
-						position: 'absolute',
-						top: 143,
-						left: 30,
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
-					>
-					</View>
-					<View style={{
-						backgroundColor: Colors.inverted,
-						shadowColor: "rgba(189, 199, 225, 0.5)",
-						shadowOffset: {
-							width: 0,
-							height: 17
-						},
-						shadowRadius: 25,
-						height: 210,
-						width: 210,
-						borderRadius: 100,
-						shadowOpacity: 1,
-						position: 'absolute',
-						top: 38,
-						left: 38,
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
-					>
-						<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
-						<Text style={{fontSize:12}}>{this.state.setpointInRadian + "rad"}</Text>
-					</View>
+				</View>*/}
+				<View style={{flex:1, marginLeft:50, marginRight:50}}>
+					<Slider
+						value={this.state.value}
+						onValueChange={value => this.setState({ value })}
+						animateTransitions={true}
+						animationType='timing'
+						minimumTrackTintColor='yellow'
+						maximumTrackTintColor='green'
+						minimumValue={0}
+						maximumValue={3}
+						step={1}
+						thumbStyle={{
+							shadowColor: "rgba(100, 100, 100, 0.2)",
+							shadowOffset: {
+								width: 0,
+								height: 2
+							},
+							shadowRadius: 2,
+							shadowOpacity: 1,
+							backgroundColor:'#ffffff'
+						}}
+					/>
+					<Text>{this.state.value}</Text>
 				</View>
 			</View>
 		);
