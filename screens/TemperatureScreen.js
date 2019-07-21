@@ -1,31 +1,30 @@
 import React, {Component} from "react";
-import {Platform, SafeAreaView, View, StyleSheet, Button, StatusBar, Text} from 'react-native';
+import {Platform, SafeAreaView, View, StyleSheet, Button, StatusBar, Text, TouchableOpacity} from 'react-native';
 import { DrawerActions } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
+import WindIcon from '../components/icons/Wind';
 import CircularSlider from '../components/CircularSlider';
 import LinearScale from "linear-scale"
 import Slider from '../components/Slider';
-import VerticalSlider from '../components/VerticalSlider';
 
 class TemperatureScreen extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			setpoint: 20,
+			setpoint: 23,
 			minSetpoint: 15,
 			maxSetpoint: 30,
-			setpointInRadian: 70,
 			startCoord: 70,
 			maxCoord: 290,
-			ThermostatsliderValue: 70,
-			value:3,
+			thermostatSliderValue: 70,
+			fanSpeedValue: 2,
 		}
 
 		this.handleThermostatSliderValueChange = this.handleThermostatSliderValueChange.bind(this);
-		this.setpointInRadianToDegree = this.setpointInRadianToDegree.bind(this);
-		this.setpointInDegreeToRadian = this.setpointInDegreeToRadian.bind(this);
+		this.sliderValueToDegree = this.sliderValueToDegree.bind(this);
+		this.setpointToSliderValue = this.setpointToSliderValue.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -34,6 +33,7 @@ class TemperatureScreen extends Component {
 	});
 
 	componentDidMount() {
+		//this.setState({thermostatSliderValue: this.setpointToSliderValue(this.state.setpoint)});
 /*		this._navListener = this.props.navigation.addListener('didFocus', () => {
 			StatusBar.setBarStyle('light-content');
 			if(Platform.OS === "android"){
@@ -47,156 +47,118 @@ class TemperatureScreen extends Component {
 	}
 
 	handleThermostatSliderValueChange(value) {
-		this.setState({setpointInRadian: value});
-		this.setpointInRadianToDegree(value);
-		this.setpointInDegreeToRadian(this.state.setpoint);
+		this.setState({thermostatSliderValue: value});
+		this.setState({setpoint: this.sliderValueToDegree(value)});
 	}
 
-	setpointInRadianToDegree(value) {
-		let setpointInRadianToDegree = LinearScale([this.state.startCoord, this.state.maxCoord], [this.state.minSetpoint, this.state.maxSetpoint])
-		let setpoint = setpointInRadianToDegree(value)
+	sliderValueToDegree(value) {
+		let linearScale = LinearScale([this.state.startCoord, this.state.maxCoord], [this.state.minSetpoint, this.state.maxSetpoint]);
+		let setpoint = linearScale(value)
 		setpoint = +setpoint.toFixed(1)
-		this.setState({setpoint: setpoint})
+		return setpoint;
 	}
 
-	setpointInDegreeToRadian(value) {
-		let setpointInDegreeToRadian = LinearScale([this.state.minSetpoint, this.state.maxSetpoint], [this.state.startCoord, this.state.maxCoord])
-		this.setState({setpointInRadian: setpointInDegreeToRadian(value)})
+	setpointToSliderValue(value) {
+		let linearScale = LinearScale([this.state.minSetpoint, this.state.maxSetpoint], [this.state.startCoord, this.state.maxCoord]);
+		let radian = linearScale(value)
+		return radian;
 	}
 
 	render() {
-
 		return (
-			<View style={styles.container}>
-{/*				<View style={styles.valuesPanelContainer}>
-					<View style={styles.valuesPanelFirstRow}>
-						<View style={[styles.valuesPanelValueContainer, styles.valuesPanelFirstTopValue]}>
-							<Text style={styles.valuesPanelValue}>27.2</Text>
-							<Text style={styles.valuesPanelLabel}>Température extérieure</Text>
+			<SafeAreaView style={styles.safearea}>
+				<View style={styles.container}>
+					<View style={styles.valuesPanelContainer}>
+						<View style={styles.valuesPanelFirstRow}>
+							<View style={[styles.valuesPanelValueContainer, styles.valuesPanelFirstTopValue]}>
+								<Text style={styles.valuesPanelValue}>27.2</Text>
+								<Text style={styles.valuesPanelLabel}>Température extérieure</Text>
+							</View>
+							<View style={styles.valuesPanelValueContainer}>
+								<Text style={styles.valuesPanelValue}>69%</Text>
+								<Text style={styles.valuesPanelLabel}>Humidité extérieure</Text>
+							</View>
 						</View>
 						<View style={styles.valuesPanelValueContainer}>
-							<Text style={styles.valuesPanelValue}>69%</Text>
-							<Text style={styles.valuesPanelLabel}>Humidité extérieure</Text>
+							<Text style={styles.valuesPanelValue}>23.1°C</Text>
+							<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
 						</View>
 					</View>
-					<View style={styles.valuesPanelValueContainer}>
-						<Text style={styles.valuesPanelValue}>23.1°C</Text>
-						<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
-					</View>
-				</View>
-				<View style={styles.thermostat}>
-					<View style={{position: 'relative'}}>
-						<CircularSlider style={styles.circularSlider}
-							value={this.state.ThermostatsliderValue}
-							dialRadius={130}
-							dialWidth={5}
-							knobRadius={14}
-							knobColor={Colors.inverted}
-							startGradient='#5D87E7'
-							endGradient='#FF7978'
-							startCoord={this.state.startCoord}
-							maxCoord={this.state.maxCoord}
-							backgroundColor={Colors.appBackground}
-							onValueChange={this.handleThermostatSliderValueChange}
-						/>
-						<View style={styles.verticalDash}></View>
-						<View style={styles.horizontalDash}></View>
-						<View style={styles.middleThermostat}>
-							<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
+					<View style={styles.thermostat}>
+						<View style={{}}>
+							<CircularSlider style={styles.circularSlider}
+								value={this.state.thermostatSliderValue}
+								dialRadius={130}
+								dialWidth={5}
+								knobRadius={14}
+								knobColor={Colors.inverted}
+								startGradient='#5D87E7'
+								endGradient='#FF7978'
+								startCoord={this.state.startCoord}
+								maxCoord={this.state.maxCoord}
+								backgroundColor={Colors.appBackground}
+								onValueChange={this.handleThermostatSliderValueChange}
+							/>
+							<View style={styles.verticalDash}></View>
+							<View style={styles.horizontalDash}></View>
+							<View style={styles.middleThermostat}>
+								<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
+								<Text style={styles.setpointValue}>{this.state.thermostatSliderValue + "rad"}</Text>
+							</View>
 						</View>
 					</View>
-				</View>*/}
-				<View style={{flex:1, justifyContent: 'space-around',}}>
-					<View style={{flex:1, justifyContent: 'space-around',alignSelf:'center'}}>
-						<Slider
-							value={this.state.value}
-							onValueChange={value => this.setState({ value })}
-							animateTransitions={true}
-							animationType='spring'
-							minimumValue={0}
-							maximumValue={100}
-							step={1}
-							maximumTrackTintColor={Colors.inverted}
-							blindsBackground
-							orientation='vertical'
-							showValueIndicator
-							valueIndicatorPosition='left'
-							valueIndicatorTextColor={Colors.secondaryText}
-							valueIndicatorStyle={{
-								fontFamily: "OpenSans",
-								fontSize: 14,
-							}}
-							
-							style={{
-								height:'100%',
-								shadowColor: "rgba(100, 100, 100, 0.1)",
-								shadowOffset: {
-									width: 0,
-									height: 2
-								},
-								shadowRadius: 4,
-								shadowOpacity: 1
-							}}
-							thumbTintColor={Colors.inverted}
-							thumbStyle={{
-								shadowColor: "rgba(100, 100, 100, 0.2)",
-								shadowOffset: {
-									width: 0,
-									height: 2
-								},
-								shadowRadius: 2,
-								shadowOpacity: 1
-							}}
-						/>
+					<View style={styles.fanSpeedContainer}>
+						<WindIcon style={styles.windIconLeft} color={Colors.primaryBrand33} size='24'/>
+						<View style={styles.fanSpeedSliderContainer}>
+							<Slider
+								value={this.state.fanSpeedValue}
+								onValueChange={value => this.setState({ fanSpeedValue: value })}
+								animateTransitions={true}
+								animationType='spring'
+								minimumValue={0}
+								maximumValue={3}
+								step={1}
+								trackSizeProp={10}
+								thumbSizeProp={20}
+								fanSpeedBackground
+								thumbTintColor={Colors.inverted}
+								thumbStyle={styles.fanSpeedSliderThumbStyle}
+							/>
+				        </View>
+						<WindIcon style={styles.windIconRight} color={Colors.primaryBrand} size='32'/>
+						<TouchableOpacity style={styles.autoIconContainer}>
+							<Text style={styles.autoIconText}>A</Text>
+						</TouchableOpacity>
 					</View>
-					<View style={{flex:1, justifyContent: 'space-around', marginLeft:50, marginRight:50}}>
-						<Slider
-							value={this.state.value}
-							onValueChange={value => this.setState({ value })}
-							animateTransitions={true}
-							animationType='spring'
-							minimumValue={0}
-							maximumValue={3}
-							step={1}
-							fanSpeedBackground
-							showValueIndicator
-							valueIndicatorPosition='top'
-							valueIndicatorTextColor={Colors.secondaryText}
-							valueIndicatorStyle={{
-								fontFamily: "OpenSans",
-								fontSize: 14,
-							}}
-							thumbTintColor={Colors.inverted}
-							thumbStyle={{
-								shadowColor: "rgba(100, 100, 100, 0.2)",
-								shadowOffset: {
-									width: 0,
-									height: 2
-								},
-								shadowRadius: 2,
-								shadowOpacity: 1,
-							}}
-						/>
-			        </View>
 				</View>
-			</View>
+			</SafeAreaView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
+	safearea: {
 		flex: 1,
 		backgroundColor: Colors.appBackground,
-		paddingTop:100,
-		//alignItems: 'center',
+	},
+	container: {
+		flex: 1,
+		...Platform.select({
+			ios: {
+				paddingTop: 70 + 20
+			},
+			android: {
+				paddingTop: 80 + 20
+			}
+		}),
 		justifyContent: 'space-around',
+		paddingBottom: 50
 	},
 	menuBtn: {
 		marginLeft: 16
 	},
 	valuesPanelContainer: {
-		flex: 1,
+		flex: 2,
 		marginLeft: 50,
 		marginRight: 50,
 		borderRadius: 10,
@@ -235,9 +197,9 @@ const styles = StyleSheet.create({
 		borderBottomColor: 'rgba(100, 100, 100, 0.05)',
 	},
 	thermostat: {
-		flex: 3,
+		flex: 6,
 		alignSelf: 'center',
-		justifyContent:'center'
+		marginTop:30,
 	},
 	verticalDash: {
 		backgroundColor: Colors.tertiaryText,
@@ -289,15 +251,60 @@ const styles = StyleSheet.create({
 		fontSize: 36,
 		color: Colors.primaryText
 	},
-	speedSliderKnob: {
+	fanSpeedContainer: {
+		flex:1,
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginLeft:20,
+		marginRight:20
+	},
+	windIconLeft: {
+		alignSelf: 'center',
+		marginRight:5
+	},
+	fanSpeedSliderContainer: {
+		flex:1,
+		justifyContent: 'space-around'
+	},
+	fanSpeedSliderThumbStyle: {
 		shadowColor: "rgba(100, 100, 100, 0.2)",
 		shadowOffset: {
 			width: 0,
 			height: 2
 		},
 		shadowRadius: 2,
-		shadowOpacity: 1
-	}
+		shadowOpacity: 1,
+	},
+	windIconRight: {
+		alignSelf: 'center',
+		marginLeft:5
+	},
+	autoIconContainer: {
+		marginLeft:20,
+		backgroundColor: Colors.inverted,
+		shadowColor: "rgba(108, 204, 53, 0.2)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 3,
+		shadowOpacity: 1,
+		borderStyle: "solid",
+		borderWidth: 1,
+		borderColor: "rgb(108, 204, 53)",
+		width: 24,
+		height: 24,
+		borderRadius: 12,
+		justifyContent: 'center',
+		alignItems: 'center',
+		alignSelf: 'center',
+	},
+	autoIconText: {
+		fontFamily: "OpenSans",
+		fontSize: 14,
+		color: "rgb(108, 204, 53)",
+		textAlign: 'center',
+	},
 });
 
 export default TemperatureScreen;
