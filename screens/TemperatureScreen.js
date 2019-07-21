@@ -85,26 +85,24 @@ class TemperatureScreen extends Component {
 						</View>
 					</View>
 					<View style={styles.thermostat}>
-						<View style={{}}>
-							<CircularSlider style={styles.circularSlider}
-								value={this.state.thermostatSliderValue}
-								dialRadius={130}
-								dialWidth={5}
-								knobRadius={14}
-								knobColor={Colors.inverted}
-								startGradient='#5D87E7'
-								endGradient='#FF7978'
-								startCoord={this.state.startCoord}
-								maxCoord={this.state.maxCoord}
-								backgroundColor={Colors.appBackground}
-								onValueChange={this.handleThermostatSliderValueChange}
-							/>
-							<View style={styles.verticalDash}></View>
-							<View style={styles.horizontalDash}></View>
-							<View style={styles.middleThermostat}>
-								<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
-								<Text style={styles.setpointValue}>{this.state.thermostatSliderValue + "rad"}</Text>
-							</View>
+						<CircularSlider style={styles.circularSlider}
+							value={this.state.thermostatSliderValue}
+							dialRadius={130}
+							dialWidth={5}
+							knobRadius={14}
+							knobColor={Colors.inverted}
+							startGradient='#5D87E7'
+							endGradient='#FF7978'
+							startCoord={this.state.startCoord}
+							maxCoord={this.state.maxCoord}
+							backgroundColor={Colors.appBackground}
+							onValueChange={this.handleThermostatSliderValueChange}
+						/>
+						<View style={styles.verticalDash}></View>
+						<View style={styles.horizontalDash}></View>
+						<View style={styles.middleThermostat}>
+							<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
+							{/*<Text style={styles.setpointValue}>{this.state.thermostatSliderValue + "rad"}</Text>*/}
 						</View>
 					</View>
 					<View style={styles.fanSpeedContainer}>
@@ -123,6 +121,7 @@ class TemperatureScreen extends Component {
 								fanSpeedBackground
 								thumbTintColor={Colors.inverted}
 								thumbStyle={styles.fanSpeedSliderThumbStyle}
+								style={styles.fanspeedSliderTrackStyle}
 							/>
 				        </View>
 						<WindIcon style={styles.windIconRight} color={Colors.primaryBrand} size='32'/>
@@ -274,6 +273,15 @@ const styles = StyleSheet.create({
 		},
 		shadowRadius: 2,
 		shadowOpacity: 1,
+	},
+	fanspeedSliderTrackStyle: {
+		shadowColor: "rgba(100, 100, 100, 0.1)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 4,
+		shadowOpacity: 1
 	},
 	windIconRight: {
 		alignSelf: 'center',
