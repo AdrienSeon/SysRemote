@@ -11,7 +11,7 @@ class Cloud extends React.Component {
 	render() {
 		return (
 			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
-				<Svg width={this.props.size} height={this.props.size} fill="none">
+				<Svg width={this.props.size} height={this.props.size} viewBox="0 0 73 78" fill="none">
 					<Path
 						fillRule="evenodd"
 						clipRule="evenodd"
