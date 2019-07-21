@@ -10,7 +10,7 @@ const BlindsStackNavigator = createStackNavigator({
 		screen: BlindsScreen,
 	},
 	BlindsList: {
-		screen: BlindsScreen,
+		screen: BlindsListScreen,
 	},
 },{
 	initialRouteName: 'Blinds',
