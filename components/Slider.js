@@ -486,102 +486,104 @@ class Slider extends Component {
 						</View>
 					) : null}
 				</View>
-				<Animated.View
-					style={StyleSheet.flatten([
-						{borderRadius: trackSizeProp / 2},
-						orientation === 'vertical'
-							? {flex: 1,	width: trackSizeProp,}
-							: {height: trackSizeProp},
-						gradientInnerTrack||fanSpeedBackground||blindsBackground
-							? mainStyles.overflow
-							: null,
-						trackStyle,
-						minimumTrackStyle,
-					])}
-				>
-					{ gradientInnerTrack ? (
-						<LinearGradient
-							colors={
-								gradientColor ? gradientColor : ['grey','black']
-							}
-							locations={
-								gradientlocation ? gradientlocation : [0,1]
-							}
-							start={{ x: 0.0, y: 0.0 }}
-							end={{ x: 1.0, y: 1.0 }}
-							style={styles.linearGradient}
-						/>
-					) : null}
-					{ blindsBackground ? (
-						<View 
-							style={StyleSheet.flatten([
-								mainStyles.overflow,
-								{flex: 1, flexDirection: 'column'}
-							])}
-						>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-							<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-							<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-						</View>
-					) : null}
-				</Animated.View>
+				{ this.getCurrentValue() ? (
+					<Animated.View
+						style={StyleSheet.flatten([
+							{borderRadius: trackSizeProp / 2},
+							orientation === 'vertical'
+								? {flex: 1,	width: trackSizeProp,}
+								: {height: trackSizeProp},
+							gradientInnerTrack||fanSpeedBackground||blindsBackground
+								? mainStyles.overflow
+								: null,
+							trackStyle,
+							minimumTrackStyle,
+						])}
+					>
+						{ gradientInnerTrack ? (
+							<LinearGradient
+								colors={
+									gradientColor ? gradientColor : ['grey','black']
+								}
+								locations={
+									gradientlocation ? gradientlocation : [0,1]
+								}
+								start={{ x: 0.0, y: 0.0 }}
+								end={{ x: 1.0, y: 1.0 }}
+								style={styles.linearGradient}
+							/>
+						) : null}
+						{ blindsBackground ? (
+							<View 
+								style={StyleSheet.flatten([
+									mainStyles.overflow,
+									{flex: 1, flexDirection: 'column'}
+								])}
+							>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
+								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+							</View>
+						) : null}
+					</Animated.View>
+				) : null}
 				<Animated.View
 					testID="sliderThumb"
 					onLayout={this.measureThumb}
@@ -594,7 +596,7 @@ class Slider extends Component {
 							borderRadius: thumbSizeProp / 2,
 						},
 						orientation === 'vertical'
-							? {top: -1, left: 20 + trackSizeProp / 2}
+							? {left: 20 + trackSizeProp / 2}
 							: {top: 20 + trackSizeProp / 2},
 						,
 						thumbStyle,
