@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { Animated, Easing, TouchableOpacity, StyleSheet } from "react-native"
 import PropTypes from 'prop-types';
-const knobOffset = 32
 
-class Switch extends Component {
+class BlindsOrientationCommand extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			value: this.props.value,
-			animatedValue: new Animated.Value(this.props.value ? knobOffset : 0),
+			animatedValue: new Animated.Value(this.props.value ? this.props.trackSize : 0),
 		};
 	}
 
@@ -21,7 +20,7 @@ class Switch extends Component {
 					Animated.timing(
 						this.state.animatedValue,
 						{
-							toValue: this.state.value ? knobOffset : 0,
+							toValue: this.state.value ? this.props.trackSize : 0,
 							easing: Easing.elastic(0.7),
 							duration: 100,
 						}
@@ -87,7 +86,7 @@ class Switch extends Component {
 	}
 }
 
-Switch.proptypes = {
+BlindsOrientationCommand.proptypes = {
 	value: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
 	knobTintColor: PropTypes.string,
@@ -99,7 +98,7 @@ Switch.proptypes = {
 	trackSize: PropTypes.number
 }
 
-Switch.defaultProps = {
+BlindsOrientationCommand.defaultProps = {
 	value: false,
 	knobTintColor: 'white',
 	trackOnColor: 'limegreen',
@@ -110,4 +109,4 @@ Switch.defaultProps = {
 	trackSize: 32
 };
 
-export default Switch
+export default BlindsOrientationCommand
