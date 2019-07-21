@@ -6,6 +6,7 @@ import LightsTopIcon from '../components/icons/LightsTop';
 import LightsBotIcon from '../components/icons/LightsBot';
 import NextIcon from '../components/icons/Next';
 import Switch from '../components/Switch';
+import Slider from '../components/Slider';
 
 class LightsScreen extends React.Component {
 	constructor(props) {
@@ -13,6 +14,7 @@ class LightsScreen extends React.Component {
 
 		this.state = {
 			switchValue: false,
+			sliderValue: 80
 		}
 	}
 
@@ -38,51 +40,58 @@ class LightsScreen extends React.Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 					<View style={styles.container}>
-						<TouchableOpacity style={{flex: 1}} onPress={() => this.props.navigation.navigate('LightsList')}>
-							<View style={{
-								flex: 1,
-								flexDirection: 'row',
-								alignSelf: 'center',
-								shadowColor: "rgba(100, 100, 100, 0.05)",
-								shadowOffset: {
-									width: 0,
-									height: 5
-								},
-								shadowRadius: 7,
-								shadowOpacity: 1,
-							}} onPress={() => this.props.navigation.navigate('LightsList')}>
-								<View style={{
-									backgroundColor: Colors.inverted,
-									width: 170,
-									height:180,
-									borderBottomLeftRadius: 20,
-									borderTopLeftRadius: 20,
-									alignItems: 'center',
-								}}>
+						<TouchableOpacity style={styles.lightsListButtonContainer} onPress={() => this.props.navigation.navigate('LightsList')} activeOpacity={0.5}>
+							<View style={styles.lightsListButton}>
+								<View style={styles.lightsListButtonLeftPart}>
 									<LightsTopIcon style={styles.lightsTopIcon} color={Colors.primaryBrand} size='128'/>
 									<LightsBotIcon style={styles.lightsBopIcon} color={Colors.tertiaryBrand} size='128'/>
 								</View>
-								<View style={{
-									backgroundColor: Colors.primaryBrand,
-									width: 40,
-									height: 180,
-									borderBottomRightRadius: 20,
-									borderTopRightRadius: 20,
-									alignItems: 'center',
-									justifyContent: 'center',
-								}}>
+								<View style={styles.lightListButtonRightPart}>
 									<NextIcon style={styles.nextIcon} color={Colors.inverted} size='32'/>
 								</View>
 							</View>
-								<Switch
-									style={{
-										flex: 1,
-									}}
-						        	onChange = {value => this.setState({switchValue: value})}
-									value = {this.state.switchValue}
-								/>
-								<Text>{this.state.switchValue}</Text>
 						</TouchableOpacity>
+						<View style={styles.switchContainer}>
+							<Switch
+					        	onChange = {value => this.setState({switchValue: value})}
+								value = {this.state.switchValue}
+								thumbTintColor = {Colors.primaryBrand}
+								trackOnColor = {Colors.primaryBrand}
+								trackOffColor = {Colors.inverted}
+								knobOnColor = {Colors.inverted}
+								knobOffColor = {Colors.primaryBrand}
+								knobSize = {28}
+								trackSize = {32}
+								trackStyle = {styles.switchTrackStyle}
+								knobStyle = {styles.switchKnobStyle}
+							/>
+						</View>
+						<View style={styles.lightSliderContainer}>
+							<Slider
+								value={this.state.sliderValue}
+								onValueChange={value => this.setState({ sliderValue: value })}
+								animateTransitions={true}
+								animationType='spring'
+								minimumValue={0}
+								maximumValue={100}
+								step={1}
+								trackSizeProp={25}
+								thumbSizeProp={25}
+								maximumTrackTintColor={Colors.inverted}
+								gradientInnerTrack
+								gradientColor={[
+									Colors.inverted,
+									Colors.tertiaryBrand
+								]}
+								showValueIndicator
+								valueIndicatorPosition='top'
+								valueIndicatorTextColor={Colors.tertiaryText}
+								valueIndicatorStyle={styles.lightSliderValueIndicatorStyle}
+								style={styles.lightSlider}
+								thumbTintColor={Colors.inverted}
+								thumbStyle={styles.lightSliderthumbStyle}
+							/>
+						</View>
 					</View>
 			</SafeAreaView>
 		);
@@ -104,11 +113,36 @@ const styles = StyleSheet.create({
 				paddingTop: 80 + 20
 			}
 		}),
-		justifyContent: 'space-around',
 		paddingBottom: 20
 	},
 	menuBtn: {
 		marginLeft: 16
+	},
+	lightsListButtonContainer: {
+		flex: 2,
+	},
+	lightsListButton: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+		shadowColor: "rgba(100, 100, 100, 0.05)",
+		shadowOffset: {
+			width: 0,
+			height: 5
+		},
+		shadowRadius: 7,
+		shadowOpacity: 1,
+	},
+	lightsListButtonLeftPart: {
+		backgroundColor: Colors.inverted,
+		width: 170,
+		height:180,
+		borderBottomLeftRadius: 20,
+		borderTopLeftRadius: 20,
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingTop: 70,
 	},
 	lightsTopIcon: {
 		position: 'relative',
@@ -126,6 +160,67 @@ const styles = StyleSheet.create({
 		position: 'relative',
 		top: -100,
 		left: 3,
+	},
+	lightListButtonRightPart: {
+		backgroundColor: Colors.primaryBrand,
+		width: 40,
+		height: 180,
+		borderBottomRightRadius: 20,
+		borderTopRightRadius: 20,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	switchContainer: {
+		flex: 1,
+		alignItems: 'center',
+	},
+	switchTrackStyle: {
+		shadowColor: "rgba(100, 100, 100, 0.1)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 4,
+		shadowOpacity: 1,
+		padding: 2,
+	},
+	switchKnobStyle: {
+		shadowColor: "rgba(100, 100, 100, 0.2)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 2,
+		shadowOpacity: 1,
+	},
+	lightSliderContainer: {
+		flex:1,
+		justifyContent: 'space-around',
+		marginLeft: 50,
+		marginRight: 50,
+	},
+	lightSliderValueIndicatorStyle: {
+		fontFamily: "OpenSans",
+		fontSize: 14,
+		left: -10,
+	},
+	lightSlider: {
+		shadowColor: "rgba(100, 100, 100, 0.1)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 4,
+		shadowOpacity: 1
+	},
+	lightSliderthumbStyle: {
+		shadowColor: "rgba(100, 100, 100, 0.2)",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 2,
+		shadowOpacity: 1
 	},
 });
 
