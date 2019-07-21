@@ -11,7 +11,7 @@ class Blinds extends React.Component {
 	render() {
 		return (
 			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
-				<Svg width={this.props.size} height={this.props.size} fill="none">
+				<Svg width={this.props.size} height={this.props.size} viewBox="0 0 32 32" fill="none">
 					<Path
 						d="M5 27V6h2v19a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1V6h2v21a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"
 						fill={this.props.color}
