@@ -2,3 +2,4 @@ Bugs :
 - next input filed on login on ios no scroll
 - TouchablePlatformSpecific sur tous les icons
 - animate switchnavigator https://reactnavigation.org/docs/en/animated-switch-navigator.html
+- bug circular slider quadn on change de vue
