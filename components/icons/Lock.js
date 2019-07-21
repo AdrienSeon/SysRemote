@@ -11,7 +11,7 @@ class Lock extends React.Component {
 	render() {
 		return (
 			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
-				<Svg width={this.props.size} height={this.props.size} fill="none">
+				<Svg width={this.props.size} height={this.props.size} viewBox="0 0 15 15" fill="none">
 					<Path
 						fillRule="evenodd"
 						clipRule="evenodd"
