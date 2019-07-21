@@ -120,7 +120,7 @@ class DrawerScreen extends React.Component {
 						</TouchablePlatformSpecific>
 						<TouchablePlatformSpecific onPress={this.LogoutAsync}>
 							<View style={styles.menuItem}>
-								<SettingsIcon style={styles.MenuItemIcon} color={Colors.inverted} size='21'/>
+								<LogoutIcon style={styles.MenuItemIcon} color={Colors.inverted} size='21'/>
 								<Text style={styles.menuItemLabel}>Se déconnecter</Text>
 							</View>
 						</TouchablePlatformSpecific>
