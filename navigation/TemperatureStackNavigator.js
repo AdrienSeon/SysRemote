@@ -9,9 +9,6 @@ const TemperatureStackNavigator = createStackNavigator({
 },{
 	initialRouteName: 'Temperature',
 	defaultNavigationOptions: {
-		headerStyle: {
-			height: 56,
-		},
 		headerTransparent: true,
 		headerTintColor: Colors.primaryText,
 		headerTitleStyle: {
