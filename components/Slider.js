@@ -402,31 +402,31 @@ class Slider extends Component {
 			switch (valueIndicatorPosition) {
 				case 'left':
 					return ({
-						right: thumbSizeProp,
+						right: thumbSizeProp / 3 * 2,
 						textAlign: 'right',
 					});
 					break;
 				case 'right':
 					return ({
-						top: thumbSizeProp,
+						top: thumbSizeProp / 3 * 2,
 						textAlign: 'left',
 					});
 					break;
 				case 'top':
 					return ({
-						bottom: thumbSizeProp,
+						bottom: thumbSizeProp / 3 * 2,
 						textAlign: 'center',
 					});
 					break;
 				case 'bottom':
 					return ({
-						top: thumbSizeProp,
+						top: thumbSizeProp / 3 * 2,
 						textAlign: 'center',
 					});
 					break;
 				default:
 					return ({
-						bottom: thumbSizeProp,
+						bottom: thumbSizeProp / 3 * 2,
 						textAlign: 'center',
 					});
 			}
