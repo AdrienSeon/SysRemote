@@ -1,26 +1,16 @@
-import React from "react"
-import PropTypes from "prop-types"
-import {
-	Animated,
-	Easing,
-	TouchableOpacity,
-} from "react-native"
-
+import React, { Component } from 'react';
+import { Animated, Easing, TouchableOpacity, StyleSheet } from "react-native"
+import PropTypes from 'prop-types';
 const knobOffset = 32
 
-class Switch extends React.Component {
-	static propTypes = {
-		value: PropTypes.bool,
-		onChange: PropTypes.func.isRequired,
-	}
+class Switch extends Component {
+	constructor(props) {
+		super(props);
 
-	static defaultProps = {
-		value: false,
-	}
-
-	state = {
-		value: this.props.value,
-		animatedValue: new Animated.Value(this.props.value ? knobOffset : 0),
+		this.state = {
+			value: this.props.value,
+			animatedValue: new Animated.Value(this.props.value ? knobOffset : 0),
+		};
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -49,29 +39,75 @@ class Switch extends React.Component {
 	}
 
 	render() {
+		const {
+			value,
+			onChange,
+			knobTintColor,
+			trackOnColor,
+			trackOffColor,
+			knobOnColor,
+			knobOffColor,
+			trackStyle,
+			knobStyle,
+			knobSize,
+			trackSize,
+			...other
+		} = this.props;
+
 		return (
 			<TouchableOpacity
 				activeOpacity={0.5}
-				style={{
-					backgroundColor: this.state.value ? "limegreen" : "gray",
-					width: 64,
-					height: 32,
-					borderRadius: 32,
-					padding: 4,
-				}}
+				style={StyleSheet.flatten([
+					{
+						backgroundColor: this.state.value ? trackOnColor : trackOffColor,
+						width: trackSize * 2,
+						height: trackSize,
+						borderRadius: trackSize / 2,
+					},
+					trackStyle
+				])}
 				onPress={() => this.handlePress()}
 			>
-				<Animated.View style={{
-					width: 24,
-					height: 24,
-					borderRadius: 32,
-					transform: [{
-						translateX: this.state.animatedValue,
-					}]
-				}} />
+				<Animated.View
+					style={StyleSheet.flatten([
+						{
+							backgroundColor: this.state.value ? knobOnColor : knobOffColor,
+							width: knobSize,
+							height: knobSize,
+							borderRadius: knobSize / 2,
+							transform: [{
+								translateX: this.state.animatedValue,
+							}],
+						},
+						knobStyle
+					])}
+				/>
 			</TouchableOpacity>
 		)
 	}
 }
+
+Switch.proptypes = {
+	value: PropTypes.bool,
+	onChange: PropTypes.func.isRequired,
+	knobTintColor: PropTypes.string,
+	trackOnColor: PropTypes.string,
+	trackOffColor: PropTypes.string,
+	knobOnColor: PropTypes.string,
+	knobOffColor: PropTypes.string,
+	knobSize: PropTypes.number,
+	trackSize: PropTypes.number
+}
+
+Switch.defaultProps = {
+	value: false,
+	knobTintColor: 'white',
+	trackOnColor: 'limegreen',
+	trackOffColor: 'gray',
+	knobOnColor: 'white',
+	knobOffColor: 'white',
+	knobSize: 24,
+	trackSize: 32
+};
 
 export default Switch
