@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from "react";
 import {Platform, SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
@@ -8,7 +8,7 @@ import NextIcon from '../components/icons/Next';
 import Switch from '../components/Switch';
 import Slider from '../components/Slider';
 
-class LightsScreen extends React.Component {
+class LightsScreen extends Component {
 	constructor(props) {
 		super(props);
 
@@ -39,60 +39,60 @@ class LightsScreen extends React.Component {
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
-					<View style={styles.container}>
-						<TouchableOpacity style={styles.lightsListButtonContainer} onPress={() => this.props.navigation.navigate('LightsList')} activeOpacity={0.5}>
-							<View style={styles.lightsListButton}>
-								<View style={styles.lightsListButtonLeftPart}>
-									<LightsTopIcon style={styles.lightsTopIcon} color={Colors.primaryBrand} size='128'/>
-									<LightsBotIcon style={styles.lightsBopIcon} color={Colors.tertiaryBrand} size='128'/>
-								</View>
-								<View style={styles.lightListButtonRightPart}>
-									<NextIcon style={styles.nextIcon} color={Colors.inverted} size='32'/>
-								</View>
+				<View style={styles.container}>
+					<TouchableOpacity style={styles.lightsListButtonContainer} onPress={() => this.props.navigation.navigate('LightsList')} activeOpacity={0.5}>
+						<View style={styles.lightsListButton}>
+							<View style={styles.lightsListButtonLeftPart}>
+								<LightsTopIcon style={styles.lightsTopIcon} color={Colors.primaryBrand} size='128'/>
+								<LightsBotIcon style={styles.lightsBopIcon} color={Colors.tertiaryBrand} size='128'/>
 							</View>
-						</TouchableOpacity>
-						<View style={styles.switchContainer}>
-							<Switch
-					        	onChange = {value => this.setState({switchValue: value})}
-								value = {this.state.switchValue}
-								thumbTintColor = {Colors.primaryBrand}
-								trackOnColor = {Colors.primaryBrand}
-								trackOffColor = {Colors.inverted}
-								knobOnColor = {Colors.inverted}
-								knobOffColor = {Colors.primaryBrand}
-								knobSize = {28}
-								trackSize = {32}
-								trackStyle = {styles.switchTrackStyle}
-								knobStyle = {styles.switchKnobStyle}
-							/>
+							<View style={styles.lightsListButtonRightPart}>
+								<NextIcon style={styles.nextIcon} color={Colors.inverted} size='32'/>
+							</View>
 						</View>
-						<View style={styles.lightSliderContainer}>
-							<Slider
-								value={this.state.sliderValue}
-								onValueChange={value => this.setState({ sliderValue: value })}
-								animateTransitions={true}
-								animationType='spring'
-								minimumValue={0}
-								maximumValue={100}
-								step={1}
-								trackSizeProp={25}
-								thumbSizeProp={25}
-								maximumTrackTintColor={Colors.inverted}
-								gradientInnerTrack
-								gradientColor={[
-									Colors.inverted,
-									Colors.tertiaryBrand
-								]}
-								showValueIndicator
-								valueIndicatorPosition='top'
-								valueIndicatorTextColor={Colors.tertiaryText}
-								valueIndicatorStyle={styles.lightSliderValueIndicatorStyle}
-								style={styles.lightSlider}
-								thumbTintColor={Colors.inverted}
-								thumbStyle={styles.lightSliderthumbStyle}
-							/>
-						</View>
+					</TouchableOpacity>
+					<View style={styles.switchContainer}>
+						<Switch
+				        	onChange = {value => this.setState({switchValue: value})}
+							value = {this.state.switchValue}
+							thumbTintColor = {Colors.primaryBrand}
+							trackOnColor = {Colors.primaryBrand}
+							trackOffColor = {Colors.inverted}
+							knobOnColor = {Colors.inverted}
+							knobOffColor = {Colors.primaryBrand}
+							knobSize = {28}
+							trackSize = {32}
+							trackStyle = {styles.switchTrackStyle}
+							knobStyle = {styles.switchKnobStyle}
+						/>
 					</View>
+					<View style={styles.lightSliderContainer}>
+						<Slider
+							value={this.state.sliderValue}
+							onValueChange={value => this.setState({ sliderValue: value })}
+							animateTransitions={true}
+							animationType='spring'
+							minimumValue={0}
+							maximumValue={100}
+							step={1}
+							trackSizeProp={25}
+							thumbSizeProp={25}
+							maximumTrackTintColor={Colors.inverted}
+							gradientInnerTrack
+							gradientColor={[
+								Colors.inverted,
+								Colors.tertiaryBrand
+							]}
+							showValueIndicator
+							valueIndicatorPosition='top'
+							valueIndicatorTextColor={Colors.tertiaryText}
+							valueIndicatorStyle={styles.lightSliderValueIndicatorStyle}
+							style={styles.lightSlider}
+							thumbTintColor={Colors.inverted}
+							thumbStyle={styles.lightSliderthumbStyle}
+						/>
+					</View>
+				</View>
 			</SafeAreaView>
 		);
 	}
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
 		top: -100,
 		left: 3,
 	},
-	lightListButtonRightPart: {
+	lightsListButtonRightPart: {
 		backgroundColor: Colors.primaryBrand,
 		width: 40,
 		height: 180,
