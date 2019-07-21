@@ -180,7 +180,7 @@ class LoginScreen extends React.Component {
 
 	render() {
 
-		let TouchablePlatformSpecific = Platform.OS === 'ios' ? TouchableHighlight : TouchableNativeFeedback;
+		let TouchablePlatformSpecific = Platform.OS === 'ios' ? TouchableHighlight : TouchableHighlight;
 
 		return (
 			<KeyboardShift>
