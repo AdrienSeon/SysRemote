@@ -229,7 +229,7 @@ class LoginScreen extends React.Component {
 								</View>
 							</TouchablePlatformSpecific>
 							<Text style={styles.noAccount}>Pas encore de compte ?</Text>
-							<TouchableOpacity>
+							<TouchableOpacity activeOpacity={0.5}>
 								<Text style={styles.contactBuildingManager}>Contactez votre gestionnaire</Text>
 							</TouchableOpacity>
 						</View>
