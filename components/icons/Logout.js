@@ -11,7 +11,7 @@ class Logout extends React.Component {
 	render() {
 		return (
 			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
-				<Svg width={this.props.size} height={this.props.size} fill="none">
+				<Svg width={this.props.size} height={this.props.size} viewBox="0 0 22 22" fill="none">
 					<Path
 						d="M7 7.547l-3.5 3.5m0 0l3.5 3.5m-3.5-3.5H14"
 						stroke={this.props.color}
