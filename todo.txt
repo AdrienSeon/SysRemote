@@ -3,3 +3,4 @@ Bugs :
 - TouchablePlatformSpecific sur tous les icons
 - animate switchnavigator https://reactnavigation.org/docs/en/animated-switch-navigator.html
 - bug circular slider quadn on change de vue
+- zone cliquable big button
