@@ -31,6 +31,7 @@ async function loadResourcesAsync() {
     Asset.loadAsync([
       require('./assets/images/robot-dev.png'),
       require('./assets/images/robot-prod.png'),
+      require('./assets/images/building.png'),
     ]),
     Font.loadAsync({
       'OpenSans': require('./assets/fonts/OpenSans-Regular.ttf'),
