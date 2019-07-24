@@ -4,3 +4,5 @@ Bugs :
 - animate switchnavigator https://reactnavigation.org/docs/en/animated-switch-navigator.html
 - bug circular slider quadn on change de vue
 - zone cliquable big button
+- pas des checkbox poru les stores mais des radio button
+- flatlist offi a tester pluto que native base
