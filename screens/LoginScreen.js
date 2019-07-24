@@ -181,11 +181,12 @@ class LoginScreen extends React.Component {
 	render() {
 
 		let TouchablePlatformSpecific = Platform.OS === 'ios' ? TouchableHighlight : TouchableHighlight;
+		const background = require('../assets/images/building.png');
 
 		return (
 			<KeyboardShift>
 				{() => (
-					<ImageBackground style={styles.backgroundImage}source={require('../assets/images/building.png')}>
+					<ImageBackground style={styles.backgroundImage} source={background}>
 						<View style={styles.titleContainer}>
 							<Text style={styles.appName}>{AppConfig.appName}</Text>
 							<Text style={styles.buildingName}>{AppConfig.buildingName}</Text>
