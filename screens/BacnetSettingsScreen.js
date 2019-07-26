@@ -5,6 +5,7 @@ import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import BacnetSettingsRow from '../components/BacnetSettingsRow';
+import KeyboardShift from '../components/KeyboardShift';
 
 class BacnetSettingsScreen extends Component {
 	constructor(props) {
@@ -154,93 +155,102 @@ class BacnetSettingsScreen extends Component {
 
 	render() {
 		return (
-			<SafeAreaView style={styles.safearea}>
-				<ScrollView style={styles.container}>
-					<List style={styles.listContainer}>
-						<ListItem itemHeader first style={styles.listHeader}>
-							<Text>CVC</Text>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.outsideTemperature}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.outsideHumidity}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.outsideCO2}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.roomTemperature}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.roomHumidity}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.roomCO2}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.roomSetpoint}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.roomSetpointRange}/>
-						</ListItem>
-						<ListItem style={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.fanspeed}/>
-						</ListItem>
-						<ListItem itemHeader style={styles.listHeader}>
-							<Text>LUMINAIRES</Text>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.LightsValue}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.Light1Value}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.Light2Value}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.Light3Value}/>
-						</ListItem>
-						<ListItem last tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.Light4Value}/>
-						</ListItem>
-						<ListItem itemHeader style={styles.listHeader}>
-							<Text>STORES</Text>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blindsPosition}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind1Position}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind2Position}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind3Position}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind4Position}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blindsRotation}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind1Rotation}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind2Rotation}/>
-						</ListItem>
-						<ListItem tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind3Rotation}/>
-						</ListItem>
-						<ListItem last tyle={styles.rowContainer}>
-							<BacnetSettingsRow point={this.state.blind4Rotation}/>
-						</ListItem>
-					</List>
-				</ScrollView>
-			</SafeAreaView>
+			<KeyboardShift
+				animDuringKeyboardDisplayIOS={false}
+				keyboardShowDisplayDuration={200}
+				keyboardHideDisplayDuration={200}
+				keyboardDisplayTopSpacing={Platform.OS === 'ios' ? 13 : 15}
+			>
+				{() => (
+					<SafeAreaView style={styles.safearea}>
+						<ScrollView style={styles.container}>
+							<List style={styles.listContainer}>
+								<ListItem itemHeader first style={styles.listHeader}>
+									<Text>CVC</Text>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.outsideTemperature}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.outsideHumidity}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.outsideCO2}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.roomTemperature}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.roomHumidity}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.roomCO2}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.roomSetpoint}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.roomSetpointRange}/>
+								</ListItem>
+								<ListItem style={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.fanspeed}/>
+								</ListItem>
+								<ListItem itemHeader style={styles.listHeader}>
+									<Text>LUMINAIRES</Text>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.LightsValue}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.Light1Value}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.Light2Value}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.Light3Value}/>
+								</ListItem>
+								<ListItem last tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.Light4Value}/>
+								</ListItem>
+								<ListItem itemHeader style={styles.listHeader}>
+									<Text>STORES</Text>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blindsPosition}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind1Position}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind2Position}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind3Position}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind4Position}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blindsRotation}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind1Rotation}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind2Rotation}/>
+								</ListItem>
+								<ListItem tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind3Rotation}/>
+								</ListItem>
+								<ListItem last tyle={styles.rowContainer}>
+									<BacnetSettingsRow point={this.state.blind4Rotation}/>
+								</ListItem>
+							</List>
+						</ScrollView>
+					</SafeAreaView>
+				)}
+			</KeyboardShift>
 		);
 	}
 }
