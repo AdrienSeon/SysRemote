@@ -6,3 +6,4 @@ Bugs :
 - zone cliquable big button
 - pas des checkbox poru les stores mais des radio button
 - flatlist offi a tester pluto que native base
+- reverse singleLightCommand slider
