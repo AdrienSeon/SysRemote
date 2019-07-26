@@ -41,7 +41,6 @@ class BlindsOrientationCommand extends Component {
 		const {
 			value,
 			onChange,
-			knobTintColor,
 			trackOnColor,
 			trackOffColor,
 			knobOnColor,
@@ -89,7 +88,6 @@ class BlindsOrientationCommand extends Component {
 BlindsOrientationCommand.proptypes = {
 	value: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
-	knobTintColor: PropTypes.string,
 	trackOnColor: PropTypes.string,
 	trackOffColor: PropTypes.string,
 	knobOnColor: PropTypes.string,
@@ -100,7 +98,6 @@ BlindsOrientationCommand.proptypes = {
 
 BlindsOrientationCommand.defaultProps = {
 	value: false,
-	knobTintColor: 'white',
 	trackOnColor: 'limegreen',
 	trackOffColor: 'gray',
 	knobOnColor: 'white',
