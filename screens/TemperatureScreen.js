@@ -33,7 +33,8 @@ class TemperatureScreen extends Component {
 	});
 
 	componentDidMount() {
-		//this.setState({thermostatSliderValue: this.setpointToSliderValue(this.state.setpoint)});
+		this.setState({thermostatSliderValue: this.setpointToSliderValue(this.state.setpoint)});
+
 /*		this._navListener = this.props.navigation.addListener('didFocus', () => {
 			StatusBar.setBarStyle('light-content');
 			if(Platform.OS === "android"){
@@ -65,6 +66,8 @@ class TemperatureScreen extends Component {
 	}
 
 	render() {
+		let colorScale = LinearScale([this.state.minSetpoint, this.state.maxSetpoint], [222, 359]);
+
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
@@ -96,13 +99,19 @@ class TemperatureScreen extends Component {
 							startCoord={this.state.startCoord}
 							maxCoord={this.state.maxCoord}
 							backgroundColor={Colors.appBackground}
-							onValueChange={this.handleThermostatSliderValueChange}
+							onValueChange={value => this.handleThermostatSliderValueChange(value)}
 						/>
 						<View style={styles.verticalDash}></View>
 						<View style={styles.horizontalDash}></View>
-						<View style={styles.middleThermostat}>
+						<View
+							style={StyleSheet.flatten([
+								styles.middleThermostat,
+								{
+									shadowColor: `hsla(${colorScale(this.state.setpoint)}, 40%, 91%, 0.8)`,
+								}
+							])}
+						>
 							<Text style={styles.setpointValue}>{this.state.setpoint + "°C"}</Text>
-							{/*<Text style={styles.setpointValue}>{this.state.thermostatSliderValue + "rad"}</Text>*/}
 						</View>
 					</View>
 					<View style={styles.fanSpeedContainer}>
@@ -226,6 +235,7 @@ const styles = StyleSheet.create({
 		position: 'relative',
 		top: 0,
 		left: 0,
+		zIndex: 1,
 	},
 	middleThermostat: {
 		backgroundColor: Colors.inverted,
