@@ -13,7 +13,7 @@ class LightsScreen extends Component {
 		super(props);
 
 		this.state = {
-			switchValue: false,
+			switchValue: true,
 			sliderValue: 80
 		}
 	}
@@ -35,7 +35,27 @@ class LightsScreen extends Component {
 	componentWillUnmount() {
 		//this._navListener.remove();
 	}
-//
+
+	handleSliderValue(value) {
+		this.setState({ sliderValue: value })
+
+		if (value > 0) {
+			this.setState({ switchValue: true })
+		} else {
+			this.setState({ switchValue: false })
+		}
+	}
+
+	handleSwitchValue(value) {
+		this.setState({switchValue: value})
+
+		if (value ) {
+			this.setState({ sliderValue: 100 })
+		} else {
+			this.setState({ sliderValue: 0 })
+		}
+	}
+
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
@@ -44,7 +64,15 @@ class LightsScreen extends Component {
 						<View style={styles.lightsListButton}>
 							<View style={styles.lightsListButtonLeftPart}>
 								<LightsTopIcon style={styles.lightsTopIcon} color={Colors.primaryBrand} size='128'/>
-								<LightsBotIcon style={styles.lightsBopIcon} color={Colors.tertiaryBrand} size='128'/>
+								<LightsBotIcon 
+									style={StyleSheet.flatten([
+										styles.lightsBopIcon,
+										{
+											shadowColor: `rgba(255, 221, 136, ${this.state.sliderValue / 100})`,
+										}
+									])}
+									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
+									size='128'/>
 							</View>
 							<View style={styles.lightsListButtonRightPart}>
 								<NextIcon style={styles.nextIcon} color={Colors.inverted} size='32'/>
@@ -53,9 +81,8 @@ class LightsScreen extends Component {
 					</TouchableOpacity>
 					<View style={styles.switchContainer}>
 						<Switch
-				        	onChange = {value => this.setState({switchValue: value})}
+				        	onChange = {(value) => this.handleSwitchValue(value)}
 							value = {this.state.switchValue}
-							thumbTintColor = {Colors.primaryBrand}
 							trackOnColor = {Colors.primaryBrand}
 							trackOffColor = {Colors.inverted}
 							knobOnColor = {Colors.inverted}
@@ -69,9 +96,9 @@ class LightsScreen extends Component {
 					<View style={styles.lightSliderContainer}>
 						<Slider
 							value={this.state.sliderValue}
-							onValueChange={value => this.setState({ sliderValue: value })}
+							onValueChange={(value) => this.handleSliderValue(value)}
 							animateTransitions={true}
-							animationType='spring'
+							animationType='timing'
 							minimumValue={0}
 							maximumValue={100}
 							step={1}
