@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {Platform, View, Text, StyleSheet, StatusBar, TextInput, Button, TouchableHighlight, TouchableOpacity, TouchableNativeFeedback, ImageBackground, AsyncStorage } from 'react-native';
 import Colors from '../constants/Colors';
 import AppConfig from '../constants/AppConfig';
@@ -6,6 +6,121 @@ import UserIcon from '../components/icons/User';
 import LockIcon from '../components/icons/Lock';
 import { LinearGradient } from 'expo-linear-gradient';
 import KeyboardShift from '../components/KeyboardShift';
+
+class LoginScreen extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			email: '',
+			password: '',
+		};
+	};
+
+	static navigationOptions = {
+		header: null,
+	};
+
+	componentDidMount() {
+/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
+			StatusBar.setBarStyle('light-content');
+			if(Platform.OS === "android"){
+				StatusBar.setBackgroundColor('#6a51ae');
+			}
+		});*/
+	}
+
+	componentWillUnmount() {
+		//this._navListener.remove();
+	}
+
+	handleEmailChange = (email: string) => {
+		this.setState({ email: email});
+	};
+
+	handleEPasswordChange = (password: string) => {
+		this.setState({ password: password});
+	};
+
+	handleLoginPress = () => {
+		this.LoginAsync;
+	};
+
+	LoginAsync = async () => {
+		await AsyncStorage.setItem('userToken', 'abc');
+		this.props.navigation.navigate('Temperature');
+	};
+
+	render() {
+
+		let TouchablePlatformSpecific = Platform.OS === 'ios' ? TouchableHighlight : TouchableHighlight;
+		const background = require('../assets/images/building.png');
+
+		return (
+			<KeyboardShift
+				animDuringKeyboardDisplayIOS={false}
+				keyboardShowDisplayDuration={200}
+				keyboardHideDisplayDuration={200}
+				keyboardDisplayTopSpacing={Platform.OS === 'ios' ? 110 : 120}
+			>
+				{() => (
+					<ImageBackground style={styles.backgroundImage} source={background}>
+						<View style={styles.titleContainer}>
+							<Text style={styles.appName}>{AppConfig.appName}</Text>
+							<Text style={styles.buildingName}>{AppConfig.buildingName}</Text>
+						</View>
+						<View style={styles.loginContainer}>
+							<Text style={styles.welcomeMessage}>Bienvenue ! Connectez-vous pour accéder à la gestion de votre espace.</Text>
+							<View style={styles.emailInputContainer}>
+								<TextInput
+									style={styles.emailInput}
+									onChangeText={this.handleEmailChange}
+									ref={(input)=>this.emailInput = input }
+									onSubmitEditing={() => this.passwordInput.focus()}
+									blurOnSubmit={false}
+									keyboardType='email-address'
+									autoCorrect={false}
+									textContentType='emailAddress'
+									returnKeyType='next'
+									placeholder='Email'
+									clearButtonMode='while-editing'
+								/>
+								<UserIcon style={styles.emailInputIcon} color={Colors.secondaryBrand} size='15'/>
+							</View>
+							<View style={styles.passwordInputContainer}>
+								<TextInput 
+									style={styles.passwordInput}
+									onChangeText={this.handlePasswordChange}
+									ref={(input)=>this.passwordInput = input }
+									placeholder='Mot de passe'
+									autoCorrect={false}
+									textContentType='password'
+									returnKeyType='done'
+									secureTextEntry={true}
+									clearButtonMode='while-editing'
+								/>
+								<LockIcon style={styles.passwordInputIcon} color={Colors.secondaryBrand} size='15'/>
+							</View>
+							<TouchablePlatformSpecific style={styles.loginBtnContainer} underlayColor={Colors.appBackground} onPress={this.LoginAsync}>
+								<View>
+									<LinearGradient style={styles.loginBtnGradient} colors={[Colors.primaryBrandGradientDark, Colors.primaryBrandGradientLight]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0}} >
+										<Text style={styles.loginBtn}>Se connecter</Text>
+									</LinearGradient>
+								</View>
+							</TouchablePlatformSpecific>
+							<Text style={styles.noAccount}>Pas encore de compte ?</Text>
+							<TouchableOpacity activeOpacity={0.5}>
+								<View>
+									<Text style={styles.contactBuildingManager}>Contactez votre gestionnaire</Text>
+								</View>
+							</TouchableOpacity>
+						</View>
+					</ImageBackground>
+				)}
+			</KeyboardShift>
+		);
+	}
+}
 
 const styles = StyleSheet.create({
 	container: {
@@ -133,112 +248,5 @@ const styles = StyleSheet.create({
 		color: Colors.secondaryText,
 	},
 });
-
-class LoginScreen extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			email: '',
-			password: '',
-		};
-	};
-
-	static navigationOptions = {
-		header: null,
-	};
-
-	componentDidMount() {
-/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
-			StatusBar.setBarStyle('light-content');
-			if(Platform.OS === "android"){
-				StatusBar.setBackgroundColor('#6a51ae');
-			}
-		});*/
-	}
-
-	componentWillUnmount() {
-		//this._navListener.remove();
-	}
-
-	handleEmailChange = (email: string) => {
-		this.setState({ email: email});
-	};
-
-	handleEPasswordChange = (password: string) => {
-		this.setState({ password: password});
-	};
-
-	handleLoginPress = () => {
-		this.LoginAsync;
-	};
-
-	LoginAsync = async () => {
-		await AsyncStorage.setItem('userToken', 'abc');
-		this.props.navigation.navigate('Temperature');
-	};
-
-	render() {
-
-		let TouchablePlatformSpecific = Platform.OS === 'ios' ? TouchableHighlight : TouchableHighlight;
-		const background = require('../assets/images/building.png');
-
-		return (
-			<KeyboardShift>
-				{() => (
-					<ImageBackground style={styles.backgroundImage} source={background}>
-						<View style={styles.titleContainer}>
-							<Text style={styles.appName}>{AppConfig.appName}</Text>
-							<Text style={styles.buildingName}>{AppConfig.buildingName}</Text>
-						</View>
-						<View style={styles.loginContainer}>
-							<Text style={styles.welcomeMessage}>Bienvenue ! Connectez-vous pour accéder à la gestion de votre espace.</Text>
-							<View style={styles.emailInputContainer}>
-								<TextInput
-									style={styles.emailInput}
-									onChangeText={this.handleEmailChange}
-									ref={(input)=>this.emailInput = input }
-									onEndEditing ={() => this.passwordInput.focus()}
-									keyboardType='email-address'
-									autoCorrect={false}
-									textContentType='emailAddress'
-									returnKeyType='next'
-									placeholder='Email'
-									clearButtonMode='while-editing'
-								/>
-								<UserIcon style={styles.emailInputIcon} color={Colors.secondaryBrand} size='15'/>
-							</View>
-							<View style={styles.passwordInputContainer}>
-								<TextInput 
-									style={styles.passwordInput}
-									onChangeText={this.handlePasswordChange}
-									ref={(input)=>this.passwordInput = input }
-									placeholder='Mot de passe'
-									autoCorrect={false}
-									textContentType='password'
-									returnKeyType='done'
-									secureTextEntry={true}
-									clearButtonMode='while-editing'
-								/>
-								<LockIcon style={styles.passwordInputIcon} color={Colors.secondaryBrand} size='15'/>
-							</View>
-							<TouchablePlatformSpecific style={styles.loginBtnContainer} underlayColor={Colors.appBackground} onPress={this.LoginAsync}>
-							<View>
-								<LinearGradient style={styles.loginBtnGradient} colors={[Colors.primaryBrandGradientDark, Colors.primaryBrandGradientLight]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0}} >
-									<Text style={styles.loginBtn}>Se connecter</Text>
-								</LinearGradient>
-								</View>
-							</TouchablePlatformSpecific>
-							<Text style={styles.noAccount}>Pas encore de compte ?</Text>
-							<TouchableOpacity activeOpacity={0.5}>
-								<Text style={styles.contactBuildingManager}>Contactez votre gestionnaire</Text>
-							</TouchableOpacity>
-						</View>
-					</ImageBackground>
-				)}
-			</KeyboardShift>
-		);
-	}
-}
 
 export default LoginScreen;
