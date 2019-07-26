@@ -5,6 +5,7 @@ export default {
     primaryBrand33: "rgba(71, 138, 247, 0.33)",
     primaryBrand50: "rgba(71, 138, 247, 0.5)",
     primaryBrand66: "rgba(71, 138, 247, 0.66)",
+    primaryBrandDark: "rgb(39, 108, 211)",
     secondaryBrandColor33: "rgba(195, 205, 223, 0.33)",
     secondaryBrandColor50: "rgba(195, 205, 223, 0.5)",
     secondaryBrandColor50: "rgba(195, 205, 223, 0.66)",
