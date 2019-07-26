@@ -10,7 +10,6 @@ import Svg, {
 	Stop,
 	Rect
 } from "react-native-svg";
-import LinearScale from "linear-scale"
 
 class CircularSlider extends Component {
 	constructor(props) {
@@ -22,6 +21,11 @@ class CircularSlider extends Component {
 			yCenter: 0,
 			knobRadius: this.props.knobRadius,
 		};
+
+		this.polarToCartesian = this.polarToCartesian.bind(this)
+		this.cartesianToPolar = this.cartesianToPolar.bind(this)
+		this.onLayout = this.onLayout.bind(this)
+		    this.handlePanResponderMove = this.handlePanResponderMove.bind(this)
 	}
 
 	componentWillMount() {
@@ -30,28 +34,28 @@ class CircularSlider extends Component {
 			onStartShouldSetPanResponderCapture: (event, gestureState) => true,
 			onMoveShouldSetPanResponder: (event, gestureState) => true,
 			onMoveShouldSetPanResponderCapture: (event, gestureState) => true,
+			onPanResponderMove: this.handlePanResponderMove
 /*			onPanResponderGrant: (evt, gestureState) => {
 				this.setState({knobRadius: this.state.knobRadius + 3});
 			},
 			onPanResponderRelease: (e, { vx, vy }) => {
 				this.setState({knobRadius:  this.state.knobRadius - 3});
 			},*/
-			onPanResponderMove: (event, gestureState) => {
-				let xOrigin = this.state.xCenter - (this.props.dialRadius + this.state.knobRadius);
-				let yOrigin = this.state.yCenter - (this.props.dialRadius + this.state.knobRadius);
-				let a = this.cartesianToPolar(gestureState.moveX - xOrigin, gestureState.moveY - yOrigin);
-
-				if (a < this.props.startCoord) {
-					this.setState({angle: this.props.startCoord});
-				} else if (a > this.props.maxCoord) {
-					this.setState({angle: this.props.maxCoord});
-				} else {
-					this.setState({angle: a});
-				}
-
-				this.props.onValueChange(this.state.angle)
-			}
 		});
+	}
+
+	handlePanResponderMove({nativeEvent:{locationX,locationY}}) {
+		let angle = this.cartesianToPolar(locationX,locationY)
+
+		if (angle < this.props.startCoord) {
+			this.setState({angle: this.props.startCoord});
+		} else if (angle > this.props.maxCoord) {
+			this.setState({angle: this.props.maxCoord});
+		} else {
+			this.setState({angle});
+		}
+
+		this.props.onValueChange(this.state.angle)
 	}
 
 	polarToCartesian(angle) {
@@ -95,8 +99,7 @@ class CircularSlider extends Component {
 		let dialRadius = this.props.dialRadius;
 		let startCoord = this.polarToCartesian(this.props.startCoord);
 		let maxCoord = this.polarToCartesian(this.props.maxCoord);
-		let endCoord = this.polarToCartesian(this.state.angle);
-		let colorScale = LinearScale([70, 290], [222, 359]);
+		let endCoord = this.polarToCartesian(this.props.value);
 
 		return (
 			<View>
@@ -111,6 +114,7 @@ class CircularSlider extends Component {
 						  <Stop offset="70%" stopColor={this.props.backgroundColor} stopOpacity="1"/>
 					  </LinearGradient>
 					</Defs>
+
 {/*					<Circle
 					  r={dialRadius}
 					  cx={width / 2}
@@ -150,7 +154,6 @@ class CircularSlider extends Component {
 						cy={knobRadius}
 						stroke='#E2E8F2'
 						strokeWidth={1}
-						//fill={`hsl(${colorScale(this.state.angle)}, 40%, 91%)`}
 						fill={this.props.knobColor}
 						{...this._panResponder.panHandlers}
 					/>
