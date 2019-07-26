@@ -320,10 +320,10 @@ class Slider extends Component {
 		};
 
 		if (this.props.orientation === 'vertical') {
-			minimumTrackStyle.height = Animated.add(thumbStart, thumbSize.height / 2);
+			minimumTrackStyle.height = Animated.add(thumbStart, thumbSize.height);
 			minimumTrackStyle.marginLeft = -trackSize.width;
 		} else {
-			minimumTrackStyle.width = Animated.add(thumbStart, thumbSize.width / 2);
+			minimumTrackStyle.width = Animated.add(thumbStart, thumbSize.width);
 			minimumTrackStyle.marginTop = -trackSize.height;
 		}
 		return minimumTrackStyle;
