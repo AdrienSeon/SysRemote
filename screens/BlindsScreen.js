@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Platform, SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
-import BlindsIcon from '../components/icons/Blinds';
+import BlindsIconAnimated from '../components/icons/BlindsAnimated';
 import BlindsLeftIcon from '../components/icons/BlindsLeft';
 import BlindsMiddleIcon from '../components/icons/BlindsMiddle';
 import BlindsRightIcon from '../components/icons/BlindsRight';
@@ -49,7 +49,16 @@ class BlindsScreen extends Component {
 					<TouchableOpacity style={styles.blindsListButtonContainer} onPress={() => this.props.navigation.navigate('BlindsList')} activeOpacity={0.5}>
 						<View style={styles.blindsListButton}>
 							<View style={styles.blindsListButtonLeftPart}>
-								<BlindsIcon style={styles.blindsListButtonBlindsIcon} color={Colors.primaryBrand} size='128'/>
+								<BlindsIconAnimated
+									style={styles.blindsListButtonBlindsIcon}
+									color={Colors.primaryBrand}
+									size='128'
+									opacityRow2={this.state.sliderValue > 16.66 ? 2 : 0}
+									opacityRow3={this.state.sliderValue > 16.66 * 3 ? 1 : 0}
+									opacityRow4={this.state.sliderValue > 16.66 * 4 ? 1 : 0}
+									opacityRow5={this.state.sliderValue > 16.66 * 5 ? 1 : 0}
+									opacityRow6={this.state.sliderValue > 16.66 * 6 ? 1 : 0}
+								/>
 							</View>
 							<View style={styles.blindsListButtonRightPart}>
 								<NextIcon style={styles.nextIcon} color={Colors.inverted} size={32}/>
