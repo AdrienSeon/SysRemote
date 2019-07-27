@@ -6,30 +6,31 @@ import SettingsIcon from '../components/icons/Settings';
 import Colors from '../constants/Colors';
 
 const SettingsStackNavigator = createStackNavigator(
-{
-	Settings: {
-		screen: SettingsScreen,
-	},
-	BacnetSettings: {
-		screen: BacnetSettingsScreen,
-	}
-},
-{
-	initialRouteName: 'Settings',
-	defaultNavigationOptions: {
-		headerTintColor: Colors.primaryText,
-		headerTitleStyle: {
-			fontFamily: "OpenSans-Semibold",
-			fontSize: 18,
+	{
+		Settings: {
+			screen: SettingsScreen
 		},
-		headerBackTitle: null,
-		headerTruncatedBackTitle: null,
+		BacnetSettings: {
+			screen: BacnetSettingsScreen
+		}
+	},
+	{
+		initialRouteName: 'Settings',
+		defaultNavigationOptions: {
+			headerTintColor: Colors.primaryText,
+			headerTitleStyle: {
+				fontFamily: 'OpenSans-Semibold',
+				fontSize: 18
+			},
+			headerBackTitle: null,
+			headerTruncatedBackTitle: null
+		}
 	}
-});
+);
 
 SettingsStackNavigator.navigationOptions = {
 	drawerLabel: 'Paramètres',
-	drawerIcon: <SettingsIcon color={Colors.inverted} size='21'/>,
+	drawerIcon: <SettingsIcon color={Colors.inverted} size="21" />
 };
 
 SettingsStackNavigator.path = '';

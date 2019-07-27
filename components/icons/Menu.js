@@ -1,24 +1,16 @@
-import React from 'react'
-import {TouchableHighlight} from 'react-native';
+import React from 'react';
+import { TouchableHighlight } from 'react-native';
+import Svg, { Rect } from 'react-native-svg';
 import Colors from '../../constants/Colors';
-import Svg, { Rect } from 'react-native-svg'
 
-class Menu extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
-	render() {
-		return (
-			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
-				<Svg width={this.props.size} height={this.props.size} viewBox="0 0 32 32" fill="none">
-					<Rect x={3} y={4} width={15} height={2.573} rx={1} fill={this.props.color} />
-					<Rect x={3} y={14.937} width={25} height={2.573} rx={1} fill={this.props.color} />
-					<Rect x={3} y={25.873} width={21.25} height={2.573} rx={1} fill={this.props.color} />
-				</Svg>
-			</TouchableHighlight>
-		);
-	}
-}
+const Menu = (props) => (
+	<TouchableHighlight underlayColor={Colors.appBackground} {...props}>
+		<Svg width={props.size} height={props.size} viewBox="0 0 32 32" fill="none">
+			<Rect x={3} y={4} width={15} height={2.573} rx={1} fill={props.color} />
+			<Rect x={3} y={14.937} width={25} height={2.573} rx={1} fill={props.color} />
+			<Rect x={3} y={25.873} width={21.25} height={2.573} rx={1} fill={props.color} />
+		</Svg>
+	</TouchableHighlight>
+);
 
 export default Menu;

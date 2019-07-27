@@ -8,22 +8,18 @@ import Colors from '../constants/Colors';
 const DEFAULT_ANIMATION_CONFIGS = {
 	spring: {
 		friction: 7,
-		tension: 100,
+		tension: 100
 	},
 	timing: {
 		duration: 150,
 		easing: Easing.inOut(Easing.ease),
-		delay: 0,
-	},
+		delay: 0
+	}
 };
 
 const getBoundedValue = ({ value, maximumValue, minimumValue }) =>
 	// eslint-disable-next-line no-nested-ternary
-	value > maximumValue
-		? maximumValue
-		: value < minimumValue
-		? minimumValue
-		: value;
+	value > maximumValue ? maximumValue : value < minimumValue ? minimumValue : value;
 
 class Rect {
 	constructor(x, y, width, height) {
@@ -34,41 +30,41 @@ class Rect {
 	}
 
 	containsPoint(x, y) {
-		return (
-			x >= this.x &&
-			y >= this.y &&
-			x <= this.x + this.width &&
-			y <= this.y + this.height
-		);
+		return x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height;
 	}
 }
 
 class Slider extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			containerSize: { width: 0, height: 0 },
 			trackSize: { width: 0, height: 0 },
 			thumbSize: { width: 0, height: 0 },
 			allMeasured: false,
-			value: new Animated.Value(getBoundedValue(props)),
+			value: new Animated.Value(getBoundedValue(props))
 		};
 
 		this.panResponder = PanResponder.create({
-			onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder.bind(
-				this
-			),
-			onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder.bind(
-				this
-			),
+			onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder.bind(this),
+			onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder.bind(this),
 			onPanResponderGrant: this.handlePanResponderGrant.bind(this),
 			onPanResponderMove: this.handlePanResponderMove.bind(this),
 			onPanResponderRelease: this.handlePanResponderEnd.bind(this),
-			onPanResponderTerminationRequest: this.handlePanResponderRequestEnd.bind(
-				this
-			),
-			onPanResponderTerminate: this.handlePanResponderEnd.bind(this),
+			onPanResponderTerminationRequest: this.handlePanResponderRequestEnd.bind(this),
+			onPanResponderTerminate: this.handlePanResponderEnd.bind(this)
 		});
+	}
+
+	componentDidMount() {
+		const newValue = getBoundedValue(this.props);
+
+		if (this.props.animateTransitions) {
+			this.setCurrentValueAnimated(newValue);
+		} else {
+			this.setCurrentValue(newValue);
+		}
 	}
 
 	componentDidUpdate(prevProps) {
@@ -94,11 +90,195 @@ class Slider extends Component {
 			DEFAULT_ANIMATION_CONFIGS[animationType],
 			this.props.animationConfig,
 			{
-				toValue: value,
+				toValue: value
 			}
 		);
 
 		Animated[animationType](this.state.value, animationConfig).start();
+	}
+
+	getTouchOverflowStyle() {
+		const { width, height } = this.getTouchOverflowSize();
+
+		const touchOverflowStyle = {};
+		if (width !== undefined && height !== undefined) {
+			const verticalMargin = -height / 2;
+			touchOverflowStyle.marginTop = verticalMargin;
+			touchOverflowStyle.marginBottom = verticalMargin;
+
+			const horizontalMargin = -width / 2;
+			touchOverflowStyle.marginLeft = horizontalMargin;
+			touchOverflowStyle.marginRight = horizontalMargin;
+		}
+
+		if (this.props.debugTouchArea === true) {
+			touchOverflowStyle.backgroundColor = 'orange';
+			touchOverflowStyle.opacity = 0.5;
+		}
+
+		return touchOverflowStyle;
+	}
+
+	getTouchOverflowSize() {
+		const { thumbSize, allMeasured, containerSize } = this.state;
+		const { thumbTouchSize } = this.props;
+
+		const size = {};
+		if (allMeasured === true) {
+			size.width = Math.max(0, thumbTouchSize.width - thumbSize.width);
+			size.height = Math.max(0, thumbTouchSize.height - containerSize.height);
+		}
+
+		return size;
+	}
+
+	getValue(gestureState) {
+		const length = this.state.containerSize.width - this.state.thumbSize.width;
+		const thumbLeft =
+			this._previousLeft +
+			(this.props.orientation === 'vertical' ? gestureState.dy : gestureState.dx);
+
+		const ratio = thumbLeft / length;
+
+		if (this.props.step) {
+			return Math.max(
+				this.props.minimumValue,
+				Math.min(
+					this.props.maximumValue,
+					this.props.minimumValue +
+						Math.round(
+							(ratio * (this.props.maximumValue - this.props.minimumValue)) /
+								this.props.step
+						) *
+							this.props.step
+				)
+			);
+		}
+		return Math.max(
+			this.props.minimumValue,
+			Math.min(
+				this.props.maximumValue,
+				ratio * (this.props.maximumValue - this.props.minimumValue) +
+					this.props.minimumValue
+			)
+		);
+	}
+
+	getCurrentValue() {
+		return this.state.value.__getValue();
+	}
+
+	getRatio(value) {
+		return (
+			(value - this.props.minimumValue) / (this.props.maximumValue - this.props.minimumValue)
+		);
+	}
+
+	getThumbLeft(value) {
+		const ratio = this.getRatio(value);
+		return ratio * (this.state.containerSize.width - this.state.thumbSize.width);
+	}
+
+	getThumbTouchRect() {
+		const { thumbSize, containerSize } = this.state;
+		const { thumbTouchSize } = this.props;
+		const touchOverflowSize = this.getTouchOverflowSize();
+
+		if (this.props.orientation === 'vertical') {
+			return new Rect(
+				touchOverflowSize.height / 2 + (containerSize.height - thumbTouchSize.height) / 2,
+				touchOverflowSize.width / 2 +
+					this.getThumbLeft(this.getCurrentValue()) +
+					(thumbSize.width - thumbTouchSize.width) / 2,
+				thumbTouchSize.width,
+				thumbTouchSize.height
+			);
+		}
+		return new Rect(
+			touchOverflowSize.width / 2 +
+				this.getThumbLeft(this.getCurrentValue()) +
+				(thumbSize.width - thumbTouchSize.width) / 2,
+			touchOverflowSize.height / 2 + (containerSize.height - thumbTouchSize.height) / 2,
+			thumbTouchSize.width,
+			thumbTouchSize.height
+		);
+	}
+
+	getMinimumTrackStyles(thumbStart) {
+		const { thumbSize, trackSize } = this.state;
+		const minimumTrackStyle = {
+			position: 'absolute'
+		};
+
+		if (this.props.orientation === 'vertical') {
+			minimumTrackStyle.height = Animated.add(thumbStart, thumbSize.height);
+			minimumTrackStyle.marginLeft = -trackSize.width;
+		} else {
+			minimumTrackStyle.width = Animated.add(thumbStart, thumbSize.width);
+			minimumTrackStyle.marginTop = -trackSize.height;
+		}
+		return minimumTrackStyle;
+	}
+
+	getThumbPositionStyles(thumbStart) {
+		if (this.props.orientation === 'vertical') {
+			return [
+				{
+					translateX: -(this.state.trackSize.height + this.state.thumbSize.height) / 2
+				},
+				{ translateY: thumbStart }
+			];
+		}
+		return [
+			{ translateX: thumbStart },
+			{
+				translateY: -(this.state.trackSize.height + this.state.thumbSize.height) / 2
+			}
+		];
+	}
+
+	measureContainer = (x) => {
+		this.handleMeasure('containerSize', x);
+	};
+
+	measureTrack = (x) => {
+		this.handleMeasure('trackSize', x);
+	};
+
+	measureThumb = (x) => {
+		this.handleMeasure('thumbSize', x);
+	};
+
+	handleMeasure(name, x) {
+		const { width: layoutWidth, height: layoutHeight } = x.nativeEvent.layout;
+		const width = this.props.orientation === 'vertical' ? layoutHeight : layoutWidth;
+		const height = this.props.orientation === 'vertical' ? layoutWidth : layoutHeight;
+		const size = { width, height };
+		const storeName = `_${name}`;
+		const currentSize = this[storeName];
+		if (currentSize && width === currentSize.width && height === currentSize.height) {
+			return;
+		}
+		this[storeName] = size;
+
+		if (this._containerSize && this._trackSize && this._thumbSize) {
+			this.setState({
+				containerSize: this._containerSize,
+				trackSize: this._trackSize,
+				thumbSize: this._thumbSize,
+				allMeasured: true
+			});
+		}
+	}
+
+	handleStartShouldSetPanResponder(e /* gestureState: Object */) {
+		// Should we become active when the user presses down on the thumb?
+		return this.thumbHitTest(e);
+	}
+
+	thumbHitTest({ nativeEvent }) {
+		const thumbTouchRect = this.getThumbTouchRect();
+		return thumbTouchRect.containsPoint(nativeEvent.locationX, nativeEvent.locationY);
 	}
 
 	// eslint-disable-next-line class-methods-use-this
@@ -136,170 +316,10 @@ class Slider extends Component {
 		this.fireChangeEvent('onSlidingComplete');
 	}
 
-	thumbHitTest({ nativeEvent }) {
-		const thumbTouchRect = this.getThumbTouchRect();
-		return thumbTouchRect.containsPoint(
-			nativeEvent.locationX,
-			nativeEvent.locationY
-		);
-	}
-
-	handleStartShouldSetPanResponder(e /* gestureState: Object */) {
-		// Should we become active when the user presses down on the thumb?
-		return this.thumbHitTest(e);
-	}
-
 	fireChangeEvent(event) {
 		if (this.props[event]) {
 			this.props[event](this.getCurrentValue());
 		}
-	}
-
-	getTouchOverflowSize() {
-		const { thumbSize, allMeasured, containerSize } = this.state;
-		const { thumbTouchSize } = this.props;
-
-		const size = {};
-		if (allMeasured === true) {
-			size.width = Math.max(0, thumbTouchSize.width - thumbSize.width);
-			size.height = Math.max(0, thumbTouchSize.height - containerSize.height);
-		}
-
-		return size;
-	}
-
-	getTouchOverflowStyle() {
-		const { width, height } = this.getTouchOverflowSize();
-
-		const touchOverflowStyle = {};
-		if (width !== undefined && height !== undefined) {
-			const verticalMargin = -height / 2;
-			touchOverflowStyle.marginTop = verticalMargin;
-			touchOverflowStyle.marginBottom = verticalMargin;
-
-			const horizontalMargin = -width / 2;
-			touchOverflowStyle.marginLeft = horizontalMargin;
-			touchOverflowStyle.marginRight = horizontalMargin;
-		}
-
-		if (this.props.debugTouchArea === true) {
-			touchOverflowStyle.backgroundColor = 'orange';
-			touchOverflowStyle.opacity = 0.5;
-		}
-
-		return touchOverflowStyle;
-	}
-
-	handleMeasure(name, x) {
-		const { width: layoutWidth, height: layoutHeight } = x.nativeEvent.layout;
-		const width =
-			this.props.orientation === 'vertical' ? layoutHeight : layoutWidth;
-		const height =
-			this.props.orientation === 'vertical' ? layoutWidth : layoutHeight;
-		const size = { width, height };
-		const storeName = `_${name}`;
-		const currentSize = this[storeName];
-		if (
-			currentSize &&
-			width === currentSize.width &&
-			height === currentSize.height
-		) {
-			return;
-		}
-		this[storeName] = size;
-
-		if (this._containerSize && this._trackSize && this._thumbSize) {
-			this.setState({
-				containerSize: this._containerSize,
-				trackSize: this._trackSize,
-				thumbSize: this._thumbSize,
-				allMeasured: true,
-			});
-		}
-	}
-
-	measureContainer = x => {
-		this.handleMeasure('containerSize', x);
-	};
-
-	measureTrack = x => {
-		this.handleMeasure('trackSize', x);
-	};
-
-	measureThumb = x => {
-		this.handleMeasure('thumbSize', x);
-	};
-
-	getValue(gestureState) {
-		const length = this.state.containerSize.width - this.state.thumbSize.width;
-		const thumbLeft =
-			this._previousLeft +
-			(this.props.orientation === 'vertical'
-				? gestureState.dy
-				: gestureState.dx);
-
-		const ratio = thumbLeft / length;
-
-		if (this.props.step) {
-			return Math.max(
-				this.props.minimumValue,
-				Math.min(
-					this.props.maximumValue,
-					this.props.minimumValue + Math.round((ratio * (this.props.maximumValue - this.props.minimumValue)) /	this.props.step) *	this.props.step
-				)
-			);
-		}
-		return Math.max(
-			this.props.minimumValue,
-			Math.min(
-				this.props.maximumValue,
-				ratio * (this.props.maximumValue - this.props.minimumValue) + this.props.minimumValue
-			)
-		);
-	}
-
-	getCurrentValue() {
-		return this.state.value.__getValue();
-	}
-
-	getRatio(value) {
-		return (
-			(value - this.props.minimumValue) /	(this.props.maximumValue - this.props.minimumValue)
-		);
-	}
-
-	getThumbLeft(value) {
-		const ratio = this.getRatio(value);
-		return (
-			ratio * (this.state.containerSize.width - this.state.thumbSize.width)
-		);
-	}
-
-	getThumbTouchRect() {
-		const { thumbSize, containerSize } = this.state;
-		const { thumbTouchSize } = this.props;
-		const touchOverflowSize = this.getTouchOverflowSize();
-
-		if (this.props.orientation === 'vertical') {
-			return new Rect(
-				touchOverflowSize.height / 2 +
-					(containerSize.height - thumbTouchSize.height) / 2,
-				touchOverflowSize.width / 2 +
-					this.getThumbLeft(this.getCurrentValue()) +
-					(thumbSize.width - thumbTouchSize.width) / 2,
-				thumbTouchSize.width,
-				thumbTouchSize.height
-			);
-		}
-		return new Rect(
-			touchOverflowSize.width / 2 +
-				this.getThumbLeft(this.getCurrentValue()) +
-				(thumbSize.width - thumbTouchSize.width) / 2,
-			touchOverflowSize.height / 2 +
-				(containerSize.height - thumbTouchSize.height) / 2,
-			thumbTouchSize.width,
-			thumbTouchSize.height
-		);
 	}
 
 	renderDebugThumbTouchRect(thumbLeft) {
@@ -308,44 +328,9 @@ class Slider extends Component {
 			left: thumbLeft,
 			top: thumbTouchRect.y,
 			width: thumbTouchRect.width,
-			height: thumbTouchRect.height,
+			height: thumbTouchRect.height
 		};
 		return <Animated.View style={positionStyle} pointerEvents="none" />;
-	}
-
-	getMinimumTrackStyles(thumbStart) {
-		const { thumbSize, trackSize } = this.state;
-		const minimumTrackStyle = {
-			position: 'absolute',
-		};
-
-		if (this.props.orientation === 'vertical') {
-			minimumTrackStyle.height = Animated.add(thumbStart, thumbSize.height);
-			minimumTrackStyle.marginLeft = -trackSize.width;
-		} else {
-			minimumTrackStyle.width = Animated.add(thumbStart, thumbSize.width);
-			minimumTrackStyle.marginTop = -trackSize.height;
-		}
-		return minimumTrackStyle;
-	}
-
-	getThumbPositionStyles(thumbStart) {
-		if (this.props.orientation === 'vertical') {
-			return [
-				{
-					translateX:
-						-(this.state.trackSize.height + this.state.thumbSize.height) / 2,
-				},
-				{ translateY: thumbStart },
-			];
-		}
-		return [
-			{ translateX: thumbStart },
-			{
-				translateY:
-					-(this.state.trackSize.height + this.state.thumbSize.height) / 2,
-			},
-		];
 	}
 
 	render() {
@@ -382,7 +367,7 @@ class Slider extends Component {
 		const mainStyles = containerStyle || styles;
 		const thumbStart = value.interpolate({
 			inputRange: [minimumValue, maximumValue],
-			outputRange: [0, containerSize.width - thumbSize.width],
+			outputRange: [0, containerSize.width - thumbSize.width]
 			// extrapolate: 'clamp',
 		});
 
@@ -395,42 +380,42 @@ class Slider extends Component {
 		const minimumTrackStyle = {
 			...this.getMinimumTrackStyles(thumbStart),
 			backgroundColor: minimumTrackTintColor,
-			...valueVisibleStyle,
+			...valueVisibleStyle
 		};
 
 		const getValueIndicatorPosition = (valueIndicatorPosition) => {
 			switch (valueIndicatorPosition) {
 				case 'left':
-					return ({
-						right: thumbSizeProp / 3 * 2,
-						textAlign: 'right',
-					});
+					return {
+						right: (thumbSizeProp / 3) * 2,
+						textAlign: 'right'
+					};
 					break;
 				case 'right':
-					return ({
-						top: thumbSizeProp / 3 * 2,
-						textAlign: 'left',
-					});
+					return {
+						top: (thumbSizeProp / 3) * 2,
+						textAlign: 'left'
+					};
 					break;
 				case 'top':
-					return ({
-						bottom: thumbSizeProp / 3 * 2,
-						textAlign: 'center',
-					});
+					return {
+						bottom: (thumbSizeProp / 3) * 2,
+						textAlign: 'center'
+					};
 					break;
 				case 'bottom':
-					return ({
-						top: thumbSizeProp / 3 * 2,
-						textAlign: 'center',
-					});
+					return {
+						top: (thumbSizeProp / 3) * 2,
+						textAlign: 'center'
+					};
 					break;
 				default:
-					return ({
-						bottom: thumbSizeProp / 3 * 2,
-						textAlign: 'center',
-					});
+					return {
+						bottom: (thumbSizeProp / 3) * 2,
+						textAlign: 'center'
+					};
 			}
-		}
+		};
 
 		const thumbStyleTransform = (thumbStyle && thumbStyle.transform) || [];
 		const touchOverflowStyle = this.getTouchOverflowStyle();
@@ -442,144 +427,491 @@ class Slider extends Component {
 					orientation === 'vertical'
 						? mainStyles.containerVertical
 						: mainStyles.containerHorizontal,
-					style,
+					style
 				])}
-				onLayout={this.measureContainer}
-			>
+				onLayout={this.measureContainer}>
 				<View
 					style={StyleSheet.flatten([
-						{borderRadius: trackSizeProp / 2},
+						{ borderRadius: trackSizeProp / 2 },
 						orientation === 'vertical'
-							? {flex: 1,	width: trackSizeProp,}
-							: {height: trackSizeProp},
-						gradientOuterTrack||fanSpeedBackground||blindsBackground
+							? { flex: 1, width: trackSizeProp }
+							: { height: trackSizeProp },
+						gradientOuterTrack || fanSpeedBackground || blindsBackground
 							? mainStyles.overflow
 							: null,
 						trackStyle,
-						{ backgroundColor: maximumTrackTintColor },
+						{ backgroundColor: maximumTrackTintColor }
 					])}
-					onLayout={this.measureTrack}
-				>
-					{ gradientOuterTrack ? (
+					onLayout={this.measureTrack}>
+					{gradientOuterTrack ? (
 						<LinearGradient
-							colors={
-								gradientColor ? gradientColor : ['grey','black']
-							}
-							locations={
-								gradientlocation ? gradientlocation : [0,1]
-							}
+							colors={gradientColor ? gradientColor : ['grey', 'black']}
+							locations={gradientlocation ? gradientlocation : [0, 1]}
 							start={{ x: 0.0, y: 0.0 }}
 							end={{ x: 1.0, y: 1.0 }}
 							style={styles.linearGradient}
 						/>
 					) : null}
-					{ fanSpeedBackground ? (
+					{fanSpeedBackground ? (
 						<View
 							style={StyleSheet.flatten([
 								mainStyles.overflow,
-								{flex: 1, flexDirection: 'row'}
-							])}
-						>
-							<View style={{flex: 1, backgroundColor: Colors.primaryBrand33}}/>
-							<View style={{flex: 1, backgroundColor: Colors.primaryBrand66}}/>
-							<View style={{flex: 1, backgroundColor: Colors.primaryBrand}}/>
+								{ flex: 1, flexDirection: 'row' }
+							])}>
+							<View style={{ flex: 1, backgroundColor: Colors.primaryBrand33 }} />
+							<View style={{ flex: 1, backgroundColor: Colors.primaryBrand66 }} />
+							<View style={{ flex: 1, backgroundColor: Colors.primaryBrand }} />
 						</View>
 					) : null}
 				</View>
-				{ this.getCurrentValue() ? (
+				{this.getCurrentValue() ? (
 					<Animated.View
 						style={StyleSheet.flatten([
-							{borderRadius: trackSizeProp / 2},
+							{ borderRadius: trackSizeProp / 2 },
 							orientation === 'vertical'
-								? {flex: 1,	width: trackSizeProp,}
-								: {height: trackSizeProp},
-							gradientInnerTrack||fanSpeedBackground||blindsBackground
+								? { flex: 1, width: trackSizeProp }
+								: { height: trackSizeProp },
+							gradientInnerTrack || fanSpeedBackground || blindsBackground
 								? mainStyles.overflow
 								: null,
 							trackStyle,
-							minimumTrackStyle,
-						])}
-					>
-						{ gradientInnerTrack ? (
+							minimumTrackStyle
+						])}>
+						{gradientInnerTrack ? (
 							<LinearGradient
-								colors={
-									gradientColor ? gradientColor : ['grey','black']
-								}
-								locations={
-									gradientlocation ? gradientlocation : [0,1]
-								}
+								colors={gradientColor ? gradientColor : ['grey', 'black']}
+								locations={gradientlocation ? gradientlocation : [0, 1]}
 								start={{ x: 0.0, y: 0.0 }}
 								end={{ x: 1.0, y: 1.0 }}
 								style={styles.linearGradient}
 							/>
 						) : null}
-						{ blindsBackground ? (
-							<View 
+						{blindsBackground ? (
+							<View
 								style={StyleSheet.flatten([
 									mainStyles.overflow,
-									{flex: 1, flexDirection: 'column'}
-								])}
-							>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
-								<View style={{flex: 2, backgroundColor: Colors.primaryBrand, minHeight: 8}}/>
-								<View style={{flex: 1, backgroundColor:'rgba(255,255,255,0)', minHeight: 4}}/>
+									{ flex: 1, flexDirection: 'column' }
+								])}>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
+								<View
+									style={{
+										flex: 2,
+										backgroundColor: Colors.primaryBrand,
+										minHeight: 8
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: 'rgba(255,255,255,0)',
+										minHeight: 4
+									}}
+								/>
 							</View>
 						) : null}
 					</Animated.View>
@@ -593,41 +925,40 @@ class Slider extends Component {
 							position: 'absolute',
 							width: thumbSizeProp,
 							height: thumbSizeProp,
-							borderRadius: thumbSizeProp / 2,
+							borderRadius: thumbSizeProp / 2
 						},
 						orientation === 'vertical'
-							? {left: 20 + trackSizeProp / 2}
-							: {top: 20 + trackSizeProp / 2},
+							? { left: 20 + trackSizeProp / 2 }
+							: { top: 20 + trackSizeProp / 2 },
 						,
 						thumbStyle,
 						{
 							transform: [
 								...this.getThumbPositionStyles(thumbStart),
-								...thumbStyleTransform,
+								...thumbStyleTransform
 							],
-							...valueVisibleStyle,
-						},
-					])}
-				>
-					{ showValueIndicator ? (
+							...valueVisibleStyle
+						}
+					])}>
+					{showValueIndicator ? (
 						<View
-								style={StyleSheet.flatten([
+							style={StyleSheet.flatten([
 								styles.valueIndicator,
 								{
 									width: valueIndicatorWidth ? valueIndicatorWidth : 48,
-									height: valueIndicatorWidth ? valueIndicatorWidth : 48,
+									height: valueIndicatorWidth ? valueIndicatorWidth : 48
 								},
 								getValueIndicatorPosition(valueIndicatorPosition),
 								valueIndicatorStyle
-							])}
-						>
+							])}>
 							<Text
 								style={StyleSheet.flatten([
 									{
-										color: valueIndicatorTextColor ? valueIndicatorTextColor : "#000000",
-									},
-								])}
-							>
+										color: valueIndicatorTextColor
+											? valueIndicatorTextColor
+											: '#000000'
+									}
+								])}>
 								{this.getCurrentValue()}
 							</Text>
 						</View>
@@ -635,9 +966,8 @@ class Slider extends Component {
 				</Animated.View>
 				<View
 					style={StyleSheet.flatten([styles.touchArea, touchOverflowStyle])}
-					{...this.panResponder.panHandlers}
-				>
-					{debugTouchArea === true &&	this.renderDebugThumbTouchRect(thumbStart)}
+					{...this.panResponder.panHandlers}>
+					{debugTouchArea === true && this.renderDebugThumbTouchRect(thumbStart)}
 				</View>
 			</View>
 		);
@@ -703,7 +1033,7 @@ Slider.propTypes = {
 	 */
 	thumbTouchSize: PropTypes.shape({
 		width: PropTypes.number,
-		height: PropTypes.number,
+		height: PropTypes.number
 	}),
 
 	/**
@@ -780,7 +1110,8 @@ Slider.propTypes = {
 
 	/**
 	 * Value indicator position
-	 */	
+	 */
+
 	valueIndicatorPosition: PropTypes.string,
 
 	/**
@@ -798,7 +1129,7 @@ Slider.propTypes = {
 	 */
 	blindsBackground: PropTypes.bool,
 
-		/**
+	/**
 	 * Width of the thumb
 	 */
 	thumbSizeProp: PropTypes.number,
@@ -807,7 +1138,6 @@ Slider.propTypes = {
 	 * thickness of the tracksize
 	 */
 	trackSizeProp: PropTypes.number
-
 };
 
 Slider.defaultProps = {
@@ -821,18 +1151,18 @@ Slider.defaultProps = {
 	thumbTouchSize: { width: 50, height: 50 },
 	debugTouchArea: false,
 	animationType: 'timing',
-	orientation: 'horizontal',
+	orientation: 'horizontal'
 };
 
 const styles = StyleSheet.create({
 	containerHorizontal: {
 		height: 40,
-		justifyContent: 'center',
+		justifyContent: 'center'
 	},
 	containerVertical: {
 		width: 40,
 		flexDirection: 'column',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	touchArea: {
 		position: 'absolute',
@@ -840,24 +1170,24 @@ const styles = StyleSheet.create({
 		top: 0,
 		left: 0,
 		right: 0,
-		bottom: 0,
+		bottom: 0
 	},
 	debugThumbTouchArea: {
 		position: 'absolute',
 		backgroundColor: 'green',
-		opacity: 0.5,
+		opacity: 0.5
 	},
 	linearGradient: {
-		width: "100%",
-		height: "100%"
+		width: '100%',
+		height: '100%'
 	},
 	overflow: {
-		overflow: "hidden",
+		overflow: 'hidden'
 	},
 	valueIndicator: {
-		position: "absolute",
-		alignItems: "center",
-		justifyContent: "center"
+		position: 'absolute',
+		alignItems: 'center',
+		justifyContent: 'center'
 	}
 });
 

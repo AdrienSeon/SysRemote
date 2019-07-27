@@ -1,29 +1,21 @@
-import React from 'react'
-import {TouchableHighlight} from 'react-native';
+import React from 'react';
+import { TouchableHighlight } from 'react-native';
+import Svg, { Path, Rect } from 'react-native-svg';
 import Colors from '../../constants/Colors';
-import Svg, { Path, Rect } from 'react-native-svg'
 
-class Blinds extends React.Component {
-	constructor(props) {
-		super(props);
-	}
+const Blinds = (props) => (
+	<TouchableHighlight underlayColor={Colors.appBackground} {...props}>
+		<Svg width={props.size} height={props.size} viewBox="0 0 32 32" fill="none">
+			<Path
+				d="M5 27V6h2v19a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1V6h2v21a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"
+				fill={props.color}
+				fillOpacity={0.5}
+			/>
+			<Rect x={1} y={4} width={29} height={3} rx={1.5} fill={props.color} />
+			<Rect x={1} y={8} width={29} height={3} rx={1.5} fill={props.color} />
+			<Rect x={1} y={12} width={29} height={3} rx={1.5} fill={props.color} />
+		</Svg>
+	</TouchableHighlight>
+);
 
-	render() {
-		return (
-			<TouchableHighlight underlayColor={Colors.appBackground} {...this.props}>
-				<Svg width={this.props.size} height={this.props.size} viewBox="0 0 32 32" fill="none">
-					<Path
-						d="M5 27V6h2v19a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1V6h2v21a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"
-						fill={this.props.color}
-						fillOpacity={0.5}
-					/>
-					<Rect x={1} y={4} width={29} height={3} rx={1.5} fill={this.props.color} />
-					<Rect x={1} y={8} width={29} height={3} rx={1.5} fill={this.props.color} />
-					<Rect x={1} y={12} width={29} height={3} rx={1.5} fill={this.props.color} />
-				</Svg>
-			</TouchableHighlight>
-		);
-	}
-}
-
-export default Blinds
+export default Blinds;

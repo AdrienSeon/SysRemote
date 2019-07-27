@@ -1,4 +1,4 @@
 export default {
-    appName: 'SysRemote',
-    buildingName: 'Nom du bâtiment',
+	appName: 'SysRemote',
+	buildingName: 'Nom du bâtiment'
 };

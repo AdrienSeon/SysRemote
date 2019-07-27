@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, View, Text, StyleSheet, TextInput } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 import Colors from '../constants/Colors';
-import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 
 class BacnetSettingsRow extends Component {
 	constructor(props) {
@@ -9,65 +9,69 @@ class BacnetSettingsRow extends Component {
 
 		this.inputRefs = {
 			pointTypeInput: null,
-			pointInstanceInput: null,
+			pointInstanceInput: null
 		};
 
 		this.state = {
 			point: this.props.point
-		}
+		};
 	}
 
 	render() {
-
 		const typePlaceholder = {
 			label: 'Type',
 			value: null,
-			color: Colors.secondaryText,
+			color: Colors.secondaryText
 		};
 
 		return (
 			<View style={styles.rowContainer}>
-				<Text 
+				<Text
 					style={StyleSheet.flatten([
 						styles.inputLabel,
-						Platform.OS === 'ios'
-							? styles.inputIOS
-							: styles.inputAndroid,
-					])}
-				>
+						Platform.OS === 'ios' ? styles.inputIOS : styles.inputAndroid
+					])}>
 					{this.state.point.label}
 				</Text>
 				<RNPickerSelect
 					value={this.state.point.type}
-					onValueChange={value => { this.setState({
-						point: {
-							...this.state.point,
-							type: value 
-						}
-					})}}
+					onValueChange={(value) => {
+						this.setState((prevState) => ({
+							point: {
+								...prevState.point,
+								type: value
+							}
+						}));
+					}}
 					items={types}
-					onDownArrow={() => { this.inputRefs.pointInstanceInput.focus() }}
-					doneText='OK'
+					onDownArrow={() => {
+						this.inputRefs.pointInstanceInput.focus();
+					}}
+					doneText="OK"
 					placeholder={typePlaceholder}
 					useNativeAndroidPickerStyle={false}
 					style={pickerSelectStyles}
-					ref={el => { this.inputRefs.pointTypeInput = el }}
+					ref={(el) => {
+						this.inputRefs.pointTypeInput = el;
+					}}
 				/>
 				<TextInput
-					value={ this.state.point.instance }
-					onChangeText={value => { this.setState({
-						point: {
-							...this.state.point,
-							instance: value 
-						}
-					})}}
-					placeholder='0'
-					underlineColorAndroid='transparent'  
-					style={StyleSheet.flatten([
-						styles.instanceInput,
-					])}
-					keyboardType={'numeric'}
-					ref={el => { this.inputRefs.pointInstanceInput = el }}
+					value={this.state.point.instance}
+					onChangeText={(value) => {
+						this.setState((prevState) => ({
+							point: {
+								...prevState.point,
+								instance: value
+							}
+						}));
+					}}
+					placeholder="0"
+					underlineColorAndroid="transparent"
+					style={StyleSheet.flatten([styles.instanceInput])}
+					keyboardType="numeric"
+					ref={(el) => {
+						this.inputRefs.pointInstanceInput = el;
+					}}
 				/>
 			</View>
 		);
@@ -77,86 +81,86 @@ class BacnetSettingsRow extends Component {
 const styles = StyleSheet.create({
 	rowContainer: {
 		flex: 1,
-		flexDirection: 'row',
+		flexDirection: 'row'
 	},
 	inputLabel: {
 		flex: 6,
-		fontFamily: "OpenSans",
- 		fontSize: 14,
+		fontFamily: 'OpenSans',
+		fontSize: 14
 	},
 	typeInput: {
-		flex: 5,
+		flex: 5
 	},
 	instanceInput: {
 		flex: 1,
-		fontFamily: "OpenSans",
- 		fontSize: 14,
- 		color: Colors.secondaryText,
+		fontFamily: 'OpenSans',
+		fontSize: 14,
+		color: Colors.secondaryText,
 		textAlign: 'center',
-		minWidth: 15,
+		minWidth: 15
 	},
 	inputIOS: {
-		paddingHorizontal: 10,
+		paddingHorizontal: 10
 	},
 	inputAndroid: {
-		paddingHorizontal: 10,
-	},
+		paddingHorizontal: 10
+	}
 });
 
 const pickerSelectStyles = StyleSheet.create({
 	inputIOS: {
 		paddingHorizontal: 10,
-		fontFamily: "OpenSans",
+		fontFamily: 'OpenSans',
 		fontSize: 14,
 		color: Colors.secondaryText,
-		paddingRight: 35,
+		paddingRight: 35
 	},
 	inputAndroid: {
 		paddingHorizontal: 10,
-		fontFamily: "OpenSans",
+		fontFamily: 'OpenSans',
 		fontSize: 14,
 		color: Colors.secondaryText,
-		paddingRight: 35,
-	},
+		paddingRight: 35
+	}
 });
 
 const types = [
 	{
 		label: 'Analog Value',
-		value: 'analogValue',
+		value: 'analogValue'
 	},
 	{
 		label: 'Analog Input',
-		value: 'analogInput',
+		value: 'analogInput'
 	},
 	{
 		label: 'Analog Output',
-		value: 'analogOutput',
+		value: 'analogOutput'
 	},
 	{
 		label: 'Binary Value',
-		value: 'binaryValue',
+		value: 'binaryValue'
 	},
 	{
 		label: 'Binary Input',
-		value: 'binaryInput',
+		value: 'binaryInput'
 	},
 	{
 		label: 'Binary Output',
-		value: 'binaryOutput',
+		value: 'binaryOutput'
 	},
 	{
 		label: 'Multistate Value',
-		value: 'multistateValue',
+		value: 'multistateValue'
 	},
 	{
 		label: 'Multistate Input',
-		value: 'multistateInput',
+		value: 'multistateInput'
 	},
 	{
 		label: 'Multistate Output',
-		value: 'multistateOutput',
-	},
+		value: 'multistateOutput'
+	}
 ];
 
 export default BacnetSettingsRow;

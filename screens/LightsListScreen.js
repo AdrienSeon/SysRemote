@@ -1,28 +1,16 @@
 import React, { Component } from 'react';
-import {Platform, SafeAreaView, ScrollView, View, Text, StyleSheet, StatusBar} from 'react-native';
+import { Platform, SafeAreaView, ScrollView, View, StyleSheet } from 'react-native';
+import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import SingleLightCommand from '../components/SingleLightCommand';
-import { Header } from 'react-navigation';
-
-const styles = StyleSheet.create({
-	safearea: {
-		flex: 1,
-		backgroundColor: Colors.appBackground,
-	},
-	container: {
-		flex: 1,
-		paddingTop:  Platform.OS === 'ios' ? Header.HEIGHT - 10 : Header.HEIGHT + 25,
-	},
-	backBtn: {
-		marginLeft: Platform.OS === 'ios' ? 10 : 0,
-	},
-	singleCommand: {
-
-	}
-});
 
 class LightsListScreen extends Component {
+	static navigationOptions = ({ navigation }) => ({
+		title: 'Luminaires',
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>,
+	});
+	
 	constructor(props) {
 		super(props);
 
@@ -34,26 +22,8 @@ class LightsListScreen extends Component {
 			light5Selected: false,
 			light6Selected: false,
 			light7Selected: false,
-			light8Selected: false,
+			light8Selected: false
 		};
-	}
-
-	static navigationOptions = {
-		title: 'Luminaires',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>,
-	};
-
-	componentDidMount() {
-/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
-			StatusBar.setBarStyle('light-content');
-			if(Platform.OS === "android"){
-				StatusBar.setBackgroundColor('#6a51ae');
-			}
-		});*/
-	}
-
-	componentWillUnmount() {
-		//this._navListener.remove();
 	}
 
 	render() {
@@ -61,59 +31,64 @@ class LightsListScreen extends Component {
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
 					<ScrollView>
-						<View style={{flex: 1, flexDirection: 'row',}}>
+						<View style={{ flex: 1, flexDirection: 'row' }}>
 							<SingleLightCommand
-								name='Luminaire 1'
+								name="Luminaire 1"
 								selected={this.state.light1Selected}
-								onChange={value => this.setState({light1Selected: value})}
+								onChange={(value) => this.setState({ light1Selected: value })}
 								style={styles.singleCommand}
 							/>
 							<SingleLightCommand
-								name='Luminaire 2'
+								name="Luminaire 2"
 								selected={this.state.light2Selected}
-								onChange={value => this.setState({light2Selected: value})}
+								onChange={(value) => this.setState({ light2Selected: value })}
 								style={styles.singleCommand}
 							/>
 						</View>
-						<View style={{flex: 1, flexDirection: 'row',}}>
+						<View style={{ flex: 1, flexDirection: 'row' }}>
 							<SingleLightCommand
-								name='Luminaire 3'
+								name="Luminaire 3"
 								selected={this.state.light3Selected}
-								onChange={value => this.setState({light3Selected: value})}
+								onChange={(value) => this.setState({ light3Selected: value })}
 								style={styles.singleCommand}
 							/>
 							<SingleLightCommand
-								name='Luminaire 4'
+								name="Luminaire 4"
 								selected={this.state.light4Selected}
-								onChange={value => this.setState({light4Selected: value})}
+								onChange={(value) => this.setState({ light4Selected: value })}
 								style={styles.singleCommand}
 							/>
 						</View>
-						<View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
+						<View
+							style={{
+								flex: 1,
+								flexDirection: 'row',
+								justifyContent: 'space-around'
+							}}>
 							<SingleLightCommand
-								name='Luminaire 5'
+								name="Luminaire 5"
 								selected={this.state.light5Selected}
-								onChange={value => this.setState({light5Selected: value})}
+								onChange={(value) => this.setState({ light5Selected: value })}
 								style={styles.singleCommand}
 							/>
 							<SingleLightCommand
-								name='Luminaire 6'
+								name="Luminaire 6"
 								selected={this.state.light6Selected}
-								onChange={value => this.setState({light6Selected: value})}
+								onChange={(value) => this.setState({ light6Selected: value })}
 								style={styles.singleCommand}
 							/>
 						</View>
-						<View style={{flex: 1, flexDirection: 'row',}}>
+						<View style={{ flex: 1, flexDirection: 'row' }}>
 							<SingleLightCommand
-								name='Luminaire 7'
+								name="Luminaire 7"
 								selected={this.state.light7Selected}
-								onChange={value => this.setState({light7Selected: value})}
+								onChange={(value) => this.setState({ light7Selected: value })}
 								style={styles.singleCommand}
 							/>
 							<SingleLightCommand
-								name='Luminaire 8'
+								name="Luminaire 8"
 								selected={this.state.light8Selected}
-								onChange={value => this.setState({light8Selected: value})}
+								onChange={(value) => this.setState({ light8Selected: value })}
 								style={styles.singleCommand}
 							/>
 						</View>
@@ -123,5 +98,20 @@ class LightsListScreen extends Component {
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	safearea: {
+		flex: 1,
+		backgroundColor: Colors.appBackground
+	},
+	container: {
+		flex: 1,
+		paddingTop: Platform.OS === 'ios' ? Header.HEIGHT - 10 : Header.HEIGHT + 25
+	},
+	backBtn: {
+		marginLeft: Platform.OS === 'ios' ? 10 : 0
+	},
+	singleCommand: {}
+});
 
 export default LightsListScreen;

@@ -4,26 +4,29 @@ import TemperatureIcon from '../components/icons/Temperature';
 import TemperatureScreen from '../screens/TemperatureScreen';
 import Colors from '../constants/Colors';
 
-const TemperatureStackNavigator = createStackNavigator({
-	Temperature: TemperatureScreen,
-},{
-	initialRouteName: 'Temperature',
-	defaultNavigationOptions: {
-		headerTransparent: true,
-		headerTintColor: Colors.primaryText,
-		headerTitleStyle: {
-			fontFamily: "OpenSans-Semibold",
-			fontSize: 18,
-		},
-		headerBackTitle: null,
-		headerTruncatedBackTitle: null,
+const TemperatureStackNavigator = createStackNavigator(
+	{
+		Temperature: TemperatureScreen
+	},
+	{
+		initialRouteName: 'Temperature',
+		defaultNavigationOptions: {
+			headerTransparent: true,
+			headerTintColor: Colors.primaryText,
+			headerTitleStyle: {
+				fontFamily: 'OpenSans-Semibold',
+				fontSize: 18
+			},
+			headerBackTitle: null,
+			headerTruncatedBackTitle: null
+		}
 	}
-});
+);
 
 TemperatureStackNavigator.navigationOptions = {
 	tabBarLabel: 'Température',
 	tabBarIcon: ({ focused }) => (
-		<TemperatureIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size='32' />
+		<TemperatureIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size="32" />
 	)
 };
 

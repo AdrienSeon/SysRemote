@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, ScrollView, Text, StyleSheet, StatusBar } from 'react-native';
+import { Platform, SafeAreaView, ScrollView, Text, StyleSheet } from 'react-native';
 import { List, ListItem } from 'native-base';
-import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import BacnetSettingsRow from '../components/BacnetSettingsRow';
 import KeyboardShift from '../components/KeyboardShift';
 
 class BacnetSettingsScreen extends Component {
+	static navigationOptions = ({ navigation }) => ({
+		title: 'Gestion Bacnet',
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size="32" />
+	});
+
 	constructor(props) {
 		super(props);
 
@@ -15,142 +19,124 @@ class BacnetSettingsScreen extends Component {
 			outsideTemperature: {
 				label: 'Température ambiante',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			outsideHumidity: {
 				label: 'Humidité extérieure',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			outsideCO2: {
 				label: 'CO2 extérieur',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			roomTemperature: {
 				label: 'Température ambiante',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			roomHumidity: {
 				label: 'Humidité ambiante',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			roomCO2: {
 				label: 'CO2 ambiant',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			roomSetpoint: {
 				label: 'Consigne effective',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			roomSetpointRange: {
 				label: 'Plage de consigne',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			fanspeed: {
 				label: 'Vitesse ventilateur',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			LightsValue: {
 				label: 'Valeur luminaires générale',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			Light1Value: {
 				label: 'Valeur luminaire 1',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			Light2Value: {
 				label: 'Valeur luminaire 2',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			Light3Value: {
 				label: 'Valeur luminaire 3',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			Light4Value: {
 				label: 'Valeur luminaire 4',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blindsPosition: {
 				label: 'Position stores générale',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind1Position: {
 				label: 'Position store 1',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind2Position: {
 				label: 'Position store 2',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind3Position: {
 				label: 'Position store 3',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind4Position: {
 				label: 'Position store 4',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blindsRotation: {
 				label: 'Rotation stores générale',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind1Rotation: {
 				label: 'Rotation store 1',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind2Rotation: {
 				label: 'Rotation store 2',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind3Rotation: {
 				label: 'Rotation store 3',
 				type: '',
-				instance: '',
+				instance: ''
 			},
 			blind4Rotation: {
 				label: 'Rotation store 4',
 				type: '',
-				instance: '',
-			},
-		}
-	}
-	
-	static navigationOptions = ({ navigation }) => ({
-		title: 'Gestion Bacnet',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>,
-	});
-
-	componentDidMount() {
-/*		this._navListener = this.props.navigation.addListener('didFocus', () => {
-			StatusBar.setBarStyle('light-content');
-			if(Platform.OS === "android"){
-				StatusBar.setBackgroundColor('#6a51ae');
+				instance: ''
 			}
-		});*/
-	}
-
-	componentWillUnmount() {
-		//this._navListener.remove();
+		};
 	}
 
 	render() {
@@ -159,8 +145,7 @@ class BacnetSettingsScreen extends Component {
 				animDuringKeyboardDisplayIOS={false}
 				keyboardShowDisplayDuration={200}
 				keyboardHideDisplayDuration={200}
-				keyboardDisplayTopSpacing={Platform.OS === 'ios' ? 13 : 15}
-			>
+				keyboardDisplayTopSpacing={Platform.OS === 'ios' ? 13 : 15}>
 				{() => (
 					<SafeAreaView style={styles.safearea}>
 						<ScrollView style={styles.container}>
@@ -169,82 +154,82 @@ class BacnetSettingsScreen extends Component {
 									<Text>CVC</Text>
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.outsideTemperature}/>
+									<BacnetSettingsRow point={this.state.outsideTemperature} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.outsideHumidity}/>
+									<BacnetSettingsRow point={this.state.outsideHumidity} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.outsideCO2}/>
+									<BacnetSettingsRow point={this.state.outsideCO2} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.roomTemperature}/>
+									<BacnetSettingsRow point={this.state.roomTemperature} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.roomHumidity}/>
+									<BacnetSettingsRow point={this.state.roomHumidity} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.roomCO2}/>
+									<BacnetSettingsRow point={this.state.roomCO2} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.roomSetpoint}/>
+									<BacnetSettingsRow point={this.state.roomSetpoint} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.roomSetpointRange}/>
+									<BacnetSettingsRow point={this.state.roomSetpointRange} />
 								</ListItem>
 								<ListItem style={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.fanspeed}/>
+									<BacnetSettingsRow point={this.state.fanspeed} />
 								</ListItem>
 								<ListItem itemHeader style={styles.listHeader}>
 									<Text>LUMINAIRES</Text>
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.LightsValue}/>
+									<BacnetSettingsRow point={this.state.LightsValue} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.Light1Value}/>
+									<BacnetSettingsRow point={this.state.Light1Value} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.Light2Value}/>
+									<BacnetSettingsRow point={this.state.Light2Value} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.Light3Value}/>
+									<BacnetSettingsRow point={this.state.Light3Value} />
 								</ListItem>
 								<ListItem last tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.Light4Value}/>
+									<BacnetSettingsRow point={this.state.Light4Value} />
 								</ListItem>
 								<ListItem itemHeader style={styles.listHeader}>
 									<Text>STORES</Text>
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blindsPosition}/>
+									<BacnetSettingsRow point={this.state.blindsPosition} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind1Position}/>
+									<BacnetSettingsRow point={this.state.blind1Position} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind2Position}/>
+									<BacnetSettingsRow point={this.state.blind2Position} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind3Position}/>
+									<BacnetSettingsRow point={this.state.blind3Position} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind4Position}/>
+									<BacnetSettingsRow point={this.state.blind4Position} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blindsRotation}/>
+									<BacnetSettingsRow point={this.state.blindsRotation} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind1Rotation}/>
+									<BacnetSettingsRow point={this.state.blind1Rotation} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind2Rotation}/>
+									<BacnetSettingsRow point={this.state.blind2Rotation} />
 								</ListItem>
 								<ListItem tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind3Rotation}/>
+									<BacnetSettingsRow point={this.state.blind3Rotation} />
 								</ListItem>
 								<ListItem last tyle={styles.rowContainer}>
-									<BacnetSettingsRow point={this.state.blind4Rotation}/>
+									<BacnetSettingsRow point={this.state.blind4Rotation} />
 								</ListItem>
 							</List>
 						</ScrollView>
@@ -258,13 +243,13 @@ class BacnetSettingsScreen extends Component {
 const styles = StyleSheet.create({
 	safearea: {
 		flex: 1,
-		backgroundColor: Colors.appBackground,
+		backgroundColor: Colors.appBackground
 	},
 	container: {
-		flex: 1,
+		flex: 1
 	},
 	backBtn: {
-		marginLeft: Platform.OS === 'ios' ? 10 : 0,
+		marginLeft: Platform.OS === 'ios' ? 10 : 0
 	},
 	listContainer: {
 		flex: 1,
@@ -274,8 +259,8 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.appBackground
 	},
 	rowContainer: {
-		flex: 1,
-	},
+		flex: 1
+	}
 });
 
 export default BacnetSettingsScreen;

@@ -2,15 +2,6 @@ import React from 'react';
 import { ActivityIndicator, AsyncStorage, StatusBar, StyleSheet, View } from 'react-native';
 import Colors from '../constants/Colors';
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.appBackground,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-});
-
 class AuthLoadingScreen extends React.Component {
 	constructor(props) {
 		super(props);
@@ -32,5 +23,14 @@ class AuthLoadingScreen extends React.Component {
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: Colors.appBackground,
+		justifyContent: 'center',
+		alignItems: 'center'
+	}
+});
 
 export default AuthLoadingScreen;

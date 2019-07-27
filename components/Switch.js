@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Animated, Easing, TouchableOpacity, StyleSheet } from "react-native"
+import { Animated, Easing, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
 class BlindsOrientationCommand extends Component {
@@ -8,33 +8,27 @@ class BlindsOrientationCommand extends Component {
 
 		this.state = {
 			value: this.props.value,
-			animatedValue: new Animated.Value(this.props.value ? this.props.trackSize : 0),
+			animatedValue: new Animated.Value(this.props.value ? this.props.trackSize : 0)
 		};
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(prevProps) {
 		if (prevProps.value !== this.props.value) {
-			this.setState(
-				{ value: this.props.value },
-				() => {
-					Animated.timing(
-						this.state.animatedValue,
-						{
-							toValue: this.state.value ? this.props.trackSize : 0,
-							easing: Easing.elastic(0.7),
-							duration: 100,
-						}
-					).start()
-				}
-			)
+			this.setState({ value: this.props.value }, () => {
+				Animated.timing(this.state.animatedValue, {
+					toValue: this.state.value ? this.props.trackSize : 0,
+					easing: Easing.elastic(0.7),
+					duration: 100
+				}).start();
+			});
 		}
 	}
 
 	handlePress() {
 		this.setState(
-			{ value: !this.state.value },
+			(prevState) => ({ value: !prevState.value }),
 			() => this.props.onChange(this.state.value)
-		)
+		);
 	}
 
 	render() {
@@ -60,12 +54,11 @@ class BlindsOrientationCommand extends Component {
 						backgroundColor: this.state.value ? trackOnColor : trackOffColor,
 						width: trackSize * 2,
 						height: trackSize,
-						borderRadius: trackSize / 2,
+						borderRadius: trackSize / 2
 					},
 					trackStyle
 				])}
-				onPress={() => this.handlePress()}
-			>
+				onPress={() => this.handlePress()}>
 				<Animated.View
 					style={StyleSheet.flatten([
 						{
@@ -73,19 +66,21 @@ class BlindsOrientationCommand extends Component {
 							width: knobSize,
 							height: knobSize,
 							borderRadius: knobSize / 2,
-							transform: [{
-								translateX: this.state.animatedValue,
-							}],
+							transform: [
+								{
+									translateX: this.state.animatedValue
+								}
+							]
 						},
 						knobStyle
 					])}
 				/>
 			</TouchableOpacity>
-		)
+		);
 	}
 }
 
-BlindsOrientationCommand.proptypes = {
+BlindsOrientationCommand.propTypes = {
 	value: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
 	trackOnColor: PropTypes.string,
@@ -93,8 +88,10 @@ BlindsOrientationCommand.proptypes = {
 	knobOnColor: PropTypes.string,
 	knobOffColor: PropTypes.string,
 	knobSize: PropTypes.number,
-	trackSize: PropTypes.number
-}
+	trackSize: PropTypes.number,
+	knobStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+	trackStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+};
 
 BlindsOrientationCommand.defaultProps = {
 	value: false,
@@ -103,7 +100,9 @@ BlindsOrientationCommand.defaultProps = {
 	knobOnColor: 'white',
 	knobOffColor: 'white',
 	knobSize: 24,
-	trackSize: 32
+	trackSize: 32,
+	knobStyle: {},
+	trackStyle: {}
 };
 
-export default BlindsOrientationCommand
+export default BlindsOrientationCommand;
