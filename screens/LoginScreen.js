@@ -19,9 +19,9 @@ import KeyboardShift from '../components/KeyboardShift';
 import background from '../assets/images/building.png';
 
 class LoginScreen extends Component {
-	static navigationOptions = {
+	static navigationOptions = () => ({
 		header: null
-	};
+	});
 
 	constructor(props) {
 		super(props);
@@ -100,7 +100,7 @@ class LoginScreen extends Component {
 								<UserIcon
 									style={styles.emailInputIcon}
 									color={Colors.secondaryBrand}
-									size="15"
+									size={15}
 								/>
 							</View>
 							<View style={styles.passwordInputContainer}>
@@ -118,7 +118,7 @@ class LoginScreen extends Component {
 								<LockIcon
 									style={styles.passwordInputIcon}
 									color={Colors.secondaryBrand}
-									size="15"
+									size={15}
 								/>
 							</View>
 							<TouchablePlatformSpecific

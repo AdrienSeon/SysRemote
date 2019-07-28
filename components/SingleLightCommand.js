@@ -20,10 +20,7 @@ class SingleLightCommand extends Component {
 	}
 
 	handlePress() {
-		this.setState(
-			(prevState) => ({ selected: !prevState.selected }),
-			() => this.props.onChange(this.state.selected)
-		);
+		this.setState(() => this.props.id);
 	}
 
 	handleSliderValue(value) {
@@ -67,7 +64,7 @@ class SingleLightCommand extends Component {
 													? Colors.inverted
 													: Colors.primaryBrand
 											}
-											size="48"
+											size={48}
 										/>
 										<LightsBotIcon
 											style={StyleSheet.flatten([
@@ -79,7 +76,7 @@ class SingleLightCommand extends Component {
 											])}
 											color={`rgba(255, 220, 133, ${this.state.sliderValue /
 												100})`}
-											size="48"
+											size={48}
 										/>
 									</View>
 									<View style={styles.switchContainer}>
@@ -176,7 +173,7 @@ class SingleLightCommand extends Component {
 												? Colors.inverted
 												: Colors.primaryBrand
 										}
-										size="48"
+										size={48}
 									/>
 									<LightsBotIcon
 										style={StyleSheet.flatten([
@@ -188,7 +185,7 @@ class SingleLightCommand extends Component {
 										])}
 										color={`rgba(255, 220, 133, ${this.state.sliderValue /
 											100})`}
-										size="48"
+										size={48}
 									/>
 								</View>
 								<View style={styles.switchContainer}>
@@ -281,12 +278,13 @@ class SingleLightCommand extends Component {
 SingleLightCommand.propTypes = {
 	selected: PropTypes.bool,
 	name: PropTypes.string,
-	onChange: PropTypes.func.isRequired
+	onPressItem: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		width: 160,
+		height: 165,
 		backgroundColor: Colors.inverted,
 		borderRadius: 20,
 		shadowColor: 'rgba(100, 100, 100, 0.1)',

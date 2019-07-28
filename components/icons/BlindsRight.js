@@ -1,8 +1,9 @@
 import React from 'react';
 import Svg, { Path, Rect } from 'react-native-svg';
+import PropTypes from 'prop-types';
 
 const BlindsRight = (props) => (
-	<Svg width={props.size} height={props.size} viewBox="0 0 24 24" fill="none">
+	<Svg width={props.size} height={props.size} viewBox="0 0 24 24" fill="none" {...props}>
 		<Path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -46,5 +47,17 @@ const BlindsRight = (props) => (
 		/>
 	</Svg>
 );
+
+BlindsRight.propTypes = {
+	iconColor: PropTypes.string,
+	backgroundColor: PropTypes.string,
+	size: PropTypes.number
+};
+
+BlindsRight.defaultProps = {
+	iconColor: 'black',
+	backgroundColor: 'white',
+	size: 32
+};
 
 export default BlindsRight;

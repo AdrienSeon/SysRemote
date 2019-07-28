@@ -9,7 +9,7 @@ import KeyboardShift from '../components/KeyboardShift';
 class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Gestion Bacnet',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size="32" />
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
 	});
 
 	constructor(props) {

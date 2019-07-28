@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, SafeAreaView, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Header } from 'react-navigation';
 import LinearScale from 'linear-scale';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
@@ -14,7 +15,7 @@ class TemperatureScreen extends Component {
 			<MenuIcon
 				style={styles.menuBtn}
 				color={Colors.primaryText}
-				size="32"
+				size={32}
 				onPress={() => navigation.openDrawer()}
 			/>
 		)
@@ -130,7 +131,7 @@ class TemperatureScreen extends Component {
 						<WindIcon
 							style={styles.windIconLeft}
 							color={Colors.primaryBrand33}
-							size="24"
+							size={24}
 						/>
 						<View style={styles.fanSpeedSliderContainer}>
 							<Slider
@@ -152,7 +153,7 @@ class TemperatureScreen extends Component {
 						<WindIcon
 							style={styles.windIconRight}
 							color={Colors.primaryBrand}
-							size="32"
+							size={32}
 						/>
 						<TouchableOpacity style={styles.autoIconContainer}>
 							<Text style={styles.autoIconText}>A</Text>
@@ -171,16 +172,9 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		...Platform.select({
-			ios: {
-				paddingTop: 70 + 20
-			},
-			android: {
-				paddingTop: 80 + 20
-			}
-		}),
-		justifyContent: 'space-around',
-		paddingBottom: 50
+		marginTop: Platform.OS === 'ios' ? Header.HEIGHT - 20 : Header.HEIGHT + 24,
+		paddingTop: 20,
+		paddingBottom: 40
 	},
 	menuBtn: {
 		marginLeft: 16

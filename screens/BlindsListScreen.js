@@ -6,7 +6,7 @@ import BackIcon from '../components/icons/Back';
 class BlindsListScreen extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Stores',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size="32" />
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
 	});
 
 	render() {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import LightsIcon from '../components/icons/Lights';
 import LightsScreen from '../screens/LightsScreen';
@@ -18,7 +19,7 @@ const LightsStackNavigator = createStackNavigator(
 		initialRouteName: 'Lights',
 		defaultNavigationOptions: {
 			headerStyle: {
-				height: 56
+				height: Platform.OS === 'ios' ? 44 : 56
 			},
 			headerTransparent: true,
 			headerTintColor: Colors.primaryText,
@@ -35,7 +36,7 @@ const LightsStackNavigator = createStackNavigator(
 LightsStackNavigator.navigationOptions = {
 	tabBarLabel: 'Luminaires',
 	tabBarIcon: ({ focused }) => (
-		<LightsIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size="32" />
+		<LightsIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size={32} />
 	)
 };
 

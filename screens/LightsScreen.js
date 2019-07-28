@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, SafeAreaView, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import LightsTopIcon from '../components/icons/LightsTop';
@@ -15,7 +16,7 @@ class LightsScreen extends Component {
 			<MenuIcon
 				style={styles.menuBtn}
 				color={Colors.primaryText}
-				size="32"
+				size={32}
 				onPress={() => navigation.openDrawer()}
 			/>
 		)
@@ -63,7 +64,7 @@ class LightsScreen extends Component {
 								<LightsTopIcon
 									style={styles.lightsTopIcon}
 									color={Colors.primaryBrand}
-									size="128"
+									size={128}
 								/>
 								<LightsBotIcon
 									style={StyleSheet.flatten([
@@ -74,14 +75,14 @@ class LightsScreen extends Component {
 										}
 									])}
 									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
-									size="128"
+									size={128}
 								/>
 							</View>
 							<View style={styles.lightsListButtonRightPart}>
 								<NextIcon
 									style={styles.nextIcon}
 									color={Colors.inverted}
-									size="32"
+									size={32}
 								/>
 							</View>
 						</View>
@@ -136,15 +137,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		...Platform.select({
-			ios: {
-				paddingTop: 70 + 20
-			},
-			android: {
-				paddingTop: 80 + 20
-			}
-		}),
-		paddingBottom: 20
+		marginTop: Platform.OS === 'ios' ? Header.HEIGHT - 20 : Header.HEIGHT + 24,
+		paddingVertical: 20
 	},
 	menuBtn: {
 		marginLeft: 16

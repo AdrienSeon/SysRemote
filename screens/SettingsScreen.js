@@ -1,24 +1,18 @@
-import React, { Component } from "react";
-import {
-	Platform,
-	SafeAreaView,
-	ScrollView,
-	Text,
-	StyleSheet
-} from "react-native";
-import { List, ListItem, Left, Right, Icon } from "native-base";
-import Colors from "../constants/Colors";
-import BackIcon from "../components/icons/Back";
+import React, { Component } from 'react';
+import { Platform, SafeAreaView, ScrollView, Text, StyleSheet } from 'react-native';
+import { List, ListItem, Left, Right, Icon } from 'native-base';
+import Colors from '../constants/Colors';
+import BackIcon from '../components/icons/Back';
 
 class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		title: "Paramètres",
+		title: 'Paramètres',
 		headerLeft: (
 			<BackIcon
 				style={styles.backBtn}
 				color={Colors.primaryText}
-				size="32"
-				onPress={() => navigation.navigate("Temperature")}
+				size={32}
+				onPress={() => navigation.navigate('Temperature')}
 			/>
 		)
 	});
@@ -38,11 +32,8 @@ class BacnetSettingsScreen extends Component {
 						<ListItem
 							last
 							button
-							onPress={() =>
-								this.props.navigation.navigate("BacnetSettings")
-							}
-							style={styles.rowContainer}
-						>
+							onPress={() => this.props.navigation.navigate('BacnetSettings')}
+							style={styles.rowContainer}>
 							<Left>
 								<Text>Gestion Bacnet</Text>
 							</Left>
@@ -66,11 +57,11 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	backBtn: {
-		marginLeft: Platform.OS === "ios" ? 10 : 0
+		marginLeft: Platform.OS === 'ios' ? 10 : 0
 	},
 	listContainer: {
 		flex: 1,
-		backgroundColor: "#fff"
+		backgroundColor: '#fff'
 	},
 	listHeader: {
 		backgroundColor: Colors.appBackground

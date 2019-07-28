@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import TemperatureIcon from '../components/icons/Temperature';
 import TemperatureScreen from '../screens/TemperatureScreen';
@@ -11,6 +12,9 @@ const TemperatureStackNavigator = createStackNavigator(
 	{
 		initialRouteName: 'Temperature',
 		defaultNavigationOptions: {
+			headerStyle: {
+				height: Platform.OS === 'ios' ? 44 : 56
+			},
 			headerTransparent: true,
 			headerTintColor: Colors.primaryText,
 			headerTitleStyle: {
@@ -26,7 +30,7 @@ const TemperatureStackNavigator = createStackNavigator(
 TemperatureStackNavigator.navigationOptions = {
 	tabBarLabel: 'Température',
 	tabBarIcon: ({ focused }) => (
-		<TemperatureIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size="32" />
+		<TemperatureIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size={32} />
 	)
 };
 

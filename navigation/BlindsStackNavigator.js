@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import BlindsIcon from '../components/icons/Blinds';
 import BlindsScreen from '../screens/BlindsScreen';
@@ -18,7 +19,7 @@ const BlindsStackNavigator = createStackNavigator(
 		initialRouteName: 'Blinds',
 		defaultNavigationOptions: {
 			headerStyle: {
-				height: 56
+				height: Platform.OS === 'ios' ? 44 : 56,
 			},
 			headerTransparent: true,
 			headerTintColor: Colors.primaryText,
@@ -35,7 +36,7 @@ const BlindsStackNavigator = createStackNavigator(
 BlindsStackNavigator.navigationOptions = {
 	tabBarLabel: 'Stores',
 	tabBarIcon: ({ focused }) => (
-		<BlindsIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size="32" />
+		<BlindsIcon color={focused ? Colors.primaryBrand : Colors.secondaryBrand} size={32} />
 	)
 };
 

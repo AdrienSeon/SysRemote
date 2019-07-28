@@ -50,7 +50,7 @@ class DrawerScreen extends React.Component {
 								<SettingsIcon
 									style={styles.MenuItemIcon}
 									color={Colors.inverted}
-									size="21"
+									size={21}
 								/>
 								<Text style={styles.menuItemLabel}>Paramètres</Text>
 							</View>
@@ -60,7 +60,7 @@ class DrawerScreen extends React.Component {
 								<LogoutIcon
 									style={styles.MenuItemIcon}
 									color={Colors.inverted}
-									size="21"
+									size={21}
 								/>
 								<Text style={styles.menuItemLabel}>Se déconnecter</Text>
 							</View>

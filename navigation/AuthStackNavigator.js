@@ -22,7 +22,7 @@ const LoginStackNavigator = createStackNavigator(
 
 LoginStackNavigator.navigationOptions = {
 	drawerLabel: 'Se déconnecter',
-	drawerIcon: <LogoutIcon color={Colors.inverted} size="21" />
+	drawerIcon: <LogoutIcon color={Colors.inverted} size={21} />
 };
 
 LoginStackNavigator.path = '';

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, SafeAreaView, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import BlindsIconAnimated from '../components/icons/BlindsAnimated';
@@ -47,7 +48,7 @@ class BlindsScreen extends Component {
 								<BlindsIconAnimated
 									style={styles.blindsListButtonBlindsIcon}
 									color={Colors.primaryBrand}
-									size="128"
+									size={128}
 									opacityRow2={this.state.sliderValue > 16.66 ? 2 : 0}
 									opacityRow3={this.state.sliderValue > 16.66 * 3 ? 1 : 0}
 									opacityRow4={this.state.sliderValue > 16.66 * 4 ? 1 : 0}
@@ -167,15 +168,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		...Platform.select({
-			ios: {
-				paddingTop: 70 + 20
-			},
-			android: {
-				paddingTop: 80 + 20
-			}
-		}),
-		paddingBottom: 20
+		marginTop: Platform.OS === 'ios' ? Header.HEIGHT - 20 : Header.HEIGHT + 24,
+		paddingVertical: 20
 	},
 	menuBtn: {
 		marginLeft: 16

@@ -30,7 +30,7 @@ const SettingsStackNavigator = createStackNavigator(
 
 SettingsStackNavigator.navigationOptions = {
 	drawerLabel: 'Paramètres',
-	drawerIcon: <SettingsIcon color={Colors.inverted} size="21" />
+	drawerIcon: <SettingsIcon color={Colors.inverted} size={21} />
 };
 
 SettingsStackNavigator.path = '';

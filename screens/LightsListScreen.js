@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, ScrollView, View, StyleSheet } from 'react-native';
+import { Platform, SafeAreaView, ScrollView, View, StyleSheet, FlatList, Text } from 'react-native';
 import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import SingleLightCommand from '../components/SingleLightCommand';
 
 class LightsListScreen extends Component {
-	static navigationOptions = ({ navigation }) => ({
+	static navigationOptions = () => ({
 		title: 'Luminaires',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size='32'/>,
+		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
 	});
-	
+
 	constructor(props) {
 		super(props);
 
@@ -22,77 +22,48 @@ class LightsListScreen extends Component {
 			light5Selected: false,
 			light6Selected: false,
 			light7Selected: false,
-			light8Selected: false
+			light8Selected: false,
+			isSliderVisible: true,
+			selected: (new Map(): Map<string, boolean>),
+			data: [{key: 'light1', name: 'Luminaire 1'}, {key: 'light2', name: 'Luminaire 2'}, {key: 'light3', name: 'Luminaire 3'}, {key: 'light4', name: 'Luminaire 4'}, {key: 'light5', name: 'Luminaire 5'}, {key: 'light6', name: 'Luminaire 6'}, {key: 'light7', name: 'Luminaire 7'}, {key: 'light8', name: 'Luminaire 8'}]
 		};
 	}
+
+	_keyExtractor = (item, index) => item.id;
+
+	_onPressItem = (id: string) => {
+		// updater functions are preferred for transactional updates
+		this.setState((state) => {
+			// copy the map rather than modifying state.
+			const selected = new Map(state.selected);
+			selected.set(id, !selected.get(id)); // toggle
+			return {selected};
+		});
+	};
+
+	_renderItem = ({item}) => (
+		<SingleLightCommand
+			id={item.id}
+			onPressItem={this._onPressItem}
+			selected={!!this.state.selected.get(item.id)}
+			name={item.name}
+		/>
+	);
 
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<ScrollView>
-						<View style={{ flex: 1, flexDirection: 'row' }}>
-							<SingleLightCommand
-								name="Luminaire 1"
-								selected={this.state.light1Selected}
-								onChange={(value) => this.setState({ light1Selected: value })}
-								style={styles.singleCommand}
-							/>
-							<SingleLightCommand
-								name="Luminaire 2"
-								selected={this.state.light2Selected}
-								onChange={(value) => this.setState({ light2Selected: value })}
-								style={styles.singleCommand}
-							/>
-						</View>
-						<View style={{ flex: 1, flexDirection: 'row' }}>
-							<SingleLightCommand
-								name="Luminaire 3"
-								selected={this.state.light3Selected}
-								onChange={(value) => this.setState({ light3Selected: value })}
-								style={styles.singleCommand}
-							/>
-							<SingleLightCommand
-								name="Luminaire 4"
-								selected={this.state.light4Selected}
-								onChange={(value) => this.setState({ light4Selected: value })}
-								style={styles.singleCommand}
-							/>
-						</View>
-						<View
-							style={{
-								flex: 1,
-								flexDirection: 'row',
-								justifyContent: 'space-around'
-							}}>
-							<SingleLightCommand
-								name="Luminaire 5"
-								selected={this.state.light5Selected}
-								onChange={(value) => this.setState({ light5Selected: value })}
-								style={styles.singleCommand}
-							/>
-							<SingleLightCommand
-								name="Luminaire 6"
-								selected={this.state.light6Selected}
-								onChange={(value) => this.setState({ light6Selected: value })}
-								style={styles.singleCommand}
-							/>
-						</View>
-						<View style={{ flex: 1, flexDirection: 'row' }}>
-							<SingleLightCommand
-								name="Luminaire 7"
-								selected={this.state.light7Selected}
-								onChange={(value) => this.setState({ light7Selected: value })}
-								style={styles.singleCommand}
-							/>
-							<SingleLightCommand
-								name="Luminaire 8"
-								selected={this.state.light8Selected}
-								onChange={(value) => this.setState({ light8Selected: value })}
-								style={styles.singleCommand}
-							/>
-						</View>
-					</ScrollView>
+					<FlatList
+						data={this.state.data}
+						extraData={this.state}
+						renderItem={this._renderItem}
+						numColumns={2}
+						contentContainerStyle={{flex:1}}
+					/>
+					<View style={{flex:1}}>
+					<Text>text</Text>
+					</View>
 				</View>
 			</SafeAreaView>
 		);
@@ -106,7 +77,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		paddingTop: Platform.OS === 'ios' ? Header.HEIGHT - 10 : Header.HEIGHT + 25
+		marginTop: Platform.OS === 'ios' ? Header.HEIGHT - 20 : Header.HEIGHT + 24,
+		flexDirection: 'row',
 	},
 	backBtn: {
 		marginLeft: Platform.OS === 'ios' ? 10 : 0
