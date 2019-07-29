@@ -15,7 +15,6 @@ class SingleLightCommand extends Component {
 		this.state = {
 			switchValue: true,
 			sliderValue: 80,
-			selected: this.props.selected
 		};
 	}
 
@@ -49,7 +48,7 @@ class SingleLightCommand extends Component {
 				activeOpacity={0.7}
 				style={styles.container}
 				onPress={() => this.handlePress()}>
-				{this.state.selected ? (
+				{this.props.selected ? (
 					<LinearGradient
 						colors={[Colors.primaryBrandGradientLight, Colors.primaryBrandGradientDark]}
 						style={styles.linearGradient}>
