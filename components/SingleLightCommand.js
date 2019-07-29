@@ -20,7 +20,7 @@ class SingleLightCommand extends Component {
 	}
 
 	handlePress() {
-		this.setState(() => this.props.id);
+		 this.props.onPressItem(this.props.id);
 	}
 
 	handleSliderValue(value) {
