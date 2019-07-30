@@ -14,15 +14,21 @@ class SingleLightCommand extends Component {
 
 		this.state = {
 			switchValue: true,
-			sliderValue: 80,
+			sliderValue: 80
 		};
 	}
 
-	handlePress() {
-		 this.props.onPressItem(this.props.id);
+	shouldComponentUpdate(nextProps, nextState) {
+		return (
+			nextProps.selected !== this.props.selected ||
+			nextProps.name !== this.props.name ||
+			nextProps.onPressItem !== this.props.onPressItem ||
+			nextState.switchValue !== this.props.switchValue ||
+			nextState.sliderValue !== this.props.sliderValue
+		);
 	}
 
-	handleSliderValue(value) {
+	handleSliderValue = (value) => {
 		this.setState({ sliderValue: value });
 
 		if (value > 0) {
@@ -30,9 +36,9 @@ class SingleLightCommand extends Component {
 		} else {
 			this.setState({ switchValue: false });
 		}
-	}
+	};
 
-	handleSwitchValue(value) {
+	handleSwitchValue = (value) => {
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -40,6 +46,10 @@ class SingleLightCommand extends Component {
 		} else {
 			this.setState({ sliderValue: 0 });
 		}
+	};
+
+	handlePress() {
+		this.props.onPressItem(this.props.id);
 	}
 
 	render() {
@@ -81,7 +91,7 @@ class SingleLightCommand extends Component {
 									<View style={styles.switchContainer}>
 										<Switch
 											value={this.state.switchValue}
-											onChange={(value) => this.handleSwitchValue(value)}
+											onChange={this.handleSwitchValue}
 											trackOnColor={
 												this.props.selected
 													? Colors.primaryBrandDark
@@ -137,7 +147,7 @@ class SingleLightCommand extends Component {
 							<View style={styles.sliderContainer}>
 								<Slider
 									value={this.state.sliderValue}
-									onValueChange={(value) => this.handleSliderValue(value)}
+									onValueChange={this.handleSliderValue}
 									animateTransitions
 									animationType="timing"
 									minimumValue={0}
@@ -275,9 +285,15 @@ class SingleLightCommand extends Component {
 }
 
 SingleLightCommand.propTypes = {
+	id: PropTypes.string.isRequired,
 	selected: PropTypes.bool,
 	name: PropTypes.string,
 	onPressItem: PropTypes.func.isRequired
+};
+
+SingleLightCommand.defaultProps = {
+	selected: false,
+	name: 'Luminaire'
 };
 
 const styles = StyleSheet.create({

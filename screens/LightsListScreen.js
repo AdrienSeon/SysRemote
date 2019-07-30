@@ -93,7 +93,7 @@ class LightsListScreen extends Component {
 		/>
 	);
 
-	handleSliderValue(value) {
+	handleSliderValue = (value) => {
 		this.setState({ sliderValue: value });
 
 		if (value > 0) {
@@ -103,7 +103,7 @@ class LightsListScreen extends Component {
 		}
 	}
 
-	handleSwitchValue(value) {
+	handleSwitchValue = (value) => {
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -133,7 +133,7 @@ class LightsListScreen extends Component {
 						}}>
 						<View style={styles.switchContainer}>
 							<Switch
-								onChange={(value) => this.handleSwitchValue(value)}
+								onChange={this.handleSwitchValue}
 								value={this.state.switchValue}
 								trackOnColor={
 									this.props.selected
@@ -160,7 +160,7 @@ class LightsListScreen extends Component {
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
-								onValueChange={(value) => this.handleSliderValue(value)}
+								onValueChange={this.handleSliderValue}
 								animateTransitions
 								animationType="spring"
 								minimumValue={0}
