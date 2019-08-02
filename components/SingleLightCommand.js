@@ -36,13 +36,9 @@ class SingleLightCommand extends Component {
 		} else {
 			this.setState({ switchValue: false });
 		}
-	};
+	}
 
-<<<<<<< HEAD
 	handleSliderValue = (value) => {
-=======
-	handleSwitchValue = (value) => {
->>>>>>> 56197eb2db969ffd8b2164b8592e77e84afe5813
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -50,10 +46,6 @@ class SingleLightCommand extends Component {
 		} else {
 			this.setState({ sliderValue: 0 });
 		}
-	};
-
-	handlePress() {
-		this.props.onPressItem(this.props.id);
 	}
 
 	handlePress() {
@@ -72,7 +64,6 @@ class SingleLightCommand extends Component {
 					}
 				])}
 				onPress={() => this.handlePress()}>
-<<<<<<< HEAD
 				<LinearGradient
 					colors={[Colors.primaryBrandGradientLight, Colors.primaryBrandGradientDark]}
 					style={styles.linearGradient}>
@@ -89,112 +80,6 @@ class SingleLightCommand extends Component {
 								<LightsTopIcon
 									style={styles.topIcon}
 									color={
-=======
-				{this.props.selected ? (
-					<LinearGradient
-						colors={[Colors.primaryBrandGradientLight, Colors.primaryBrandGradientDark]}
-						style={styles.linearGradient}>
-						<View style={styles.innerContainer}>
-							<View style={styles.leftPart}>
-								<View style={styles.topPart}>
-									<View>
-										<LightsTopIcon
-											style={styles.topIcon}
-											color={
-												this.props.selected
-													? Colors.inverted
-													: Colors.primaryBrand
-											}
-											size={48}
-										/>
-										<LightsBotIcon
-											style={StyleSheet.flatten([
-												styles.botIcon,
-												{
-													shadowColor: `rgba(255, 221, 136, ${this.state
-														.sliderValue / 100})`
-												}
-											])}
-											color={`rgba(255, 220, 133, ${this.state.sliderValue /
-												100})`}
-											size={48}
-										/>
-									</View>
-									<View style={styles.switchContainer}>
-										<Switch
-											value={this.state.switchValue}
-											onChange={this.handleSwitchValue}
-											trackOnColor={
-												this.props.selected
-													? Colors.primaryBrandDark
-													: Colors.primaryBrand50
-											}
-											trackOffColor={
-												this.props.selected
-													? Colors.primaryBrandDark
-													: Colors.primaryBrand50
-											}
-											knobOnColor={
-												this.props.selected
-													? Colors.inverted
-													: Colors.primaryBrand
-											}
-											knobOffColor={
-												this.props.selected
-													? Colors.inverted
-													: Colors.primaryBrand
-											}
-											knobSize={14}
-											trackSize={18}
-											trackStyle={styles.switchTrackStyle}
-											knobStyle={styles.switchKnobStyle}
-										/>
-									</View>
-								</View>
-								<View style={styles.text}>
-									<Text
-										style={StyleSheet.flatten([
-											styles.name,
-											{
-												color: this.props.selected
-													? Colors.inverted
-													: Colors.primaryText
-											}
-										])}>
-										{this.props.name}
-									</Text>
-									<Text
-										style={StyleSheet.flatten([
-											styles.state,
-											{
-												color: this.props.selected
-													? Colors.inverted50
-													: Colors.secondaryText
-											}
-										])}>
-										{this.state.switchValue ? 'Allumé' : 'Eteint'}
-									</Text>
-								</View>
-							</View>
-							<View style={styles.sliderContainer}>
-								<Slider
-									value={this.state.sliderValue}
-									onValueChange={this.handleSliderValue}
-									animateTransitions
-									animationType="timing"
-									minimumValue={0}
-									maximumValue={100}
-									step={1}
-									trackSizeProp={18}
-									thumbSizeProp={18}
-									orientation="vertical"
-									maximumTrackTintColor={
-										this.props.selected
-											? Colors.primaryBrandDark
-											: Colors.primaryBrand50
-									}
-									minimumTrackTintColor={
->>>>>>> 56197eb2db969ffd8b2164b8592e77e84afe5813
 										this.props.selected ? Colors.inverted : Colors.primaryBrand
 									}
 									size={48}
@@ -398,15 +283,9 @@ class SingleLightCommand extends Component {
 }
 
 SingleLightCommand.propTypes = {
-	id: PropTypes.string.isRequired,
 	selected: PropTypes.bool,
 	name: PropTypes.string,
 	onPressItem: PropTypes.func.isRequired
-};
-
-SingleLightCommand.defaultProps = {
-	selected: false,
-	name: 'Luminaire'
 };
 
 const styles = StyleSheet.create({
