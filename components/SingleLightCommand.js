@@ -14,12 +14,12 @@ class SingleLightCommand extends Component {
 
 		this.state = {
 			switchValue: true,
-			sliderValue: 80,
+			sliderValue: 80
 		};
 	}
 
 	handlePress() {
-		 this.props.onPressItem(this.props.id);
+		this.props.onPressItem(this.props.id);
 	}
 
 	handleSliderValue(value) {
@@ -43,150 +43,132 @@ class SingleLightCommand extends Component {
 	}
 
 	render() {
-		return (
+		return this.props.selected ? (
 			<TouchableOpacity
 				activeOpacity={0.7}
-				style={styles.container}
+				style={StyleSheet.flatten([
+					styles.container,
+					{
+						height: 165,
+						margin: this.props.collapsed ? 5 : 0
+					}
+				])}
 				onPress={() => this.handlePress()}>
-				{this.props.selected ? (
-					<LinearGradient
-						colors={[Colors.primaryBrandGradientLight, Colors.primaryBrandGradientDark]}
-						style={styles.linearGradient}>
-						<View style={styles.innerContainer}>
-							<View style={styles.leftPart}>
-								<View style={styles.topPart}>
-									<View>
-										<LightsTopIcon
-											style={styles.topIcon}
-											color={
-												this.props.selected
-													? Colors.inverted
-													: Colors.primaryBrand
-											}
-											size={48}
-										/>
-										<LightsBotIcon
-											style={StyleSheet.flatten([
-												styles.botIcon,
-												{
-													shadowColor: `rgba(255, 221, 136, ${this.state
-														.sliderValue / 100})`
-												}
-											])}
-											color={`rgba(255, 220, 133, ${this.state.sliderValue /
-												100})`}
-											size={48}
-										/>
-									</View>
-									<View style={styles.switchContainer}>
-										<Switch
-											value={this.state.switchValue}
-											onChange={(value) => this.handleSwitchValue(value)}
-											trackOnColor={
-												this.props.selected
-													? Colors.primaryBrandDark
-													: Colors.primaryBrand50
-											}
-											trackOffColor={
-												this.props.selected
-													? Colors.primaryBrandDark
-													: Colors.primaryBrand50
-											}
-											knobOnColor={
-												this.props.selected
-													? Colors.inverted
-													: Colors.primaryBrand
-											}
-											knobOffColor={
-												this.props.selected
-													? Colors.inverted
-													: Colors.primaryBrand
-											}
-											knobSize={14}
-											trackSize={18}
-											trackStyle={styles.switchTrackStyle}
-											knobStyle={styles.switchKnobStyle}
-										/>
-									</View>
-								</View>
-								<View style={styles.text}>
-									<Text
-										style={StyleSheet.flatten([
-											styles.name,
-											{
-												color: this.props.selected
-													? Colors.inverted
-													: Colors.primaryText
-											}
-										])}>
-										{this.props.name}
-									</Text>
-									<Text
-										style={StyleSheet.flatten([
-											styles.state,
-											{
-												color: this.props.selected
-													? Colors.inverted50
-													: Colors.secondaryText
-											}
-										])}>
-										{this.state.switchValue ? 'Allumé' : 'Eteint'}
-									</Text>
-								</View>
-							</View>
-							<View style={styles.sliderContainer}>
-								<Slider
-									value={this.state.sliderValue}
-									onValueChange={(value) => this.handleSliderValue(value)}
-									animateTransitions
-									animationType="timing"
-									minimumValue={0}
-									maximumValue={100}
-									step={1}
-									trackSizeProp={18}
-									thumbSizeProp={18}
-									orientation="vertical"
-									maximumTrackTintColor={
-										this.props.selected
-											? Colors.primaryBrandDark
-											: Colors.primaryBrand50
-									}
-									minimumTrackTintColor={
+				<LinearGradient
+					colors={[Colors.primaryBrandGradientLight, Colors.primaryBrandGradientDark]}
+					style={styles.linearGradient}>
+					<View
+						style={StyleSheet.flatten([
+							styles.innerContainer,
+							{
+								flexDirection: this.props.collapsed ? 'row' : 'column',
+								padding: this.props.collapsed ? 15 : 10
+							}
+						])}>
+						<View style={styles.topPart}>
+							<View style={{ flex: 1 }}>
+								<LightsTopIcon
+									style={styles.topIcon}
+									color={
 										this.props.selected ? Colors.inverted : Colors.primaryBrand
 									}
-									style={styles.slider}
-									thumbStyle={styles.sliderthumbStyle}
+									size={48}
+								/>
+								<LightsBotIcon
+									style={StyleSheet.flatten([
+										styles.botIcon,
+										{
+											shadowColor: `rgba(255, 221, 136, ${this.state
+												.sliderValue / 100})`
+										}
+									])}
+									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
+									size={48}
 								/>
 							</View>
-						</View>
-					</LinearGradient>
-				) : (
-					<View style={styles.innerContainer}>
-						<View style={styles.leftPart}>
-							<View style={styles.topPart}>
-								<View>
-									<LightsTopIcon
-										style={styles.topIcon}
-										color={
-											this.props.selected
+							<View style={{ flex: 1 }}>
+								<Text
+									style={StyleSheet.flatten([
+										styles.bigValueDisplay,
+										{
+											color: this.props.selected
 												? Colors.inverted
-												: Colors.primaryBrand
+												: Colors.primaryText
 										}
-										size={48}
-									/>
-									<LightsBotIcon
-										style={StyleSheet.flatten([
-											styles.botIcon,
-											{
-												shadowColor: `rgba(255, 221, 136, ${this.state
-													.sliderValue / 100})`
-											}
-										])}
-										color={`rgba(255, 220, 133, ${this.state.sliderValue /
-											100})`}
-										size={48}
-									/>
-								</View>
+									])}>
+									{this.state.sliderValue + '%'}
+								</Text>
+							</View>
+						</View>
+						<View style={styles.text}>
+							<Text
+								style={StyleSheet.flatten([
+									styles.name,
+									{
+										color: this.props.selected
+											? Colors.inverted
+											: Colors.primaryText
+									}
+								])}>
+								{this.props.name}
+							</Text>
+							<Text
+								style={StyleSheet.flatten([
+									styles.state,
+									{
+										color: this.props.selected
+											? Colors.inverted50
+											: Colors.secondaryText
+									}
+								])}>
+								{this.state.switchValue ? 'Allumé' : 'Eteint'}
+							</Text>
+						</View>
+					</View>
+				</LinearGradient>
+			</TouchableOpacity>
+		) : (
+			<TouchableOpacity
+				activeOpacity={0.7}
+				style={StyleSheet.flatten([
+					styles.container,
+					{
+						height: 165,
+						margin: this.props.collapsed ? 5 : 0
+					}
+				])}
+				onPress={() => this.handlePress()}>
+				<View
+					style={StyleSheet.flatten([
+						styles.innerContainer,
+						{
+							flexDirection: this.props.collapsed ? 'row' : 'column',
+							padding: this.props.collapsed ? 15 : 10
+						}
+					])}>
+					<View style={{ flex: this.props.collapsed ? 2 : 1 }}>
+						<View style={styles.topPart}>
+							<View>
+								<LightsTopIcon
+									style={styles.topIcon}
+									color={
+										this.props.selected ? Colors.inverted : Colors.primaryBrand
+									}
+									size={48}
+								/>
+								<LightsBotIcon
+									style={StyleSheet.flatten([
+										styles.botIcon,
+										{
+											shadowColor: `rgba(255, 221, 136, ${this.state
+												.sliderValue / 100})`
+										}
+									])}
+									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
+									size={48}
+								/>
+							</View>
+							{this.props.collapsed ? (
 								<View style={styles.switchContainer}>
 									<Switch
 										onChange={(value) => this.handleSwitchValue(value)}
@@ -217,32 +199,48 @@ class SingleLightCommand extends Component {
 										knobStyle={styles.switchKnobStyle}
 									/>
 								</View>
-							</View>
-							<View style={styles.text}>
-								<Text
-									style={StyleSheet.flatten([
-										styles.name,
-										{
-											color: this.props.selected
-												? Colors.inverted
-												: Colors.primaryText
-										}
-									])}>
-									{this.props.name}
-								</Text>
-								<Text
-									style={StyleSheet.flatten([
-										styles.state,
-										{
-											color: this.props.selected
-												? Colors.inverted50
-												: Colors.secondaryText
-										}
-									])}>
-									{this.state.switchValue ? 'Allumé' : 'Eteint'}
-								</Text>
-							</View>
+							) : (
+								<View style={{ flex: 1 }}>
+									<Text
+										style={StyleSheet.flatten([
+											styles.bigValueDisplay,
+											{
+												color: this.props.selected
+													? Colors.inverted
+													: Colors.primaryText
+											}
+										])}>
+										{this.state.sliderValue + '%'}
+									</Text>
+								</View>
+							)}
 						</View>
+						<View style={styles.text}>
+							<Text
+								style={StyleSheet.flatten([
+									styles.name,
+									{
+										color: this.props.selected
+											? Colors.inverted
+											: Colors.primaryText
+									}
+								])}>
+								{this.props.name}
+							</Text>
+							<Text
+								style={StyleSheet.flatten([
+									styles.state,
+									{
+										color: this.props.selected
+											? Colors.inverted50
+											: Colors.secondaryText
+									}
+								])}>
+								{this.state.switchValue ? 'Allumé' : 'Eteint'}
+							</Text>
+						</View>
+					</View>
+					{this.props.collapsed ? (
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
@@ -267,8 +265,8 @@ class SingleLightCommand extends Component {
 								thumbStyle={styles.sliderthumbStyle}
 							/>
 						</View>
-					</View>
-				)}
+					) : null}
+				</View>
 			</TouchableOpacity>
 		);
 	}
@@ -282,8 +280,6 @@ SingleLightCommand.propTypes = {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 160,
-		height: 165,
 		backgroundColor: Colors.inverted,
 		borderRadius: 20,
 		shadowColor: 'rgba(100, 100, 100, 0.1)',
@@ -292,8 +288,7 @@ const styles = StyleSheet.create({
 			height: 5
 		},
 		shadowRadius: 15,
-		shadowOpacity: 1,
-		margin: 10
+		shadowOpacity: 1
 	},
 	linearGradient: {
 		width: '100%',
@@ -301,12 +296,7 @@ const styles = StyleSheet.create({
 		borderRadius: 20
 	},
 	innerContainer: {
-		flex: 1,
-		flexDirection: 'row',
-		padding: 15
-	},
-	leftPart: {
-		flex: 2
+		flex: 1
 	},
 	topPart: {
 		flex: 1,
@@ -380,6 +370,12 @@ const styles = StyleSheet.create({
 	},
 	sliderthumbStyle: {
 		opacity: 0
+	},
+	bigValueDisplay: {
+		fontFamily: 'OpenSans',
+		fontSize: 20,
+		lineHeight: 48,
+		textAlign: 'right'
 	}
 });
 

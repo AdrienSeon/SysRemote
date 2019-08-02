@@ -10,7 +10,8 @@ import {
 	Button,
 	Animated,
 	LayoutAnimation,
-	UIManager
+	UIManager,
+	Dimensions
 } from 'react-native';
 import { Header } from 'react-navigation';
 import { FlatGrid } from 'react-native-super-grid';
@@ -20,6 +21,7 @@ import SingleLightCommand from '../components/SingleLightCommand';
 import Switch from '../components/Switch';
 import Slider from '../components/Slider';
 
+const { width } = Dimensions.get('window');
 class LightsListScreen extends Component {
 	static navigationOptions = () => ({
 		title: 'Luminaires',
@@ -33,7 +35,8 @@ class LightsListScreen extends Component {
 			switchValue: true,
 			sliderValue: 80,
 			collapsed: true,
-			flex: 0,
+			rightPannel: -100,
+			width: width,
 			selected: (new Map(): Map<string, boolean>),
 			data: [
 				{ id: 'light1', name: 'Luminaire 1' },
@@ -67,10 +70,12 @@ class LightsListScreen extends Component {
 
 	changeLayout = () => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-		if (this.state.flex == 0) {
-			this.setState({ flex: 3 });
+		if (this.state.collapsed) {
+			this.setState({ rightPannel: 0 });
+			this.setState({ width: width - 100 });
 		} else {
-			this.setState({ flex: 0 });
+			this.setState({ rightPannel: -100 });
+			this.setState({ width: width });
 		}
 	};
 
@@ -90,6 +95,7 @@ class LightsListScreen extends Component {
 			onPressItem={this.onPressItem}
 			selected={!!this.state.selected.get(item.id)}
 			name={item.name}
+			collapsed={this.state.collapsed}
 		/>
 	);
 
@@ -116,20 +122,37 @@ class LightsListScreen extends Component {
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
-				<View style={styles.container}>
-					<FlatGrid
-						itemDimension={160}
-						contentContainerStyle={{ alignItems: 'center', backgroundColor: 'green' }}
-						staticDimension={this.state.collapsed ? undefined : 200}
-						items={this.state.data}
-						extraData={this.state}
-						renderItem={this.renderItem}
-					/>
+				<View
+					style={{
+						flex: 1,
+						marginTop: Platform.OS === 'ios' ? Header.HEIGHT - 20 : Header.HEIGHT + 24,
+						flexDirection: 'row'
+					}}>
 					<View
 						style={{
-							flex: this.state.flex,
-							backgroundColor: 'red',
+							width: this.state.width
+						}}>
+						<FlatGrid
+							itemDimension={this.state.collapsed ? 160 : 90}
+							contentContainerStyle={{
+								alignItems: 'center',
+								//backgroundColor: 'green'
+							}}
+							//staticDimension={this.state.collapsed ? undefined : 200}
+							items={this.state.data}
+							extraData={this.state}
+							renderItem={this.renderItem}
+						/>
+					</View>
+					<View
+						style={{
+							//backgroundColor: 'red',
 							paddingVertical: 30,
+							width: 100,
+							position: 'absolute',
+							top: 10,
+							bottom: 0,
+							right: this.state.rightPannel
 						}}>
 						<View style={styles.switchContainer}>
 							<Switch
@@ -193,11 +216,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: Colors.appBackground
 	},
-	container: {
-		flex: 1,
-		marginTop: Platform.OS === 'ios' ? Header.HEIGHT - 20 : Header.HEIGHT + 24,
-		flexDirection: 'row'
-	},
+	container: {},
 	backBtn: {
 		marginLeft: Platform.OS === 'ios' ? 10 : 0
 	},
@@ -251,7 +270,7 @@ const styles = StyleSheet.create({
 		fontFamily: 'OpenSans',
 		fontSize: 14,
 		left: -10
-	},
+	}
 });
 
 export default LightsListScreen;
