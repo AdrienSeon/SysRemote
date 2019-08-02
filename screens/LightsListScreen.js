@@ -22,6 +22,7 @@ import Switch from '../components/Switch';
 import Slider from '../components/Slider';
 
 const { width } = Dimensions.get('window');
+
 class LightsListScreen extends Component {
 	static navigationOptions = () => ({
 		title: 'Luminaires',
