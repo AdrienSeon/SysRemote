@@ -18,11 +18,17 @@ class SingleLightCommand extends Component {
 		};
 	}
 
-	handlePress() {
-		this.props.onPressItem(this.props.id);
+	shouldComponentUpdate(nextProps, nextState) {
+		return (
+			nextProps.selected !== this.props.selected ||
+			nextProps.name !== this.props.name ||
+			nextProps.onPressItem !== this.props.onPressItem ||
+			nextState.switchValue !== this.props.switchValue ||
+			nextState.sliderValue !== this.props.sliderValue
+		);
 	}
 
-	handleSliderValue(value) {
+	handleSliderValue = (value) => {
 		this.setState({ sliderValue: value });
 
 		if (value > 0) {
@@ -32,7 +38,7 @@ class SingleLightCommand extends Component {
 		}
 	}
 
-	handleSwitchValue(value) {
+	handleSliderValue = (value) => {
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -40,6 +46,10 @@ class SingleLightCommand extends Component {
 		} else {
 			this.setState({ sliderValue: 0 });
 		}
+	}
+
+	handlePress() {
+		this.props.onPressItem(this.props.id);
 	}
 
 	render() {
@@ -171,7 +181,7 @@ class SingleLightCommand extends Component {
 							{this.props.collapsed ? (
 								<View style={styles.switchContainer}>
 									<Switch
-										onChange={(value) => this.handleSwitchValue(value)}
+										onChange={this.handleSwitchValue}
 										value={this.state.switchValue}
 										trackOnColor={
 											this.props.selected
@@ -244,7 +254,7 @@ class SingleLightCommand extends Component {
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
-								onValueChange={(value) => this.handleSliderValue(value)}
+								onValueChange{this.handleSliderValue}
 								animateTransitions
 								animationType="timing"
 								minimumValue={0}
