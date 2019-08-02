@@ -57,16 +57,6 @@ class Slider extends Component {
 		});
 	}
 
-	componentDidMount() {
-		const newValue = getBoundedValue(this.props);
-
-		if (this.props.animateTransitions) {
-			this.setCurrentValueAnimated(newValue);
-		} else {
-			this.setCurrentValue(newValue);
-		}
-	}
-
 	componentDidUpdate(prevProps) {
 		const newValue = getBoundedValue(this.props);
 
