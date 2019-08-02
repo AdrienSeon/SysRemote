@@ -38,7 +38,7 @@ class SingleLightCommand extends Component {
 		}
 	}
 
-	handleSliderValue = (value) => {
+	handleSwitchValue = (value) => {
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -48,7 +48,7 @@ class SingleLightCommand extends Component {
 		}
 	}
 
-	handlePress() {
+	handlePress = () => {
 		this.props.onPressItem(this.props.id);
 	}
 
@@ -63,7 +63,7 @@ class SingleLightCommand extends Component {
 						margin: this.props.collapsed ? 5 : 0
 					}
 				])}
-				onPress={() => this.handlePress()}>
+				onPress={this.handlePress}>
 				<LinearGradient
 					colors={[Colors.primaryBrandGradientLight, Colors.primaryBrandGradientDark]}
 					style={styles.linearGradient}>
@@ -147,7 +147,7 @@ class SingleLightCommand extends Component {
 						margin: this.props.collapsed ? 5 : 0
 					}
 				])}
-				onPress={() => this.handlePress()}>
+				onPress={this.handlePress}>
 				<View
 					style={StyleSheet.flatten([
 						styles.innerContainer,
@@ -254,7 +254,7 @@ class SingleLightCommand extends Component {
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
-								onValueChange{this.handleSliderValue}
+								onValueChange={this.handleSliderValue}
 								animateTransitions
 								animationType="timing"
 								minimumValue={0}
