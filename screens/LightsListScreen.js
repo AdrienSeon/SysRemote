@@ -2,21 +2,18 @@ import React, { Component } from 'react';
 import {
 	Platform,
 	SafeAreaView,
-	ScrollView,
 	View,
 	StyleSheet,
 	FlatList,
-	Text,
-	Button,
-	Animated,
 	LayoutAnimation,
 	UIManager,
-	Dimensions
+	Dimensions,
+	TouchableOpacity
 } from 'react-native';
 import { Header } from 'react-navigation';
-import { FlatGrid } from 'react-native-super-grid';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
+import SelectNone from '../components/icons/SelectNone';
 import SingleLightCommand from '../components/SingleLightCommand';
 import Switch from '../components/Switch';
 import Slider from '../components/Slider';
@@ -24,9 +21,18 @@ import Slider from '../components/Slider';
 const { width } = Dimensions.get('window');
 
 class LightsListScreen extends Component {
-	static navigationOptions = () => ({
+	static navigationOptions = ({ navigation }) => ({
 		title: 'Luminaires',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+		headerBackImage: (
+			<TouchableOpacity activeOpacity={0}>
+				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
+		),
+		headerRight: navigation.getParam('selectNoneButtonDisplay', false) ? (
+			<TouchableOpacity activeOpacity={0.5} onPress={navigation.getParam('deselectAll')}>
+				<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
+		) : null
 	});
 
 	constructor(props) {
@@ -37,17 +43,65 @@ class LightsListScreen extends Component {
 			sliderValue: 80,
 			collapsed: true,
 			rightPannel: -100,
-			width: width,
+			width,
 			selected: (new Map(): Map<string, boolean>),
-			data: [
-				{ id: 'light1', name: 'Luminaire 1' },
-				{ id: 'light2', name: 'Luminaire 2' },
-				{ id: 'light3', name: 'Luminaire 3' },
-				{ id: 'light4', name: 'Luminaire 4' },
-				{ id: 'light5', name: 'Luminaire 5' },
-				{ id: 'light6', name: 'Luminaire 6' },
-				{ id: 'light7', name: 'Luminaire 7' },
-				{ id: 'light8', name: 'Luminaire 8' }
+			lightsData: [
+				{
+					id: 'light1',
+					name: 'Luminaire 1',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light2',
+					name: 'Luminaire 2',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light3',
+					name: 'Luminaire 3',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light4',
+					name: 'Luminaire 4',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light5',
+					name: 'Luminaire 5',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light6',
+					name: 'Luminaire 6',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light7',
+					name: 'Luminaire 7',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				},
+				{
+					id: 'light8',
+					name: 'Luminaire 8',
+					switchValue: true,
+					sliderValue: 80,
+					selected: false
+				}
 			]
 		};
 
@@ -56,18 +110,38 @@ class LightsListScreen extends Component {
 		}
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidMount() {
+		this.props.navigation.setParams({ deselectAll: this.deselectAll });
+	}
+
+	componentDidUpdate(prevState) {
 		if (prevState.selected !== this.state.selected) {
 			if (this.state.selected.size > 0 && this.state.collapsed) {
 				this.setState({ collapsed: false });
+				this.props.navigation.setParams({ selectNoneButtonDisplay: true });
 				this.changeLayout();
 			}
-			if (this.state.selected.size == 0 && !this.state.collapsed) {
+			if (this.state.selected.size === 0 && !this.state.collapsed) {
 				this.setState({ collapsed: true });
+				this.props.navigation.setParams({ selectNoneButtonDisplay: false });
 				this.changeLayout();
 			}
 		}
 	}
+
+	deselectAll = () => {
+		const items = this.state.lightsData;
+		items.forEach((item) => {
+			item.selected = false;
+		});
+		this.setState({ lightsData: items });
+
+		this.setState(() => {
+			const selected = new Map(this.state.selected);
+			selected.clear();
+			return { selected };
+		});
+	};
 
 	changeLayout = () => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -76,16 +150,21 @@ class LightsListScreen extends Component {
 			this.setState({ width: width - 100 });
 		} else {
 			this.setState({ rightPannel: -100 });
-			this.setState({ width: width });
+			this.setState({ width });
 		}
 	};
 
-	onPressItem = (id: string) => {
+	onPressItem = (item) => {
+		const items = this.state.lightsData;
+		const index = items.indexOf(item);
+		items[index].selected = !items[index].selected;
+		this.setState({ lightsData: items });
+
 		this.setState((state) => {
 			const selected = new Map(state.selected);
-			this.state.selected.has(id)
-				? selected.delete(id, !selected.get(id))
-				: selected.set(id, !selected.get(id));
+			this.state.selected.has(item.id)
+				? selected.delete(item.id, !selected.get(item.id))
+				: selected.set(item.id, !selected.get(item.id));
 			return { selected };
 		});
 	};
@@ -94,23 +173,55 @@ class LightsListScreen extends Component {
 		<SingleLightCommand
 			id={item.id}
 			onPressItem={this.onPressItem}
-			selected={!!this.state.selected.get(item.id)}
+			selected={item.selected}
 			name={item.name}
 			collapsed={this.state.collapsed}
+			switchValue={item.switchValue}
+			sliderValue={item.sliderValue}
+			item={item}
+			onChildSliderValueChange={this.handleChildSliderValue}
+			onChildSwitchValueChange={this.handleChildSwitchValue}
 		/>
 	);
 
-	handleSliderValue = (value) => {
+	keyExtractor = (item) => item.id;
+
+	handleMainSliderValue = (value) => {
 		this.setState({ sliderValue: value });
+
+		this.setState((state) => {
+			const lights = state.lightsData.map((light) => {
+				if (light.selected) {
+					light.sliderValue = value;
+				}
+				return light;
+			});
+			return { lights };
+		});
 
 		if (value > 0) {
 			this.setState({ switchValue: true });
 		} else {
 			this.setState({ switchValue: false });
 		}
-	}
+	};
 
-	handleSwitchValue = (value) => {
+	handleChildSliderValue = (item, value) => {
+		const items = this.state.lightsData;
+		const index = items.indexOf(item);
+
+		items[index].sliderValue = value;
+
+		if (value > 0) {
+			items[index].switchValue = true;
+		} else {
+			items[index].switchValue = false;
+		}
+
+		this.setState({ lightsData: items });
+	};
+
+	handleMainSwitchValue = (value) => {
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -118,7 +229,22 @@ class LightsListScreen extends Component {
 		} else {
 			this.setState({ sliderValue: 0 });
 		}
-	}
+	};
+
+	handleChildSwitchValue = (item, value) => {
+		const items = this.state.lightsData;
+		const index = items.indexOf(item);
+
+		items[index].switchValue = value;
+
+		if (value) {
+			items[index].sliderValue = 100;
+		} else {
+			items[index].sliderValue = 0;
+		}
+
+		this.setState({ lightsData: items });
+	};
 
 	render() {
 		return (
@@ -133,22 +259,19 @@ class LightsListScreen extends Component {
 						style={{
 							width: this.state.width
 						}}>
-						<FlatGrid
-							itemDimension={this.state.collapsed ? 160 : 90}
+						<FlatList
 							contentContainerStyle={{
-								alignItems: 'center',
-								//backgroundColor: 'green'
+								alignItems: 'center'
 							}}
-							//staticDimension={this.state.collapsed ? undefined : 200}
-							items={this.state.data}
+							data={this.state.lightsData}
 							extraData={this.state}
 							renderItem={this.renderItem}
+							numColumns={2}
+							keyExtractor={this.keyExtractor}
 						/>
 					</View>
 					<View
 						style={{
-							//backgroundColor: 'red',
-							paddingVertical: 30,
 							width: 100,
 							position: 'absolute',
 							top: 10,
@@ -157,24 +280,12 @@ class LightsListScreen extends Component {
 						}}>
 						<View style={styles.switchContainer}>
 							<Switch
-								onChange={this.handleSwitchValue}
+								onChange={this.handleMainSwitchValue}
 								value={this.state.switchValue}
-								trackOnColor={
-									this.props.selected
-										? Colors.primaryBrandDark
-										: Colors.primaryBrand50
-								}
-								trackOffColor={
-									this.props.selected
-										? Colors.primaryBrandDark
-										: Colors.primaryBrand50
-								}
-								knobOnColor={
-									this.props.selected ? Colors.inverted : Colors.primaryBrand
-								}
-								knobOffColor={
-									this.props.selected ? Colors.inverted : Colors.primaryBrand
-								}
+								trackOnColor={Colors.primaryBrand}
+								trackOffColor={Colors.inverted}
+								knobOnColor={Colors.inverted}
+								knobOffColor={Colors.primaryBrand}
 								knobSize={28}
 								trackSize={32}
 								trackStyle={styles.switchTrackStyle}
@@ -184,22 +295,18 @@ class LightsListScreen extends Component {
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
-								onValueChange={this.handleSliderValue}
+								onValueChange={this.handleMainSliderValue}
 								animateTransitions
 								animationType="spring"
 								minimumValue={0}
 								maximumValue={100}
 								step={1}
 								orientation="vertical"
-								trackSizeProp={50}
-								thumbSizeProp={50}
+								trackSizeProp={40}
+								thumbSizeProp={40}
 								maximumTrackTintColor={Colors.inverted}
 								gradientInnerTrack
 								gradientColor={[Colors.inverted, Colors.tertiaryBrand]}
-								showValueIndicator
-								valueIndicatorPosition="top"
-								valueIndicatorTextColor={Colors.tertiaryText}
-								valueIndicatorStyle={styles.sliderValueIndicatorStyle}
 								style={styles.slider}
 								thumbTintColor={Colors.inverted}
 								thumbStyle={styles.sliderthumbStyle}
@@ -217,13 +324,16 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: Colors.appBackground
 	},
-	container: {},
 	backBtn: {
 		marginLeft: Platform.OS === 'ios' ? 10 : 0
 	},
+	rightBtn: {
+		marginRight: 10
+	},
 	switchContainer: {
 		flex: 1,
-		alignItems: 'center'
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	switchTrackStyle: {
 		shadowColor: 'rgba(100, 100, 100, 0.1)',
@@ -245,7 +355,8 @@ const styles = StyleSheet.create({
 		shadowOpacity: 1
 	},
 	sliderContainer: {
-		flex: 3,
+		flex: 2,
+		paddingBottom: 30,
 		alignItems: 'center'
 	},
 	slider: {
@@ -266,11 +377,6 @@ const styles = StyleSheet.create({
 		},
 		shadowRadius: 2,
 		shadowOpacity: 1
-	},
-	lightSliderValueIndicatorStyle: {
-		fontFamily: 'OpenSans',
-		fontSize: 14,
-		left: -10
 	}
 });
 

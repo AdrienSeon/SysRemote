@@ -12,12 +12,9 @@ class TemperatureScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Température',
 		headerLeft: (
-			<MenuIcon
-				style={styles.menuBtn}
-				color={Colors.primaryText}
-				size={32}
-				onPress={() => navigation.openDrawer()}
-			/>
+			<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
+				<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
 		)
 	});
 

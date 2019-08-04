@@ -8,7 +8,8 @@ import {
 	Image,
 	TouchableNativeFeedback,
 	TouchableOpacity,
-	AsyncStorage
+	AsyncStorage,
+	Animated
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../constants/Colors';
@@ -31,6 +32,11 @@ class DrawerScreen extends React.Component {
 		const TouchablePlatformSpecific =
 			Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
+		const translateX = this.props.drawerOpenProgress.interpolate({
+			inputRange: [0, 1],
+			outputRange: [-200, 0]
+		});
+
 		return (
 			<SafeAreaView style={styles.container}>
 				<LinearGradient
@@ -38,34 +44,45 @@ class DrawerScreen extends React.Component {
 					start={{ x: 1, y: 1 }}
 					end={{ x: 0, y: 0 }}
 					style={styles.linearGradient}>
-					<View style={styles.titleContainer}>
-						<Image style={styles.logo} />
-						<Text style={styles.appName}>{AppConfig.appName}</Text>
-						<Text style={styles.buildingName}>{AppConfig.buildingName}</Text>
-					</View>
-					<View style={styles.menu}>
-						<TouchablePlatformSpecific
-							onPress={() => this.props.navigation.navigate('Settings')}>
-							<View style={styles.menuItem}>
-								<SettingsIcon
-									style={styles.MenuItemIcon}
-									color={Colors.inverted}
-									size={21}
-								/>
-								<Text style={styles.menuItemLabel}>Paramètres</Text>
-							</View>
-						</TouchablePlatformSpecific>
-						<TouchablePlatformSpecific onPress={this.LogoutAsync}>
-							<View style={styles.menuItem}>
-								<LogoutIcon
-									style={styles.MenuItemIcon}
-									color={Colors.inverted}
-									size={21}
-								/>
-								<Text style={styles.menuItemLabel}>Se déconnecter</Text>
-							</View>
-						</TouchablePlatformSpecific>
-					</View>
+					<Animated.View
+						style={StyleSheet.flatten([
+							styles.parallaxView,
+							{
+								transform: [{ translateX }]
+							}
+						])}>
+						<View style={styles.titleContainer}>
+							<Image
+								source={require('../assets/images/Icon/icon-ios-83.5.png')}
+								style={styles.logo}
+							/>
+							<Text style={styles.appName}>{AppConfig.appName}</Text>
+							<Text style={styles.buildingName}>{AppConfig.buildingName}</Text>
+						</View>
+						<View style={styles.menu}>
+							<TouchablePlatformSpecific
+								onPress={() => this.props.navigation.navigate('Settings')}>
+								<View style={styles.menuItem}>
+									<SettingsIcon
+										style={styles.MenuItemIcon}
+										color={Colors.inverted}
+										size={21}
+									/>
+									<Text style={styles.menuItemLabel}>Paramètres</Text>
+								</View>
+							</TouchablePlatformSpecific>
+							<TouchablePlatformSpecific onPress={this.LogoutAsync}>
+								<View style={styles.menuItem}>
+									<LogoutIcon
+										style={styles.MenuItemIcon}
+										color={Colors.inverted}
+										size={21}
+									/>
+									<Text style={styles.menuItemLabel}>Se déconnecter</Text>
+								</View>
+							</TouchablePlatformSpecific>
+						</View>
+					</Animated.View>
 				</LinearGradient>
 			</SafeAreaView>
 		);
@@ -77,6 +94,9 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	linearGradient: {
+		flex: 1
+	},
+	parallaxView: {
 		flex: 1,
 		justifyContent: 'space-between'
 	},
@@ -86,8 +106,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	logo: {
-		width: 80,
-		height: 80,
 		borderRadius: 10,
 		backgroundColor: Colors.inverted50,
 		shadowColor: 'rgba(0, 0, 0, 0.05)',

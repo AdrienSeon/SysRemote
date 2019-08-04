@@ -4,7 +4,7 @@ import LoginScreen from '../screens/LoginScreen';
 import LogoutIcon from '../components/icons/Logout';
 import Colors from '../constants/Colors';
 
-const LoginStackNavigator = createStackNavigator(
+const AuthStackNavigator = createStackNavigator(
 	{
 		Login: {
 			screen: LoginScreen
@@ -15,16 +15,17 @@ const LoginStackNavigator = createStackNavigator(
 		defaultNavigationOptions: {
 			headerTransparent: true,
 			headerBackTitle: null,
-			headerTruncatedBackTitle: null
+			headerTruncatedBackTitle: null,
+			gesturesEnabled: false
 		}
 	}
 );
 
-LoginStackNavigator.navigationOptions = {
+AuthStackNavigator.navigationOptions = {
 	drawerLabel: 'Se déconnecter',
 	drawerIcon: <LogoutIcon color={Colors.inverted} size={21} />
 };
 
-LoginStackNavigator.path = '';
+AuthStackNavigator.path = '';
 
-export default LoginStackNavigator;
+export default AuthStackNavigator;

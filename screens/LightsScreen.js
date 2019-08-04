@@ -13,12 +13,9 @@ class LightsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Luminaires',
 		headerLeft: (
-			<MenuIcon
-				style={styles.menuBtn}
-				color={Colors.primaryText}
-				size={32}
-				onPress={() => navigation.openDrawer()}
-			/>
+			<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
+				<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
 		)
 	});
 
@@ -31,7 +28,7 @@ class LightsScreen extends Component {
 		};
 	}
 
-	handleSliderValue(value) {
+	handleSliderValue = (value) => {
 		this.setState({ sliderValue: value });
 
 		if (value > 0) {
@@ -39,9 +36,9 @@ class LightsScreen extends Component {
 		} else {
 			this.setState({ switchValue: false });
 		}
-	}
+	};
 
-	handleSwitchValue(value) {
+	handleSwitchValue = (value) => {
 		this.setState({ switchValue: value });
 
 		if (value) {
@@ -49,47 +46,50 @@ class LightsScreen extends Component {
 		} else {
 			this.setState({ sliderValue: 0 });
 		}
-	}
+	};
 
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<TouchableOpacity
-						style={styles.lightsListButtonContainer}
-						onPress={() => this.props.navigation.navigate('LightsList')}
-						activeOpacity={0.5}>
-						<View style={styles.lightsListButton}>
-							<View style={styles.lightsListButtonLeftPart}>
-								<LightsTopIcon
-									style={styles.lightsTopIcon}
-									color={Colors.primaryBrand}
-									size={128}
-								/>
-								<LightsBotIcon
-									style={StyleSheet.flatten([
-										styles.lightsBopIcon,
-										{
-											shadowColor: `rgba(255, 221, 136, ${this.state
-												.sliderValue / 100})`
-										}
-									])}
-									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
-									size={128}
-								/>
+					<View style={styles.listButtonContainer}>
+						<TouchableOpacity
+							style={styles.listButtonTouchable}
+							onPress={() => this.props.navigation.navigate('LightsList')}
+							activeOpacity={0.7}>
+							<View style={styles.listButton}>
+								<View style={styles.listButtonLeftPart}>
+									<LightsTopIcon
+										style={styles.topIcon}
+										color={Colors.primaryBrand}
+										size={128}
+									/>
+									<LightsBotIcon
+										style={StyleSheet.flatten([
+											styles.botIcon,
+											{
+												shadowColor: `rgba(255, 221, 136, ${this.state
+													.sliderValue / 100})`
+											}
+										])}
+										color={`rgba(255, 220, 133, ${this.state.sliderValue /
+											100})`}
+										size={128}
+									/>
+								</View>
+								<View style={styles.listButtonRightPart}>
+									<NextIcon
+										style={styles.nextIcon}
+										color={Colors.inverted}
+										size={32}
+									/>
+								</View>
 							</View>
-							<View style={styles.lightsListButtonRightPart}>
-								<NextIcon
-									style={styles.nextIcon}
-									color={Colors.inverted}
-									size={32}
-								/>
-							</View>
-						</View>
-					</TouchableOpacity>
+						</TouchableOpacity>
+					</View>
 					<View style={styles.switchContainer}>
 						<Switch
-							onChange={(value) => this.handleSwitchValue(value)}
+							onChange={this.handleSwitchValue}
 							value={this.state.switchValue}
 							trackOnColor={Colors.primaryBrand}
 							trackOffColor={Colors.inverted}
@@ -101,27 +101,28 @@ class LightsScreen extends Component {
 							knobStyle={styles.switchKnobStyle}
 						/>
 					</View>
-					<View style={styles.lightSliderContainer}>
+					<View style={styles.sliderContainer}>
 						<Slider
 							value={this.state.sliderValue}
-							onValueChange={(value) => this.handleSliderValue(value)}
+							onValueChange={this.handleSliderValue}
 							animateTransitions
 							animationType="spring"
 							minimumValue={0}
 							maximumValue={100}
 							step={1}
-							trackSizeProp={25}
-							thumbSizeProp={25}
+							trackSizeProp={35}
+							thumbSizeProp={35}
+							minimumTrackTintColor="black"
 							maximumTrackTintColor={Colors.inverted}
 							gradientInnerTrack
 							gradientColor={[Colors.inverted, Colors.tertiaryBrand]}
 							showValueIndicator
 							valueIndicatorPosition="top"
 							valueIndicatorTextColor={Colors.tertiaryText}
-							valueIndicatorStyle={styles.lightSliderValueIndicatorStyle}
-							style={styles.lightSlider}
+							valueIndicatorStyle={styles.sliderValueIndicatorStyle}
+							style={styles.slider}
 							thumbTintColor={Colors.inverted}
-							thumbStyle={styles.lightSliderthumbStyle}
+							thumbStyle={styles.sliderthumbStyle}
 						/>
 					</View>
 				</View>
@@ -143,10 +144,16 @@ const styles = StyleSheet.create({
 	menuBtn: {
 		marginLeft: 16
 	},
-	lightsListButtonContainer: {
-		flex: 2
+	listButtonContainer: {
+		flex: 2,
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
-	lightsListButton: {
+	listButtonTouchable: {
+		width: 210,
+		height: 180
+	},
+	listButton: {
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 7,
 		shadowOpacity: 1
 	},
-	lightsListButtonLeftPart: {
+	listButtonLeftPart: {
 		backgroundColor: Colors.inverted,
 		width: 170,
 		height: 180,
@@ -169,12 +176,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		paddingTop: 70
 	},
-	lightsTopIcon: {
+	topIcon: {
 		position: 'relative',
 		top: 25,
 		left: 3
 	},
-	lightsBopIcon: {
+	botIcon: {
 		shadowColor: 'rgba(255, 221, 136, 0.8)',
 		shadowOffset: {
 			width: 0,
@@ -186,7 +193,7 @@ const styles = StyleSheet.create({
 		top: -100,
 		left: 3
 	},
-	lightsListButtonRightPart: {
+	listButtonRightPart: {
 		backgroundColor: Colors.primaryBrand,
 		width: 40,
 		height: 180,
@@ -218,18 +225,13 @@ const styles = StyleSheet.create({
 		shadowRadius: 2,
 		shadowOpacity: 1
 	},
-	lightSliderContainer: {
+	sliderContainer: {
 		flex: 1,
 		justifyContent: 'space-around',
 		marginLeft: 50,
 		marginRight: 50
 	},
-	lightSliderValueIndicatorStyle: {
-		fontFamily: 'OpenSans',
-		fontSize: 14,
-		left: -10
-	},
-	lightSlider: {
+	slider: {
 		shadowColor: 'rgba(100, 100, 100, 0.1)',
 		shadowOffset: {
 			width: 0,
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		shadowOpacity: 1
 	},
-	lightSliderthumbStyle: {
+	sliderthumbStyle: {
 		shadowColor: 'rgba(100, 100, 100, 0.2)',
 		shadowOffset: {
 			width: 0,
@@ -246,6 +248,11 @@ const styles = StyleSheet.create({
 		},
 		shadowRadius: 2,
 		shadowOpacity: 1
+	},
+	sliderValueIndicatorStyle: {
+		fontFamily: 'OpenSans',
+		fontSize: 14,
+		left: -5
 	}
 });
 

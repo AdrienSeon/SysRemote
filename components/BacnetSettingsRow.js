@@ -113,7 +113,6 @@ const pickerSelectStyles = StyleSheet.create({
 		fontFamily: 'OpenSans',
 		fontSize: 14,
 		color: Colors.secondaryText,
-		paddingRight: 35
 	},
 	inputAndroid: {
 		paddingHorizontal: 10,

@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, ScrollView, Text, StyleSheet } from 'react-native';
+import {
+	Platform,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	StyleSheet,
+	TouchableOpacity
+} from 'react-native';
 import { List, ListItem, Left, Right, Icon } from 'native-base';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
@@ -8,12 +15,11 @@ class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Paramètres',
 		headerLeft: (
-			<BackIcon
-				style={styles.backBtn}
-				color={Colors.primaryText}
-				size={32}
-				onPress={() => navigation.navigate('Temperature')}
-			/>
+			<TouchableOpacity
+				activeOpacity={0.5}
+				onPress={() => navigation.navigate('Temperature')}>
+				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
 		)
 	});
 

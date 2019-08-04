@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
@@ -8,48 +8,18 @@ import LightsBotIcon from './icons/LightsBot';
 import Switch from './Switch';
 import Slider from './Slider';
 
-class SingleLightCommand extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			switchValue: true,
-			sliderValue: 80
-		};
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		return (
-			nextProps.selected !== this.props.selected ||
-			nextProps.name !== this.props.name ||
-			nextProps.onPressItem !== this.props.onPressItem ||
-			nextState.switchValue !== this.props.switchValue ||
-			nextState.sliderValue !== this.props.sliderValue
-		);
-	}
+class SingleLightCommand extends PureComponent {
 
 	handleSliderValue = (value) => {
-		this.setState({ sliderValue: value });
-
-		if (value > 0) {
-			this.setState({ switchValue: true });
-		} else {
-			this.setState({ switchValue: false });
-		}
+		this.props.onChildSliderValueChange(this.props.item, value)
 	}
 
 	handleSwitchValue = (value) => {
-		this.setState({ switchValue: value });
-
-		if (value) {
-			this.setState({ sliderValue: 100 });
-		} else {
-			this.setState({ sliderValue: 0 });
-		}
+		this.props.onChildSwitchValueChange(this.props.item, value)
 	}
 
 	handlePress = () => {
-		this.props.onPressItem(this.props.id);
+		this.props.onPressItem(this.props.item);
 	}
 
 	render() {
@@ -59,8 +29,9 @@ class SingleLightCommand extends Component {
 				style={StyleSheet.flatten([
 					styles.container,
 					{
+						width: this.props.collapsed ? 160 : 120,
 						height: 165,
-						margin: this.props.collapsed ? 5 : 0
+						margin: this.props.collapsed ? 10 : 5,
 					}
 				])}
 				onPress={this.handlePress}>
@@ -88,11 +59,10 @@ class SingleLightCommand extends Component {
 									style={StyleSheet.flatten([
 										styles.botIcon,
 										{
-											shadowColor: `rgba(255, 221, 136, ${this.state
-												.sliderValue / 100})`
+											shadowColor: `rgba(255, 221, 136, ${this.props.sliderValue / 100})`
 										}
 									])}
-									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
+									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
 									size={48}
 								/>
 							</View>
@@ -106,7 +76,7 @@ class SingleLightCommand extends Component {
 												: Colors.primaryText
 										}
 									])}>
-									{this.state.sliderValue + '%'}
+									{this.props.sliderValue + '%'}
 								</Text>
 							</View>
 						</View>
@@ -131,7 +101,7 @@ class SingleLightCommand extends Component {
 											: Colors.secondaryText
 									}
 								])}>
-								{this.state.switchValue ? 'Allumé' : 'Eteint'}
+								{this.props.switchValue ? 'Allumé' : 'Eteint'}
 							</Text>
 						</View>
 					</View>
@@ -143,8 +113,9 @@ class SingleLightCommand extends Component {
 				style={StyleSheet.flatten([
 					styles.container,
 					{
+						width: this.props.collapsed ? 160 : 120,
 						height: 165,
-						margin: this.props.collapsed ? 5 : 0
+						margin: this.props.collapsed ? 10 : 5,
 					}
 				])}
 				onPress={this.handlePress}>
@@ -170,11 +141,10 @@ class SingleLightCommand extends Component {
 									style={StyleSheet.flatten([
 										styles.botIcon,
 										{
-											shadowColor: `rgba(255, 221, 136, ${this.state
-												.sliderValue / 100})`
+											shadowColor: `rgba(255, 221, 136, ${this.props.sliderValue / 100})`
 										}
 									])}
-									color={`rgba(255, 220, 133, ${this.state.sliderValue / 100})`}
+									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
 									size={48}
 								/>
 							</View>
@@ -182,7 +152,7 @@ class SingleLightCommand extends Component {
 								<View style={styles.switchContainer}>
 									<Switch
 										onChange={this.handleSwitchValue}
-										value={this.state.switchValue}
+										value={this.props.switchValue}
 										trackOnColor={
 											this.props.selected
 												? Colors.primaryBrandDark
@@ -220,7 +190,7 @@ class SingleLightCommand extends Component {
 													: Colors.primaryText
 											}
 										])}>
-										{this.state.sliderValue + '%'}
+										{this.props.sliderValue + '%'}
 									</Text>
 								</View>
 							)}
@@ -246,17 +216,17 @@ class SingleLightCommand extends Component {
 											: Colors.secondaryText
 									}
 								])}>
-								{this.state.switchValue ? 'Allumé' : 'Eteint'}
+								{this.props.switchValue ? 'Allumé' : 'Eteint'}
 							</Text>
 						</View>
 					</View>
 					{this.props.collapsed ? (
 						<View style={styles.sliderContainer}>
 							<Slider
-								value={this.state.sliderValue}
+								value={this.props.sliderValue}
 								onValueChange={this.handleSliderValue}
 								animateTransitions
-								animationType="timing"
+								animationType="spring"
 								minimumValue={0}
 								maximumValue={100}
 								step={1}
@@ -292,13 +262,13 @@ const styles = StyleSheet.create({
 	container: {
 		backgroundColor: Colors.inverted,
 		borderRadius: 20,
-		shadowColor: 'rgba(100, 100, 100, 0.1)',
+/*		shadowColor: 'rgba(100, 100, 100, 0.1)',
 		shadowOffset: {
 			width: 0,
 			height: 5
 		},
 		shadowRadius: 15,
-		shadowOpacity: 1
+		shadowOpacity: 1*/
 	},
 	linearGradient: {
 		width: '100%',

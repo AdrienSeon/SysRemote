@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, ScrollView, Text, StyleSheet } from 'react-native';
+import { Platform, SafeAreaView, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { List, ListItem } from 'native-base';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
@@ -9,7 +9,11 @@ import KeyboardShift from '../components/KeyboardShift';
 class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Gestion Bacnet',
-		headerBackImage: <BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+		headerBackImage: (
+			<TouchableOpacity activeOpacity={0.5}>
+				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
+		)
 	});
 
 	constructor(props) {
@@ -177,7 +181,7 @@ class BacnetSettingsScreen extends Component {
 								<ListItem style={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.roomSetpointRange} />
 								</ListItem>
-								<ListItem style={styles.rowContainer}>
+								<ListItem last style={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.fanspeed} />
 								</ListItem>
 								<ListItem itemHeader style={styles.listHeader}>

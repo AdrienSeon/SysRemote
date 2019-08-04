@@ -48,7 +48,7 @@ class BlindsOrientationCommand extends Component {
 
 		return (
 			<TouchableOpacity
-				activeOpacity={0.5}
+				activeOpacity={0.7}
 				style={StyleSheet.flatten([
 					{
 						backgroundColor: this.state.value ? trackOnColor : trackOffColor,

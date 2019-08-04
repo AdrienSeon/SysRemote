@@ -114,7 +114,10 @@ CustomizableCheckbox.defaultProps = {
 	noLabel: false,
 	checked: false,
 	noFeedback: false,
-	disabled: false
+	disabled: false,
+	checkboxStyle: {},
+	containerStyle: {},
+	labelStyle: {}
 };
 
 const Label = ({ labelStyle, numberOfLabelLines, label, customLabel }) => {
@@ -129,14 +132,23 @@ const Label = ({ labelStyle, numberOfLabelLines, label, customLabel }) => {
 	);
 };
 
+Label.propTypes = {
+	labelStyle: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+	numberOfLabelLines: PropTypes.number,
+	label: PropTypes.string.isRequired,
+	customLabel: PropTypes.element
+};
+
+Label.defaultProps = {
+	labelStyle: {},
+	numberOfLabelLines: 1,
+	customLabel: null
+};
+
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		alignItems: 'center'
-	},
-	checkbox: {
-		width: 30,
-		height: 30
 	},
 	labelContainer: {
 		marginLeft: 10,

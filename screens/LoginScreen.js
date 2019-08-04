@@ -155,14 +155,9 @@ class LoginScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.appBackground,
-		alignItems: 'stretch'
-	},
 	backgroundImage: {
 		flex: 1,
-		backgroundColor: 'transparent'
+		backgroundColor: Colors.appBackground
 	},
 	titleContainer: {
 		flex: 1,

@@ -15,9 +15,6 @@ const DrawerNavigator = createDrawerNavigator(
 		},
 		Settings: {
 			screen: SettingsStackNavigator
-		},
-		Auth: {
-			screen: AuthStackNavigator
 		}
 	},
 	{
@@ -34,7 +31,7 @@ const DrawerNavigator = createDrawerNavigator(
 				lineHeight: 21
 			}
 		},
-		overlayColor: 'rgba(0, 0, 0, 0.25)',
+		overlayColor: 'rgba(0, 0, 0, 0.50)',
 		initialRouteName: 'Temperature'
 	}
 );

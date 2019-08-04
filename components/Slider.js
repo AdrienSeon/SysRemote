@@ -101,11 +101,6 @@ class Slider extends Component {
 			touchOverflowStyle.marginRight = horizontalMargin;
 		}
 
-		if (this.props.debugTouchArea === true) {
-			touchOverflowStyle.backgroundColor = 'orange';
-			touchOverflowStyle.opacity = 0.5;
-		}
-
 		return touchOverflowStyle;
 	}
 
@@ -312,17 +307,6 @@ class Slider extends Component {
 		}
 	}
 
-	renderDebugThumbTouchRect(thumbLeft) {
-		const thumbTouchRect = this.getThumbTouchRect();
-		const positionStyle = {
-			left: thumbLeft,
-			top: thumbTouchRect.y,
-			width: thumbTouchRect.width,
-			height: thumbTouchRect.height
-		};
-		return <Animated.View style={positionStyle} pointerEvents="none" />;
-	}
-
 	render() {
 		const {
 			minimumValue,
@@ -334,7 +318,6 @@ class Slider extends Component {
 			style,
 			trackStyle,
 			thumbStyle,
-			debugTouchArea,
 			orientation,
 			gradientColor,
 			gradientlocation,
@@ -377,13 +360,13 @@ class Slider extends Component {
 			switch (valueIndicatorPosition) {
 				case 'left':
 					return {
-						right: (thumbSizeProp / 3) * 2,
-						textAlign: 'right'
+						right: thumbSizeProp,
+						textAlign: 'right',
 					};
 					break;
 				case 'right':
 					return {
-						top: (thumbSizeProp / 3) * 2,
+						top: thumbSizeProp,
 						textAlign: 'left'
 					};
 					break;
@@ -949,15 +932,15 @@ class Slider extends Component {
 											: '#000000'
 									}
 								])}>
-								{this.getCurrentValue()}
+								{this.props.value + '%'}
 							</Text>
 						</View>
 					) : null}
 				</Animated.View>
 				<View
-					style={StyleSheet.flatten([styles.touchArea, touchOverflowStyle])}
-					{...this.panResponder.panHandlers}>
-					{debugTouchArea === true && this.renderDebugThumbTouchRect(thumbStart)}
+					style={styles.touchArea}
+					{...this.panResponder.panHandlers}
+				>
 				</View>
 			</View>
 		);
@@ -1042,11 +1025,6 @@ Slider.propTypes = {
 	 * the slider is released).
 	 */
 	onSlidingComplete: PropTypes.func,
-
-	/**
-	 * Set this to true to visually see the thumb touch rect in green.
-	 */
-	debugTouchArea: PropTypes.bool,
 
 	/**
 	 * Set to true to animate values with default 'timing' animation type
@@ -1139,7 +1117,6 @@ Slider.defaultProps = {
 	maximumTrackTintColor: 'transparent',
 	thumbTintColor: 'red',
 	thumbTouchSize: { width: 50, height: 50 },
-	debugTouchArea: false,
 	animationType: 'timing',
 	orientation: 'horizontal'
 };
@@ -1161,11 +1138,6 @@ const styles = StyleSheet.create({
 		left: 0,
 		right: 0,
 		bottom: 0
-	},
-	debugThumbTouchArea: {
-		position: 'absolute',
-		backgroundColor: 'green',
-		opacity: 0.5
 	},
 	linearGradient: {
 		width: '100%',

@@ -15,12 +15,9 @@ class BlindsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Stores',
 		headerLeft: (
-			<MenuIcon
-				style={styles.menuBtn}
-				color={Colors.primaryText}
-				size={32}
-				onPress={() => navigation.openDrawer()}
-			/>
+			<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
+				<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+			</TouchableOpacity>
 		)
 	});
 
@@ -39,32 +36,34 @@ class BlindsScreen extends Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<TouchableOpacity
-						style={styles.blindsListButtonContainer}
-						onPress={() => this.props.navigation.navigate('BlindsList')}
-						activeOpacity={0.5}>
-						<View style={styles.blindsListButton}>
-							<View style={styles.blindsListButtonLeftPart}>
-								<BlindsIconAnimated
-									style={styles.blindsListButtonBlindsIcon}
-									color={Colors.primaryBrand}
-									size={128}
-									opacityRow2={this.state.sliderValue > 16.66 ? 2 : 0}
-									opacityRow3={this.state.sliderValue > 16.66 * 3 ? 1 : 0}
-									opacityRow4={this.state.sliderValue > 16.66 * 4 ? 1 : 0}
-									opacityRow5={this.state.sliderValue > 16.66 * 5 ? 1 : 0}
-									opacityRow6={this.state.sliderValue > 16.66 * 6 ? 1 : 0}
-								/>
+					<View style={styles.listButtonContainer}>
+						<TouchableOpacity
+							style={styles.listButtonTouchable}
+							onPress={() => this.props.navigation.navigate('BlindsList')}
+							activeOpacity={0.7}>
+							<View style={styles.listButton}>
+								<View style={styles.listButtonLeftPart}>
+									<BlindsIconAnimated
+										style={styles.listButtonBlindsIcon}
+										color={Colors.primaryBrand}
+										size={128}
+										opacityRow2={this.state.sliderValue > 16.66 ? 2 : 0}
+										opacityRow3={this.state.sliderValue > 16.66 * 3 ? 1 : 0}
+										opacityRow4={this.state.sliderValue > 16.66 * 4 ? 1 : 0}
+										opacityRow5={this.state.sliderValue > 16.66 * 5 ? 1 : 0}
+										opacityRow6={this.state.sliderValue > 16.66 * 6 ? 1 : 0}
+									/>
+								</View>
+								<View style={styles.listButtonRightPart}>
+									<NextIcon
+										style={styles.nextIcon}
+										color={Colors.inverted}
+										size={32}
+									/>
+								</View>
 							</View>
-							<View style={styles.blindsListButtonRightPart}>
-								<NextIcon
-									style={styles.nextIcon}
-									color={Colors.inverted}
-									size={32}
-								/>
-							</View>
-						</View>
-					</TouchableOpacity>
+						</TouchableOpacity>
+					</View>
 					<View style={styles.blindsCommands}>
 						<View style={styles.orientationContainer}>
 							<CustomizableCheckbox
@@ -131,7 +130,7 @@ class BlindsScreen extends Component {
 								}
 							/>
 						</View>
-						<View style={styles.blindsliderContainer}>
+						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
 								onValueChange={(value) => this.setState({ sliderValue: value })}
@@ -140,18 +139,18 @@ class BlindsScreen extends Component {
 								minimumValue={0}
 								maximumValue={100}
 								step={1}
-								trackSizeProp={25}
-								thumbSizeProp={25}
+								trackSizeProp={35}
+								thumbSizeProp={35}
 								maximumTrackTintColor={Colors.inverted}
 								blindsBackground
 								orientation="vertical"
 								showValueIndicator
 								valueIndicatorPosition="left"
 								valueIndicatorTextColor={Colors.tertiaryText}
-								valueIndicatorStyle={styles.blindsliderValueIndicatorStyle}
-								style={styles.blindslider}
+								valueIndicatorStyle={styles.sliderValueIndicatorStyle}
+								style={styles.slider}
 								thumbTintColor={Colors.inverted}
-								thumbStyle={styles.blindsliderthumbStyle}
+								thumbStyle={styles.sliderthumbStyle}
 							/>
 						</View>
 					</View>
@@ -174,10 +173,16 @@ const styles = StyleSheet.create({
 	menuBtn: {
 		marginLeft: 16
 	},
-	blindsListButtonContainer: {
-		flex: 1
+	listButtonContainer: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
-	blindsListButton: {
+	listButtonTouchable: {
+		width: 210,
+		height: 180
+	},
+	listButton: {
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
@@ -190,7 +195,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 7,
 		shadowOpacity: 1
 	},
-	blindsListButtonLeftPart: {
+	listButtonLeftPart: {
 		backgroundColor: Colors.inverted,
 		width: 170,
 		height: 180,
@@ -200,12 +205,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		paddingTop: 70
 	},
-	blindsListButtonBlindsIcon: {
+	listButtonBlindsIcon: {
 		position: 'relative',
 		top: -35,
 		left: 3
 	},
-	blindsListButtonRightPart: {
+	listButtonRightPart: {
 		backgroundColor: Colors.primaryBrand,
 		width: 40,
 		height: 180,
@@ -226,11 +231,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-around'
 	},
-	blindsliderContainer: {
+	sliderContainer: {
 		flex: 1,
 		alignItems: 'center'
 	},
-	blindslider: {
+	slider: {
 		height: '100%',
 		shadowColor: 'rgba(100, 100, 100, 0.1)',
 		shadowOffset: {
@@ -240,7 +245,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		shadowOpacity: 1
 	},
-	blindsliderthumbStyle: {
+	sliderthumbStyle: {
 		shadowColor: 'rgba(100, 100, 100, 0.2)',
 		shadowOffset: {
 			width: 0,
@@ -249,10 +254,10 @@ const styles = StyleSheet.create({
 		shadowRadius: 2,
 		shadowOpacity: 1
 	},
-	blindsliderValueIndicatorStyle: {
+	sliderValueIndicatorStyle: {
 		fontFamily: 'OpenSans',
 		fontSize: 14,
-		paddingBottom: 21
+		top: -7
 	}
 });
 
