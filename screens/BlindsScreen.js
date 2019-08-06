@@ -9,7 +9,7 @@ import BlindsMiddleIcon from '../components/icons/BlindsMiddle';
 import BlindsRightIcon from '../components/icons/BlindsRight';
 import NextIcon from '../components/icons/Next';
 import Slider from '../components/Slider';
-import CustomizableCheckbox from '../components/CustomizableCheckbox';
+import BlindsOrientationButton from '../components/BlindsOrientationButton';
 
 class BlindsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
@@ -26,11 +26,38 @@ class BlindsScreen extends Component {
 
 		this.state = {
 			sliderValue: 80,
-			blindsLeftOrientationValue: true,
-			blindsMiddleOrientationValue: false,
-			blindsRightOrientationValue: false
+			orientationButtons: [
+				{
+					key: 'left',
+					checked: true,
+					icon: BlindsLeftIcon
+				},
+				{
+					key: 'middle',
+					checked: false,
+					icon: BlindsMiddleIcon
+				},
+				{
+					key: 'right',
+					checked: false,
+					icon: BlindsRightIcon
+				}
+			]
 		};
 	}
+
+	handleOrientationPress = (item) => {
+		const items = this.state.orientationButtons;
+
+		items.forEach((button) => {
+			button.checked = false;
+		});
+
+		const index = items.indexOf(item);
+		items[index].checked = true;
+
+		this.setState({ orientationButtons: items });
+	};
 
 	render() {
 		return (
@@ -66,69 +93,31 @@ class BlindsScreen extends Component {
 					</View>
 					<View style={styles.blindsCommands}>
 						<View style={styles.orientationContainer}>
-							<CustomizableCheckbox
-								value={this.state.blindsLeftOrientationValue}
-								noLabel
-								onChange={(checked) =>
-									this.setState({ blindsLeftOrientationValue: checked })
-								}
-								checkedComponent={
-									<BlindsLeftIcon
-										backgroundColor={Colors.primaryBrand}
-										iconColor={Colors.inverted}
-										size={48}
+							{this.state.orientationButtons.map((item) => {
+								const Icon = item.icon;
+								return (
+									<BlindsOrientationButton
+										key={item.key}
+										onPressItem={this.handleOrientationPress}
+										checked={item.checked}
+										item={item}
+										checkedComponent={
+											<Icon
+												backgroundColor={Colors.primaryBrand}
+												iconColor={Colors.inverted}
+												size={48}
+											/>
+										}
+										uncheckedComponent={
+											<Icon
+												backgroundColor={Colors.inverted}
+												iconColor={Colors.primaryBrand}
+												size={48}
+											/>
+										}
 									/>
-								}
-								uncheckedComponent={
-									<BlindsLeftIcon
-										backgroundColor={Colors.inverted}
-										iconColor={Colors.primaryBrand}
-										size={48}
-									/>
-								}
-							/>
-							<CustomizableCheckbox
-								value={this.state.blindsMiddleOrientationValue}
-								noLabel
-								onChange={(checked) =>
-									this.setState({ blindsMiddleOrientationValue: checked })
-								}
-								checkedComponent={
-									<BlindsMiddleIcon
-										backgroundColor={Colors.primaryBrand}
-										iconColor={Colors.inverted}
-										size={48}
-									/>
-								}
-								uncheckedComponent={
-									<BlindsMiddleIcon
-										backgroundColor={Colors.inverted}
-										iconColor={Colors.primaryBrand}
-										size={48}
-									/>
-								}
-							/>
-							<CustomizableCheckbox
-								value={this.state.blindsRightOrientationValue}
-								noLabel
-								onChange={(checked) =>
-									this.setState({ blindsRightOrientationValue: checked })
-								}
-								checkedComponent={
-									<BlindsRightIcon
-										backgroundColor={Colors.primaryBrand}
-										iconColor={Colors.inverted}
-										size={48}
-									/>
-								}
-								uncheckedComponent={
-									<BlindsRightIcon
-										backgroundColor={Colors.inverted}
-										iconColor={Colors.primaryBrand}
-										size={48}
-									/>
-								}
-							/>
+								);
+							})}
 						</View>
 						<View style={styles.sliderContainer}>
 							<Slider

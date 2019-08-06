@@ -4,3 +4,4 @@ Bugs :
 - zone cliquable big button
 - pas des checkbox poru les stores mais des radio button
 - reverse singleLightCommand slider
+- back button store list et light list enlever touchable opacity pour android

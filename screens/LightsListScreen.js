@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		shadowOpacity: 1
 	},
-	lightSliderthumbStyle: {
+	sliderthumbStyle: {
 		shadowColor: 'rgba(100, 100, 100, 0.2)',
 		shadowOffset: {
 			width: 0,

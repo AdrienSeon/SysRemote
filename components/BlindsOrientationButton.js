@@ -1,13 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-	TouchableOpacity,
-	View,
-	StyleSheet,
-	Platform,
-	TouchableNativeFeedback,
-	TouchableWithoutFeedback
-} from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 class BlindsOrientationButton extends PureComponent {
 	handlePress = () => {
@@ -15,27 +8,16 @@ class BlindsOrientationButton extends PureComponent {
 	};
 
 	render() {
-		const {
-			checked,
-			containerStyle,
-			checkedComponent,
-			uncheckedComponent,
-			noFeedback,
-			disabled,
-			...other
-		} = this.props;
-
-		const NativeContainer = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
-		const Container = noFeedback ? TouchableWithoutFeedback : NativeContainer;
+		const { checked, checkedComponent, uncheckedComponent, ...other } = this.props;
 
 		return (
-			<Container style={[containerStyle]} onPress={this.handlePress} disabled={disabled}>
+			<TouchableOpacity style={styles.touchable} onPress={this.handlePress}>
 				{checkedComponent && uncheckedComponent
 					? checked
 						? checkedComponent
 						: uncheckedComponent
 					: null}
-			</Container>
+			</TouchableOpacity>
 		);
 	}
 }
@@ -44,16 +26,14 @@ BlindsOrientationButton.propTypes = {
 	checkedComponent: PropTypes.element.isRequired,
 	uncheckedComponent: PropTypes.element.isRequired,
 	checked: PropTypes.bool.isRequired,
-	containerStyle: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-	onPressItem: PropTypes.func.isRequired,
-	noFeedback: PropTypes.bool,
-	disabled: PropTypes.bool
+	onPressItem: PropTypes.func.isRequired
 };
 
-BlindsOrientationButton.defaultProps = {
-	noFeedback: false,
-	disabled: false,
-	containerStyle: {}
-};
+const styles = StyleSheet.create({
+	touchable: {
+		flex: 1,
+		alignItems: 'center'
+	}
+});
 
 export default BlindsOrientationButton;
