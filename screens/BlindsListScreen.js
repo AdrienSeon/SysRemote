@@ -274,7 +274,6 @@ class BlindsListScreen extends React.Component {
 				this.changeLayout();
 			}
 		}
-		console.log(JSON.stringify(this.state.blindsData[0],0,4))
 	}
 
 	deselectAll = () => {
