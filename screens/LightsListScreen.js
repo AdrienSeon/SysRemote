@@ -44,6 +44,7 @@ class LightsListScreen extends Component {
 			collapsed: true,
 			rightPannel: -100,
 			width,
+			layoutAnimationActive: false,
 			selected: (new Map(): Map<string, boolean>),
 			lightsData: [
 				{
@@ -106,7 +107,8 @@ class LightsListScreen extends Component {
 		};
 
 		if (Platform.OS === 'android') {
-			UIManager.setLayoutAnimationEnabledExperimental(true);
+			UIManager.setLayoutAnimationEnabledExperimental &&
+				UIManager.setLayoutAnimationEnabledExperimental(true);
 		}
 	}
 
@@ -144,7 +146,17 @@ class LightsListScreen extends Component {
 	};
 
 	changeLayout = () => {
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+		LayoutAnimation.configureNext({
+			duration: 300,
+			create: {
+				type: LayoutAnimation.Types.easeInEaseOut,
+				property: LayoutAnimation.Properties.opacity
+			},
+			update: {
+				type: LayoutAnimation.Types.easeInEaseOut
+			}
+		});
+
 		if (this.state.collapsed) {
 			this.setState({ rightPannel: 0 });
 			this.setState({ width: width - 100 });
@@ -193,6 +205,11 @@ class LightsListScreen extends Component {
 			const lights = state.lightsData.map((light) => {
 				if (light.selected) {
 					light.sliderValue = value;
+					if (value > 0) {
+						light.switchValue = true
+					} else {
+						light.switchValue = false
+					}
 				}
 				return light;
 			});
@@ -223,6 +240,21 @@ class LightsListScreen extends Component {
 
 	handleMainSwitchValue = (value) => {
 		this.setState({ switchValue: value });
+
+		this.setState((state) => {
+			const lights = state.lightsData.map((light) => {
+				if (light.selected) {
+					light.switchValue = value;
+					if (value) {
+						light.sliderValue = 100
+					} else {
+						light.sliderValue = 0
+					}
+				}
+				return light;
+			});
+			return { lights };
+		});
 
 		if (value) {
 			this.setState({ sliderValue: 100 });

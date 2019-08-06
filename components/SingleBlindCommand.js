@@ -1,35 +1,43 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import Colors from '../constants/Colors';
-import BlindsIconAnimated from '../components/icons/BlindsAnimated';
-import Switch from './Switch';
+import BlindsIconAnimated from './icons/BlindsAnimated';
+import BlindsLeftIcon from './icons/BlindsLeft';
+import BlindsMiddleIcon from './icons/BlindsMiddle';
+import BlindsRightIcon from './icons/BlindsRight';
+import BlindsOrientationButton from './BlindsOrientationButton';
 import Slider from './Slider';
 
-class SingleLightCommand extends PureComponent {
-
-	handleSliderValue = (value) => {
-		this.props.onChildSliderValueChange(this.props.item, value)
+class SingleBlindCommand extends Component {
+	shouldComponentUpdate(nextProps) {
+		if (this.props.selected !== nextProps.selected) {
+			return true;
+		}
+		if (this.props.collapsed !== nextProps.collapsed) {
+			return true;
+		}
+		if (this.props.sliderValue !== nextProps.sliderValue) {
+			return true;
+		}
+		if (this.props.orientationButtons !== nextProps.orientationButtons) {
+			return true;
+		}
+		return false;
 	}
 
+	handleSliderValue = (value) => {
+		this.props.onChildSliderValueChange(this.props.item, value);
+	};
+
 	handleOrientationPress = (item) => {
-		this.props.onChildOrientationPress(this.props.item, value)
-		const items = this.props.orientationButtons;
-
-		items.forEach((button) => {
-			button.checked = false;
-		});
-
-		const index = items.indexOf(item);
-		items[index].checked = true;
-
-		this.setState({ orientationButtons: items });
+		this.props.onChildOrientationPress(this.props.item);
 	};
 
 	handlePress = () => {
 		this.props.onPressItem(this.props.item);
-	}
+	};
 
 	render() {
 		return this.props.selected ? (
@@ -40,7 +48,7 @@ class SingleLightCommand extends PureComponent {
 					{
 						width: this.props.collapsed ? 160 : 120,
 						height: 165,
-						margin: this.props.collapsed ? 10 : 5,
+						margin: this.props.collapsed ? 10 : 5
 					}
 				])}
 				onPress={this.handlePress}>
@@ -51,21 +59,21 @@ class SingleLightCommand extends PureComponent {
 						style={StyleSheet.flatten([
 							styles.innerContainer,
 							{
-								padding: this.props.collapsed ? 15 : 10
+								margin: this.props.collapsed ? 15 : 10
 							}
 						])}>
 						<View style={styles.topPart}>
 							<View style={{ flex: 1 }}>
-									<BlindsIconAnimated
-										style={styles.listButtonBlindsIcon}
-										color={Colors.primaryBrand}
-										size={128}
-										opacityRow2={this.state.sliderValue > 16.66 ? 2 : 0}
-										opacityRow3={this.state.sliderValue > 16.66 * 3 ? 1 : 0}
-										opacityRow4={this.state.sliderValue > 16.66 * 4 ? 1 : 0}
-										opacityRow5={this.state.sliderValue > 16.66 * 5 ? 1 : 0}
-										opacityRow6={this.state.sliderValue > 16.66 * 6 ? 1 : 0}
-									/>
+								<BlindsIconAnimated
+									style={styles.blindsIcon}
+									color={Colors.inverted}
+									size={40}
+									opacityRow2={this.props.sliderValue > 16.66 ? 2 : 0}
+									opacityRow3={this.props.sliderValue > 16.66 * 3 ? 1 : 0}
+									opacityRow4={this.props.sliderValue > 16.66 * 4 ? 1 : 0}
+									opacityRow5={this.props.sliderValue > 16.66 * 5 ? 1 : 0}
+									opacityRow6={this.props.sliderValue > 16.66 * 6 ? 1 : 0}
+								/>
 							</View>
 							<View style={{ flex: 1 }}>
 								<Text
@@ -102,8 +110,41 @@ class SingleLightCommand extends PureComponent {
 											: Colors.secondaryText
 									}
 								])}>
-								{this.props.switchValue ? 'Allumé' : 'Eteint'}
+								{this.props.switchValue ? 'Descendu' : 'Monté'}
 							</Text>
+							<View
+								style={StyleSheet.flatten([
+									styles.orientationContainer,
+									{
+										marginLeft: this.props.selected ? 0 : -3
+									}
+								])}>
+								{this.props.orientationButtons.map((item) => {
+									const Icon = item.icon;
+									return (
+										<BlindsOrientationButton
+											key={item.key}
+											onPressItem={this.handleOrientationPress}
+											checked={item.checked}
+											item={item}
+											checkedComponent={
+												<Icon
+													backgroundColor={Colors.primaryBrand}
+													iconColor={Colors.inverted}
+													size={24}
+												/>
+											}
+											uncheckedComponent={
+												<Icon
+													backgroundColor={Colors.inverted}
+													iconColor={Colors.primaryBrand}
+													size={24}
+												/>
+											}
+										/>
+									);
+								})}
+							</View>
 						</View>
 					</View>
 				</LinearGradient>
@@ -116,7 +157,7 @@ class SingleLightCommand extends PureComponent {
 					{
 						width: this.props.collapsed ? 160 : 120,
 						height: 165,
-						margin: this.props.collapsed ? 10 : 5,
+						margin: this.props.collapsed ? 10 : 5
 					}
 				])}
 				onPress={this.handlePress}>
@@ -125,62 +166,24 @@ class SingleLightCommand extends PureComponent {
 						styles.innerContainer,
 						{
 							flexDirection: this.props.collapsed ? 'row' : 'column',
-							padding: this.props.collapsed ? 15 : 10
+							margin: this.props.collapsed ? 15 : 10
 						}
 					])}>
 					<View style={{ flex: this.props.collapsed ? 2 : 1 }}>
 						<View style={styles.topPart}>
 							<View>
-								<LightsTopIcon
-									style={styles.topIcon}
-									color={
-										this.props.selected ? Colors.inverted : Colors.primaryBrand
-									}
-									size={48}
-								/>
-								<LightsBotIcon
-									style={StyleSheet.flatten([
-										styles.botIcon,
-										{
-											shadowColor: `rgba(255, 221, 136, ${this.props.sliderValue / 100})`
-										}
-									])}
-									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
-									size={48}
+								<BlindsIconAnimated
+									style={styles.blindsIcon}
+									color={Colors.primaryBrand}
+									size={40}
+									opacityRow2={this.props.sliderValue > 16.66 ? 2 : 0}
+									opacityRow3={this.props.sliderValue > 16.66 * 3 ? 1 : 0}
+									opacityRow4={this.props.sliderValue > 16.66 * 4 ? 1 : 0}
+									opacityRow5={this.props.sliderValue > 16.66 * 5 ? 1 : 0}
+									opacityRow6={this.props.sliderValue > 16.66 * 6 ? 1 : 0}
 								/>
 							</View>
-							{this.props.collapsed ? (
-								<View style={styles.switchContainer}>
-									<Switch
-										onChange={this.handleSwitchValue}
-										value={this.props.switchValue}
-										trackOnColor={
-											this.props.selected
-												? Colors.primaryBrandDark
-												: Colors.primaryBrand50
-										}
-										trackOffColor={
-											this.props.selected
-												? Colors.primaryBrandDark
-												: Colors.primaryBrand50
-										}
-										knobOnColor={
-											this.props.selected
-												? Colors.inverted
-												: Colors.primaryBrand
-										}
-										knobOffColor={
-											this.props.selected
-												? Colors.inverted
-												: Colors.primaryBrand
-										}
-										knobSize={14}
-										trackSize={18}
-										trackStyle={styles.switchTrackStyle}
-										knobStyle={styles.switchKnobStyle}
-									/>
-								</View>
-							) : (
+							{!this.props.collapsed ? (
 								<View style={{ flex: 1 }}>
 									<Text
 										style={StyleSheet.flatten([
@@ -194,7 +197,7 @@ class SingleLightCommand extends PureComponent {
 										{this.props.sliderValue + '%'}
 									</Text>
 								</View>
-							)}
+							) : null}
 						</View>
 						<View style={styles.text}>
 							<Text
@@ -217,8 +220,41 @@ class SingleLightCommand extends PureComponent {
 											: Colors.secondaryText
 									}
 								])}>
-								{this.props.switchValue ? 'Allumé' : 'Eteint'}
+								{this.props.switchValue ? 'Descendu' : 'Monté'}
 							</Text>
+						</View>
+						<View
+							style={StyleSheet.flatten([
+								styles.orientationContainer,
+								{
+									marginLeft: this.props.selected ? 0 : -3
+								}
+							])}>
+							{this.props.orientationButtons.map((item) => {
+								const Icon = item.icon;
+								return (
+									<BlindsOrientationButton
+										key={item.key}
+										onPressItem={this.handleOrientationPress}
+										checked={item.checked}
+										item={item}
+										checkedComponent={
+											<Icon
+												backgroundColor={Colors.primaryBrand}
+												iconColor={Colors.inverted}
+												size={24}
+											/>
+										}
+										uncheckedComponent={
+											<Icon
+												backgroundColor={Colors.inverted}
+												iconColor={Colors.primaryBrand}
+												size={24}
+											/>
+										}
+									/>
+								);
+							})}
 						</View>
 					</View>
 					{this.props.collapsed ? (
@@ -253,7 +289,7 @@ class SingleLightCommand extends PureComponent {
 	}
 }
 
-SingleLightCommand.propTypes = {
+SingleBlindCommand.propTypes = {
 	selected: PropTypes.bool,
 	name: PropTypes.string,
 	onPressItem: PropTypes.func.isRequired
@@ -262,14 +298,14 @@ SingleLightCommand.propTypes = {
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: Colors.inverted,
-		borderRadius: 20,
-/*		shadowColor: 'rgba(100, 100, 100, 0.1)',
+		borderRadius: 20
+		/* shadowColor: 'rgba(100, 100, 100, 0.1)',
 		shadowOffset: {
 			width: 0,
 			height: 5
 		},
 		shadowRadius: 15,
-		shadowOpacity: 1*/
+		shadowOpacity: 1 */
 	},
 	linearGradient: {
 		width: '100%',
@@ -280,60 +316,31 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	topPart: {
-		flex: 1,
+		flex: 3,
 		flexDirection: 'row'
 	},
-	topIcon: {
-		position: 'relative'
-	},
-	botIcon: {
-		shadowColor: 'rgba(255, 221, 136, 0.8)',
-		shadowOffset: {
-			width: 0,
-			height: 4
-		},
-		shadowRadius: 10,
-		shadowOpacity: 1,
-		position: 'relative',
-		top: -48
-	},
-	switchContainer: {
-		flex: 1,
-		marginTop: 15,
-		alignItems: 'center'
-	},
-	switchTrackStyle: {
-		shadowColor: 'rgba(100, 100, 100, 0.1)',
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowRadius: 4,
-		shadowOpacity: 1,
-		padding: 2
-	},
-	switchKnobStyle: {
-		shadowColor: 'rgba(100, 100, 100, 0.2)',
-		shadowOffset: {
-			width: 0,
-			height: 2
-		},
-		shadowRadius: 2,
-		shadowOpacity: 1
+	blindsIcon: {
+		marginLeft: -1
 	},
 	text: {
-		flex: 2,
+		flex: 4,
 		justifyContent: 'center'
 	},
 	name: {
 		fontFamily: 'OpenSans',
-		fontSize: 16,
+		fontSize: 15,
 		lineHeight: 27
 	},
 	state: {
 		fontFamily: 'OpenSans',
 		fontSize: 12,
 		lineHeight: 27
+	},
+	orientationContainer: {
+		flex: 2,
+		flexDirection: 'row',
+		alignItems: 'flex-end',
+		justifyContent: 'space-around'
 	},
 	sliderContainer: {
 		flex: 1,
@@ -355,9 +362,9 @@ const styles = StyleSheet.create({
 	bigValueDisplay: {
 		fontFamily: 'OpenSans',
 		fontSize: 20,
-		lineHeight: 48,
+		lineHeight: 40,
 		textAlign: 'right'
 	}
 });
 
-export default SingleLightCommand;
+export default SingleBlindCommand;

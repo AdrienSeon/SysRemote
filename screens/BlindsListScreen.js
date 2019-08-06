@@ -14,7 +14,7 @@ import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import SelectNone from '../components/icons/SelectNone';
-import SingleLightCommand from '../components/SingleLightCommand';
+import SingleBlindCommand from '../components/SingleBlindCommand';
 import Slider from '../components/Slider';
 import BlindsLeftIcon from '../components/icons/BlindsLeft';
 import BlindsMiddleIcon from '../components/icons/BlindsMiddle';
@@ -274,14 +274,15 @@ class BlindsListScreen extends React.Component {
 				this.changeLayout();
 			}
 		}
+		console.log(JSON.stringify(this.state.blindsData[0],0,4))
 	}
 
 	deselectAll = () => {
-		const items = this.state.lightsData;
+		const items = this.state.blindsData;
 		items.forEach((item) => {
 			item.selected = false;
 		});
-		this.setState({ lightsData: items });
+		this.setState({ blindsData: items });
 
 		this.setState(() => {
 			const selected = new Map(this.state.selected);
@@ -291,7 +292,17 @@ class BlindsListScreen extends React.Component {
 	};
 
 	changeLayout = () => {
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+		LayoutAnimation.configureNext({
+			duration: 300,
+			create: {
+				type: LayoutAnimation.Types.easeInEaseOut,
+				property: LayoutAnimation.Properties.opacity
+			},
+			update: {
+				type: LayoutAnimation.Types.easeInEaseOut
+			}
+		});
+
 		if (this.state.collapsed) {
 			this.setState({ rightPannel: 0 });
 			this.setState({ width: width - 100 });
@@ -302,10 +313,10 @@ class BlindsListScreen extends React.Component {
 	};
 
 	onPressItem = (item) => {
-		const items = this.state.lightsData;
+		const items = this.state.blindsData;
 		const index = items.indexOf(item);
 		items[index].selected = !items[index].selected;
-		this.setState({ lightsData: items });
+		this.setState({ blindsData: items });
 
 		this.setState((state) => {
 			const selected = new Map(state.selected);
@@ -317,17 +328,16 @@ class BlindsListScreen extends React.Component {
 	};
 
 	renderItem = ({ item }) => (
-		<SingleLightCommand
+		<SingleBlindCommand
 			id={item.id}
 			onPressItem={this.onPressItem}
 			selected={item.selected}
 			name={item.name}
 			collapsed={this.state.collapsed}
-			switchValue={item.switchValue}
 			sliderValue={item.sliderValue}
 			item={item}
 			onChildSliderValueChange={this.handleChildSliderValue}
-			onChildSwitchValueChange={this.handleChildSwitchValue}
+			orientationButtons={item.orientationButtons}
 		/>
 	);
 
@@ -337,48 +347,50 @@ class BlindsListScreen extends React.Component {
 		this.setState({ sliderValue: value });
 
 		this.setState((state) => {
-			const lights = state.lightsData.map((light) => {
-				if (light.selected) {
-					light.sliderValue = value;
+			const blinds = state.blindsData.map((blind) => {
+				if (blind.selected) {
+					blind.sliderValue = value;
 				}
-				return light;
+				return blind;
 			});
-			return { lights };
+			return { blinds };
 		});
-
-		if (value > 0) {
-			this.setState({ switchValue: true });
-		} else {
-			this.setState({ switchValue: false });
-		}
 	};
 
 	handleChildSliderValue = (item, value) => {
-		const items = this.state.lightsData;
+		const items = this.state.blindsData;
 		const index = items.indexOf(item);
 
 		items[index].sliderValue = value;
 
-		if (value > 0) {
-			items[index].switchValue = true;
-		} else {
-			items[index].switchValue = false;
-		}
-
-		this.setState({ lightsData: items });
+		this.setState({ blindsData: items });
 	};
 
-	handleMainOrientationPress = (item) => {
-		const items = this.state.orientationButtons;
+	handleMainOrientationPress = (mainButton) => {
+		const mainButtons = this.state.orientationButtons;
 
-		items.forEach((button) => {
+		mainButtons.forEach((button) => {
 			button.checked = false;
 		});
 
-		const index = items.indexOf(item);
-		items[index].checked = true;
+		const index = mainButtons.indexOf(mainButton);
+		mainButtons[index].checked = true;
 
-		this.setState({ orientationButtons: items });
+		this.setState({ orientationButtons: mainButtons });
+
+		this.setState((state) => {
+			const blinds = state.blindsData.map((blind) => {
+				if (blind.selected) {
+					blind.orientationButtons.forEach((childButton) => {
+						childButton.checked = false;
+					});
+					blind.orientationButtons[index].checked = true;
+				}
+				return blind;
+			});
+			return { blinds };
+		});
+
 	};
 
 	render() {
@@ -398,7 +410,7 @@ class BlindsListScreen extends React.Component {
 							contentContainerStyle={{
 								alignItems: 'center'
 							}}
-							data={this.state.lightsData}
+							data={this.state.blindsData}
 							extraData={this.state}
 							renderItem={this.renderItem}
 							numColumns={2}
@@ -443,7 +455,7 @@ class BlindsListScreen extends React.Component {
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.state.sliderValue}
-								onValueChange={(value) => this.setState({ sliderValue: value })}
+								onValueChange={this.handleMainSliderValue}
 								animateTransitions
 								animationType="spring"
 								minimumValue={0}

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
@@ -8,19 +8,34 @@ import LightsBotIcon from './icons/LightsBot';
 import Switch from './Switch';
 import Slider from './Slider';
 
-class SingleLightCommand extends PureComponent {
+class SingleLightCommand extends Component {
+	shouldComponentUpdate(nextProps) {
+		if (this.props.selected !== nextProps.selected) {
+			return true;
+		}
+		if (this.props.collapsed !== nextProps.collapsed) {
+			return true;
+		}
+		if (this.props.sliderValue !== nextProps.sliderValue) {
+			return true;
+		}
+		if (this.props.switchValue !== nextProps.switchValue) {
+			return true;
+		}
+		return false;
+	}
 
 	handleSliderValue = (value) => {
-		this.props.onChildSliderValueChange(this.props.item, value)
-	}
+		this.props.onChildSliderValueChange(this.props.item, value);
+	};
 
 	handleSwitchValue = (value) => {
-		this.props.onChildSwitchValueChange(this.props.item, value)
-	}
+		this.props.onChildSwitchValueChange(this.props.item, value);
+	};
 
 	handlePress = () => {
 		this.props.onPressItem(this.props.item);
-	}
+	};
 
 	render() {
 		return this.props.selected ? (
@@ -31,7 +46,7 @@ class SingleLightCommand extends PureComponent {
 					{
 						width: this.props.collapsed ? 160 : 120,
 						height: 165,
-						margin: this.props.collapsed ? 10 : 5,
+						margin: this.props.collapsed ? 10 : 5
 					}
 				])}
 				onPress={this.handlePress}>
@@ -43,7 +58,7 @@ class SingleLightCommand extends PureComponent {
 							styles.innerContainer,
 							{
 								flexDirection: this.props.collapsed ? 'row' : 'column',
-								padding: this.props.collapsed ? 15 : 10
+								margin: this.props.collapsed ? 15 : 10
 							}
 						])}>
 						<View style={styles.topPart}>
@@ -59,7 +74,8 @@ class SingleLightCommand extends PureComponent {
 									style={StyleSheet.flatten([
 										styles.botIcon,
 										{
-											shadowColor: `rgba(255, 221, 136, ${this.props.sliderValue / 100})`
+											shadowColor: `rgba(255, 221, 136, ${this.props
+												.sliderValue / 100})`
 										}
 									])}
 									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
@@ -115,7 +131,7 @@ class SingleLightCommand extends PureComponent {
 					{
 						width: this.props.collapsed ? 160 : 120,
 						height: 165,
-						margin: this.props.collapsed ? 10 : 5,
+						margin: this.props.collapsed ? 10 : 5
 					}
 				])}
 				onPress={this.handlePress}>
@@ -124,7 +140,7 @@ class SingleLightCommand extends PureComponent {
 						styles.innerContainer,
 						{
 							flexDirection: this.props.collapsed ? 'row' : 'column',
-							padding: this.props.collapsed ? 15 : 10
+							margin: this.props.collapsed ? 15 : 10
 						}
 					])}>
 					<View style={{ flex: this.props.collapsed ? 2 : 1 }}>
@@ -141,7 +157,8 @@ class SingleLightCommand extends PureComponent {
 									style={StyleSheet.flatten([
 										styles.botIcon,
 										{
-											shadowColor: `rgba(255, 221, 136, ${this.props.sliderValue / 100})`
+											shadowColor: `rgba(255, 221, 136, ${this.props
+												.sliderValue / 100})`
 										}
 									])}
 									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
@@ -261,8 +278,8 @@ SingleLightCommand.propTypes = {
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: Colors.inverted,
-		borderRadius: 20,
-/*		shadowColor: 'rgba(100, 100, 100, 0.1)',
+		borderRadius: 20
+		/*		shadowColor: 'rgba(100, 100, 100, 0.1)',
 		shadowOffset: {
 			width: 0,
 			height: 5
@@ -283,7 +300,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	topIcon: {
-		position: 'relative'
+		position: 'relative',
+		left: -5
 	},
 	botIcon: {
 		shadowColor: 'rgba(255, 221, 136, 0.8)',
@@ -294,7 +312,8 @@ const styles = StyleSheet.create({
 		shadowRadius: 10,
 		shadowOpacity: 1,
 		position: 'relative',
-		top: -48
+		top: -48,
+		left: -5
 	},
 	switchContainer: {
 		flex: 1,
@@ -326,7 +345,7 @@ const styles = StyleSheet.create({
 	},
 	name: {
 		fontFamily: 'OpenSans',
-		fontSize: 16,
+		fontSize: 15,
 		lineHeight: 27
 	},
 	state: {

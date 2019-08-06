@@ -5,3 +5,4 @@ Bugs :
 - pas des checkbox poru les stores mais des radio button
 - reverse singleLightCommand slider
 - back button store list et light list enlever touchable opacity pour android
+- lmain light switch n'affecte pas les enfants
