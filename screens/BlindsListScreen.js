@@ -274,6 +274,7 @@ class BlindsListScreen extends React.Component {
 				this.changeLayout();
 			}
 		}
+		//console.log(this.state.blindsData[0],0,4)
 	}
 
 	deselectAll = () => {
@@ -465,10 +466,6 @@ class BlindsListScreen extends React.Component {
 								maximumTrackTintColor={Colors.inverted}
 								blindsBackground
 								orientation="vertical"
-								showValueIndicator
-								valueIndicatorPosition="left"
-								valueIndicatorTextColor={Colors.tertiaryText}
-								valueIndicatorStyle={styles.sliderValueIndicatorStyle}
 								style={styles.slider}
 								thumbTintColor={Colors.inverted}
 								thumbStyle={styles.sliderthumbStyle}

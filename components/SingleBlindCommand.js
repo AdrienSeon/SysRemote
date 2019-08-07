@@ -9,6 +9,7 @@ import BlindsMiddleIcon from './icons/BlindsMiddle';
 import BlindsRightIcon from './icons/BlindsRight';
 import BlindsOrientationButton from './BlindsOrientationButton';
 import Slider from './Slider';
+import {isEqual} from 'lodash'
 
 class SingleBlindCommand extends Component {
 	shouldComponentUpdate(nextProps) {
@@ -21,7 +22,9 @@ class SingleBlindCommand extends Component {
 		if (this.props.sliderValue !== nextProps.sliderValue) {
 			return true;
 		}
-		if (this.props.orientationButtons !== nextProps.orientationButtons) {
+		console.log(this.props.orientationButtons)
+		console.log(isEqual(this.props.orientationButtons, nextProps.orientationButtons))
+		if (!isEqual(this.props.orientationButtons, nextProps.orientationButtons)) {
 			return true;
 		}
 		return false;
