@@ -10,6 +10,7 @@ export default {
     secondaryBrandColor50: 'rgba(195, 205, 223, 0.5)',
     secondaryBrandColor50: 'rgba(195, 205, 223, 0.66)',
     primaryText: 'rgb(47, 60, 78)',
+    primaryTextRipple: 'rgba(47, 60, 78,0.4)',
     secondaryText: 'rgb(145, 157, 180)',
     tertiaryText: 'rgb(195, 205, 223)',
     primaryBrandGradientDark: 'rgb(52, 115, 244)',

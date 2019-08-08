@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
 import { Transition } from 'react-native-reanimated';
@@ -18,7 +19,10 @@ export default createAppContainer(
 			transition: (
 				<Transition.Together>
 					<Transition.In type="fade" durationMs={350} interpolation="easeIn" />
-					<Transition.Out type="fade" durationMs={350} interpolation="easeIn" />
+					{// Android bug on Transition.Out
+					Platform.OS === 'ios' ? (
+						<Transition.Out type="fade" durationMs={350} interpolation="easeIn" />
+					) : null}
 				</Transition.Together>
 			)
 		}

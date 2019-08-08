@@ -9,11 +9,11 @@ import BlindsMiddleIcon from './icons/BlindsMiddle';
 import BlindsRightIcon from './icons/BlindsRight';
 import BlindsOrientationButton from './BlindsOrientationButton';
 import Slider from './Slider';
-import {isEqual} from 'lodash'
+import isEqual from 'react-fast-compare';
 
 class SingleBlindCommand extends Component {
 	shouldComponentUpdate(nextProps) {
-		if (this.props.selected !== nextProps.selected) {
+		/*		if (this.props.selected !== nextProps.selected) {
 			return true;
 		}
 		if (this.props.collapsed !== nextProps.collapsed) {
@@ -22,12 +22,15 @@ class SingleBlindCommand extends Component {
 		if (this.props.sliderValue !== nextProps.sliderValue) {
 			return true;
 		}
-		console.log(this.props.orientationButtons)
-		console.log(isEqual(this.props.orientationButtons, nextProps.orientationButtons))
+		console.log('this.props.orientationButtons => ' + JSON.stringify(this.props.orientationButtons))
+		console.log('nextProps.orientationButtons => ' + JSON.stringify(nextProps.orientationButtons))
+		console.log(isEqual(this.props.orientationButtons, nextProps.orientationButtons));
 		if (!isEqual(this.props.orientationButtons, nextProps.orientationButtons)) {
 			return true;
 		}
-		return false;
+
+		return false;*/
+		return true;
 	}
 
 	handleSliderValue = (value) => {

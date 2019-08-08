@@ -5,7 +5,8 @@ import {
 	ScrollView,
 	Text,
 	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+	TouchableNativeFeedback
 } from 'react-native';
 import { List, ListItem, Left, Right, Icon } from 'native-base';
 import Colors from '../constants/Colors';
@@ -15,11 +16,17 @@ class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Paramètres',
 		headerLeft: (
-			<TouchableOpacity
-				activeOpacity={0.5}
-				onPress={() => navigation.navigate('Temperature')}>
-				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('Temperature')}>
+					<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
+				<TouchableNativeFeedback
+					background={TouchableNativeFeedback.Ripple(Colors.primaryTextRipple, true)}
+					onPress={() => navigation.navigate('Temperature')}>
+					<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+				</TouchableNativeFeedback>
+			)
 		)
 	});
 
@@ -63,7 +70,7 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	backBtn: {
-		marginLeft: Platform.OS === 'ios' ? 10 : 0
+		marginLeft: 10
 	},
 	listContainer: {
 		flex: 1,

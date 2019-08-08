@@ -1,8 +1,4 @@
 Bugs :
-- TouchablePlatformSpecific sur tous les icons
-- animate switchnavigator https://reactnavigation.org/docs/en/animated-switch-navigator.html
-- zone cliquable big button
-- pas des checkbox poru les stores mais des radio button
 - reverse singleLightCommand slider
-- back button store list et light list enlever touchable opacity pour android
-- lmain light switch n'affecte pas les enfants
+- crash transition out android switch navigator
+- shouldComponentUpdate of SingleBlindCommand not trigering on orientaion change

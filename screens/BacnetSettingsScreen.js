@@ -10,9 +10,13 @@ class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Gestion Bacnet',
 		headerBackImage: (
-			<TouchableOpacity activeOpacity={0.5}>
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5}>
+					<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
 				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
+			)
 		)
 	});
 

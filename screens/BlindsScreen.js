@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, SafeAreaView, View, StyleSheet, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
 import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
@@ -15,9 +15,17 @@ class BlindsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Stores',
 		headerLeft: (
-			<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
-				<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
+					<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
+				<TouchableNativeFeedback
+					background={TouchableNativeFeedback.Ripple(Colors.primaryTextRipple, true)}
+					onPress={() => navigation.openDrawer()}>
+					<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+				</TouchableNativeFeedback>
+			)
 		)
 	});
 

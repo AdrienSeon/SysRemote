@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+	Platform,
+	SafeAreaView,
+	View,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	TouchableNativeFeedback
+} from 'react-native';
 import { Header } from 'react-navigation';
 import LinearScale from 'linear-scale';
 import Colors from '../constants/Colors';
@@ -11,11 +19,18 @@ import Slider from '../components/Slider';
 class TemperatureScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Température',
-		headerLeft: (
-			<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
-				<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
-		)
+		headerLeft:
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
+					<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
+				<TouchableNativeFeedback
+					background={TouchableNativeFeedback.Ripple(Colors.primaryTextRipple, true)}
+					onPress={() => navigation.openDrawer()}>
+					<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
+				</TouchableNativeFeedback>
+			)
 	});
 
 	constructor(props) {
@@ -76,23 +91,29 @@ class TemperatureScreen extends Component {
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
 					<View style={styles.valuesPanelContainer}>
-						<View style={styles.valuesPanelFirstRow}>
-							<View
-								style={[
-									styles.valuesPanelValueContainer,
-									styles.valuesPanelFirstTopValue
-								]}>
+						<View style={styles.valuesPanelRow}>
+							<View style={styles.valuesPanelValueContainer}>
 								<Text style={styles.valuesPanelValue}>27.2</Text>
 								<Text style={styles.valuesPanelLabel}>Température extérieure</Text>
 							</View>
-							<View style={styles.valuesPanelValueContainer}>
+							<View
+								style={StyleSheet.flatten([
+									styles.valuesPanelValueContainer,
+									styles.valuesPanelLastValueOfRow
+								])}>
 								<Text style={styles.valuesPanelValue}>69%</Text>
 								<Text style={styles.valuesPanelLabel}>Humidité extérieure</Text>
 							</View>
 						</View>
-						<View style={styles.valuesPanelValueContainer}>
-							<Text style={styles.valuesPanelValue}>23.1°C</Text>
-							<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
+						<View
+							style={StyleSheet.flatten([
+								styles.valuesPanelRow,
+								styles.valuesPanelLastRow
+							])}>
+							<View style={styles.valuesPanelValueContainer}>
+								<Text style={styles.valuesPanelValue}>23.1°C</Text>
+								<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
+							</View>
 						</View>
 					</View>
 					<View style={styles.thermostat}>
@@ -177,9 +198,8 @@ const styles = StyleSheet.create({
 		marginLeft: 16
 	},
 	valuesPanelContainer: {
-		flex: 2,
-		marginLeft: 50,
-		marginRight: 50,
+		flex: 3,
+		marginHorizontal: 40,
 		borderRadius: 10,
 		backgroundColor: Colors.inverted,
 		shadowColor: 'rgba(100, 100, 100, 0.05)',
@@ -190,33 +210,41 @@ const styles = StyleSheet.create({
 		shadowRadius: 15,
 		shadowOpacity: 1
 	},
-	valuesPanelValueContainer: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	valuesPanelValue: {
-		fontFamily: 'OpenSans',
-		fontSize: 22,
-		color: Colors.primaryText
-	},
-	valuesPanelLabel: {
-		fontFamily: 'OpenSans',
-		fontSize: 10,
-		color: Colors.secondaryText
-	},
-	valuesPanelFirstTopValue: {
-		borderRightWidth: 1,
-		borderRightColor: 'rgba(100, 100, 100, 0.05)'
-	},
-	valuesPanelFirstRow: {
+	valuesPanelRow: {
 		flex: 1,
 		flexDirection: 'row',
 		borderBottomWidth: 1,
 		borderBottomColor: 'rgba(100, 100, 100, 0.05)'
 	},
+	valuesPanelLastRow: {
+		flex: 1,
+		flexDirection: 'row',
+		borderBottomWidth: 0
+	},
+	valuesPanelValueContainer: {
+		flex: 1,
+		padding: 5,
+		borderRightWidth: 1,
+		borderRightColor: 'rgba(100, 100, 100, 0.05)',
+		alignItems: 'center'
+	},
+	valuesPanelLastValueOfRow: {
+		borderRightWidth: 0
+	},
+	valuesPanelValue: {
+		flex: 2,
+		fontFamily: 'OpenSans',
+		fontSize: 22,
+		color: Colors.primaryText
+	},
+	valuesPanelLabel: {
+		flex: 1,
+		fontFamily: 'OpenSans',
+		fontSize: 12,
+		color: Colors.secondaryText
+	},
 	thermostat: {
-		flex: 6,
+		flex: 8,
 		alignSelf: 'center',
 		marginTop: 30
 	},
@@ -275,8 +303,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'space-around',
-		marginLeft: 20,
-		marginRight: 20
+		marginHorizontal: 20
 	},
 	windIconLeft: {
 		alignSelf: 'center',

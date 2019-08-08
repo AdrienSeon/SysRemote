@@ -8,7 +8,8 @@ import {
 	LayoutAnimation,
 	UIManager,
 	Dimensions,
-	TouchableOpacity
+	TouchableOpacity,
+	TouchableNativeFeedback
 } from 'react-native';
 import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
@@ -23,15 +24,26 @@ const { width } = Dimensions.get('window');
 class LightsListScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Luminaires',
-		headerBackImage: (
-			<TouchableOpacity activeOpacity={0}>
+		headerBackImage:
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5}>
+					<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
 				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
-		),
+			),
 		headerRight: navigation.getParam('selectNoneButtonDisplay', false) ? (
-			<TouchableOpacity activeOpacity={0.5} onPress={navigation.getParam('deselectAll')}>
-				<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5} onPress={navigation.getParam('deselectAll')}>
+					<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
+				<TouchableNativeFeedback
+					background={TouchableNativeFeedback.Ripple(Colors.primaryTextRipple, true)}
+					onPress={navigation.getParam('deselectAll')}>
+					<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
+				</TouchableNativeFeedback>
+			)
 		) : null
 	});
 

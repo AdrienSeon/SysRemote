@@ -8,7 +8,8 @@ import {
 	LayoutAnimation,
 	UIManager,
 	Dimensions,
-	TouchableOpacity
+	TouchableOpacity,
+	TouchableNativeFeedback
 } from 'react-native';
 import { Header } from 'react-navigation';
 import Colors from '../constants/Colors';
@@ -26,15 +27,26 @@ const { width } = Dimensions.get('window');
 class BlindsListScreen extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Stores',
-		headerBackImage: (
-			<TouchableOpacity activeOpacity={0.5}>
+		headerBackImage:
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5}>
+					<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
 				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
-		),
+			),
 		headerRight: navigation.getParam('selectNoneButtonDisplay', false) ? (
-			<TouchableOpacity activeOpacity={0.5} onPress={navigation.getParam('deselectAll')}>
-				<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
-			</TouchableOpacity>
+			Platform.OS === 'ios' ? (
+				<TouchableOpacity activeOpacity={0.5} onPress={navigation.getParam('deselectAll')}>
+					<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
+				</TouchableOpacity>
+			) : (
+				<TouchableNativeFeedback
+					background={TouchableNativeFeedback.Ripple(Colors.primaryTextRipple, true)}
+					onPress={navigation.getParam('deselectAll')}>
+					<SelectNone style={styles.rightBtn} color={Colors.primaryText} size={32} />
+				</TouchableNativeFeedback>
+			)
 		) : null
 	});
 
@@ -337,6 +349,7 @@ class BlindsListScreen extends React.Component {
 			sliderValue={item.sliderValue}
 			item={item}
 			onChildSliderValueChange={this.handleChildSliderValue}
+			onChildOrientationPress={this.handleChildOrientationPress}
 			orientationButtons={item.orientationButtons}
 		/>
 	);
@@ -381,8 +394,9 @@ class BlindsListScreen extends React.Component {
 		this.setState((state) => {
 			const blinds = state.blindsData.map((blind) => {
 				if (blind.selected) {
-					blind.orientationButtons.forEach((childButton) => {
+					blind.orientationButtons.map((childButton) => {
 						childButton.checked = false;
+						return childButton;
 					});
 					blind.orientationButtons[index].checked = true;
 				}
@@ -390,7 +404,21 @@ class BlindsListScreen extends React.Component {
 			});
 			return { blinds };
 		});
+	};
 
+	handleChildOrientationPress = (item) => {
+		const blinds = [...this.state.blindsData];
+		const blindIndex = blinds.indexOf(item);
+
+		this.setState(() => {
+			const orientationButtons = blinds[blindIndex].orientationButtons
+			orientationButtons.map((childButton) => {
+				childButton.checked = false;
+				return childButton;
+			});
+			blind.orientationButtons[index].checked = true;
+			return { blinds };
+		});
 	};
 
 	render() {
