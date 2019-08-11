@@ -2,3 +2,4 @@ Bugs :
 - reverse singleLightCommand slider
 - crash transition out android switch navigator
 - shouldComponentUpdate of SingleBlindCommand not trigering on orientaion change
+- slider shouldn't sent value if state is still pressed => debounced pour l'instant mais a voir

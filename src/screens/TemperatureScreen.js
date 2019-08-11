@@ -6,7 +6,8 @@ import {
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	TouchableNativeFeedback
+	TouchableNativeFeedback,
+	Button
 } from 'react-native';
 import { Header } from 'react-navigation';
 import LinearScale from 'linear-scale';
@@ -15,6 +16,12 @@ import MenuIcon from '../components/icons/Menu';
 import WindIcon from '../components/icons/Wind';
 import CircularSlider from '../components/CircularSlider';
 import Slider from '../components/Slider';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '../actions';
+import debounce from 'debounce';
+import axios from 'axios'
+import AppConfig from '../constants/AppConfig';
 
 class TemperatureScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
@@ -42,8 +49,7 @@ class TemperatureScreen extends Component {
 			maxSetpoint: 30,
 			startCoord: 70,
 			maxCoord: 290,
-			thermostatSliderValue: 70,
-			fanSpeedValue: 2
+			thermostatSliderValue: 70
 		};
 
 		this.handleThermostatSliderValueChange = this.handleThermostatSliderValueChange.bind(this);
@@ -81,6 +87,30 @@ class TemperatureScreen extends Component {
 		this.setState({ setpoint: this.sliderValueToDegree(value) });
 	}
 
+	handleFanspeedSliderValue = debounce((value) => {
+		this.props.actions.setFanSpeed(value)
+	}, 200);
+
+axiosTest = () => {
+			const url = 'https://' + AppConfig.device.host + '/api/rest/v1/protocols/bacnet/local/objects/' + 'multistate-value' + '/' + '3' + '/properties/present-value';
+			console.log(url)
+			console.log(AppConfig.device.username)
+			console.log(AppConfig.device.password)
+				axios.get(url, {
+					auth: {
+						username: AppConfig.device.username,
+						password: AppConfig.device.password
+					},
+			})
+			.then((response) => {
+				
+				 console.log('response : ' + response.data)
+			})
+			.catch((error) => {
+				console.log('error : ' + error);
+			})
+}
+
 	render() {
 		const colorScale = LinearScale(
 			[this.state.minSetpoint, this.state.maxSetpoint],
@@ -90,6 +120,7 @@ class TemperatureScreen extends Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
+					<Button onPress={this.axiosTest} title='test'/>
 					<View style={styles.valuesPanelContainer}>
 						<View style={styles.valuesPanelRow}>
 							<View style={styles.valuesPanelValueContainer}>
@@ -153,8 +184,8 @@ class TemperatureScreen extends Component {
 						/>
 						<View style={styles.fanSpeedSliderContainer}>
 							<Slider
-								value={this.state.fanSpeedValue}
-								onValueChange={(value) => this.setState({ fanSpeedValue: value })}
+								value={this.props.fanSpeed}
+								onValueChange={this.handleFanspeedSliderValue}
 								animateTransitions
 								animationType="spring"
 								minimumValue={0}
@@ -181,6 +212,27 @@ class TemperatureScreen extends Component {
 			</SafeAreaView>
 		);
 	}
+}
+
+function mapStateToProps({ temperatureScreen }) {
+	const { fanSpeedValue } = temperatureScreen;
+	console.log(fanSpeedValue);
+	return {
+		fanSpeed: fanSpeedValue
+	};
+}
+
+/*
+function mapStateToProps({ profile }) {
+  const { userInfo, error, isSaved } = profile;
+  return { userInfo, error, isSaved };
+}
+*/
+
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: bindActionCreators(Actions, dispatch)
+	};
 }
 
 const styles = StyleSheet.create({
@@ -363,4 +415,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default TemperatureScreen;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(TemperatureScreen);
