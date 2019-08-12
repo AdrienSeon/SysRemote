@@ -22,6 +22,7 @@ import * as Actions from '../actions';
 import debounce from 'debounce';
 import axios from 'axios'
 import AppConfig from '../constants/AppConfig';
+import store from '../store';
 
 class TemperatureScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
@@ -61,6 +62,21 @@ class TemperatureScreen extends Component {
 		this.setState({
 			thermostatSliderValue: this.setpointToSliderValue(this.state.setpoint)
 		});
+
+		this.getData()
+
+		this.interval = setInterval(() => {
+			this.getData()
+		}, 10000)
+	}
+
+	componentWillUnmount () {
+		clearInterval(this.interval);
+	}
+
+	getData() {
+		this.props.actions.getFanSpeedValue()
+		this.props.actions.getFanSpeedAuto()
 	}
 
 	setpointToSliderValue(value) {
@@ -87,16 +103,18 @@ class TemperatureScreen extends Component {
 		this.setState({ setpoint: this.sliderValueToDegree(value) });
 	}
 
-	handleFanspeedSliderValue = debounce((value) => {
-		this.props.actions.setFanSpeed(value)
+	handleFanSpeedSliderValue = debounce((value) => {
+		this.props.actions.setFanSpeedValue(value)
 	}, 200);
 
+	handleFanSpeedAuto = () => {
+		this.props.actions.setFanSpeedAuto()
+	}
+
 axiosTest = () => {
-			const url = 'https://' + AppConfig.device.host + '/api/rest/v1/protocols/bacnet/local/objects/' + 'multistate-value' + '/' + '3' + '/properties/present-value';
+			const url = 'http://' + AppConfig.device.host + '/api/rest/v1/protocols/bacnet/local/objects/' + 'multistate-value' + '/' + '3' + '/properties/present-value';
 			console.log(url)
-			console.log(AppConfig.device.username)
-			console.log(AppConfig.device.password)
-				axios.get(url, {
+				axios.post(url, {value: "5"},{
 					auth: {
 						username: AppConfig.device.username,
 						password: AppConfig.device.password
@@ -184,19 +202,19 @@ axiosTest = () => {
 						/>
 						<View style={styles.fanSpeedSliderContainer}>
 							<Slider
-								value={this.props.fanSpeed}
-								onValueChange={this.handleFanspeedSliderValue}
+								value={this.props.fanSpeedValue}
+								onValueChange={this.handleFanSpeedSliderValue}
 								animateTransitions
 								animationType="spring"
-								minimumValue={0}
-								maximumValue={3}
+								minimumValue={1}
+								maximumValue={4}
 								step={1}
 								trackSizeProp={10}
 								thumbSizeProp={20}
 								fanSpeedBackground
 								thumbTintColor={Colors.inverted}
 								thumbStyle={styles.fanSpeedSliderThumbStyle}
-								style={styles.fanspeedSliderTrackStyle}
+								style={styles.fanSpeedSliderTrackStyle}
 							/>
 						</View>
 						<WindIcon
@@ -204,8 +222,19 @@ axiosTest = () => {
 							color={Colors.primaryBrand}
 							size={32}
 						/>
-						<TouchableOpacity style={styles.autoIconContainer}>
-							<Text style={styles.autoIconText}>A</Text>
+						<TouchableOpacity
+							style={StyleSheet.flatten([
+								styles.autoIconContainer,
+								this.props.fanSpeedAuto ? styles.autoIconActive : styles.autoIconInactive
+							])}
+							onPress={this.handleFanSpeedAuto}
+							disabled={this.props.fanSpeedAuto ? true : false}
+							 >
+							<Text 
+								style={StyleSheet.flatten([
+									styles.autoIconText,
+									this.props.fanSpeedAuto ? styles.autoIconActive : styles.autoIconInactive
+								])}>A</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -215,19 +244,13 @@ axiosTest = () => {
 }
 
 function mapStateToProps({ temperatureScreen }) {
-	const { fanSpeedValue } = temperatureScreen;
-	console.log(fanSpeedValue);
+	const { fanSpeedValue, fanSpeedAuto } = temperatureScreen;
+	console.log(JSON.stringify(store.getState(),0,4))
 	return {
-		fanSpeed: fanSpeedValue
+		fanSpeedValue: fanSpeedValue,
+		fanSpeedAuto: fanSpeedAuto
 	};
 }
-
-/*
-function mapStateToProps({ profile }) {
-  const { userInfo, error, isSaved } = profile;
-  return { userInfo, error, isSaved };
-}
-*/
 
 function mapDispatchToProps(dispatch) {
 	return {
@@ -374,7 +397,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 2,
 		shadowOpacity: 1
 	},
-	fanspeedSliderTrackStyle: {
+	fanSpeedSliderTrackStyle: {
 		shadowColor: 'rgba(100, 100, 100, 0.1)',
 		shadowOffset: {
 			width: 0,
@@ -389,7 +412,6 @@ const styles = StyleSheet.create({
 	},
 	autoIconContainer: {
 		marginLeft: 20,
-		backgroundColor: Colors.inverted,
 		shadowColor: 'rgba(108, 204, 53, 0.2)',
 		shadowOffset: {
 			width: 0,
@@ -405,13 +427,20 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		justifyContent: 'center',
 		alignItems: 'center',
-		alignSelf: 'center'
+		alignSelf: 'center',
 	},
 	autoIconText: {
 		fontFamily: 'OpenSans',
 		fontSize: 14,
-		color: 'rgb(108, 204, 53)',
 		textAlign: 'center'
+	},
+	autoIconActive: {
+		backgroundColor: 'rgb(108, 204, 53)',
+		color: Colors.inverted,
+	},
+	autoIconInactive: {
+		backgroundColor: Colors.inverted,
+		color: 'rgb(108, 204, 53)',
 	}
 });
 
