@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { PanResponder, View, Dimensions } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
+import LinearScale from 'linear-scale';
 
 class CircularSlider extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			angle: this.props.value,
+			startCoord: 70,
+			maxCoord: 290,
+			angle: 70,
 			knobRadius: this.props.knobRadius
 		};
 
@@ -32,19 +35,40 @@ class CircularSlider extends Component {
 		});
 	}
 
+	componentDidMount() {
+		this.setState({ angle: this.valueToAngle(this.props.value) });
+	}
+
 	handlePanResponderMove({ nativeEvent: { locationX, locationY } }) {
 		const angle = this.cartesianToPolar(locationX, locationY);
 
-		if (angle < this.props.startCoord) {
-			this.setState({ angle: this.props.startCoord });
-		} else if (angle > this.props.maxCoord) {
-			this.setState({ angle: this.props.maxCoord });
+		if (angle < this.state.startCoord) {
+			this.setState({ angle: this.state.startCoord });
+		} else if (angle > this.state.maxCoord) {
+			this.setState({ angle: this.state.maxCoord });
 		} else {
 			this.setState({ angle });
 		}
-
-		this.props.onValueChange(this.state.angle);
+		this.props.onValueChange(this.angleToValue(this.state.angle));
 	}
+
+	valueToAngle = (value) => {
+		const linearScale = LinearScale(
+			[this.props.minValue, this.props.maxValue],
+			[this.state.startCoord, this.state.maxCoord]
+		);
+		return linearScale(value);
+	};
+
+	angleToValue = (value) => {
+		const linearScale = LinearScale(
+			[this.state.startCoord, this.state.maxCoord],
+			[this.props.minValue, this.props.maxValue]
+		);
+		let valueFormated = linearScale(value);
+		valueFormated = +valueFormated.toFixed(1);
+		return valueFormated;
+	};
 
 	polarToCartesian(angle) {
 		const dialRadius = this.props.dialRadius;
@@ -74,9 +98,9 @@ class CircularSlider extends Component {
 		const width = (this.props.dialRadius + this.state.knobRadius) * 2;
 		const knobRadius = this.state.knobRadius;
 		const dialRadius = this.props.dialRadius;
-		const startCoord = this.polarToCartesian(this.props.startCoord);
-		const maxCoord = this.polarToCartesian(this.props.maxCoord);
-		const endCoord = this.polarToCartesian(this.props.value);
+		const startCoord = this.polarToCartesian(this.state.startCoord);
+		const maxCoord = this.polarToCartesian(this.state.maxCoord);
+		const endCoord = this.polarToCartesian(this.valueToAngle(this.props.value));
 
 		return (
 			<View>
@@ -127,7 +151,7 @@ class CircularSlider extends Component {
 						fill="none"
 						strokeLinecap='round'
 						strokeLinejoin='round'
-						d={`M${startCoord.x} ${startCoord.y} A ${dialRadius} ${dialRadius} 0 ${this.state.angle>180+this.props.startCoord?1:0} 1 ${endCoord.x} ${endCoord.y}`}
+						d={`M${startCoord.x} ${startCoord.y} A ${dialRadius} ${dialRadius} 0 ${this.state.angle>180+this.state.startCoord?1:0} 1 ${endCoord.x} ${endCoord.y}`}
 					/>*/}
 					<Circle
 						r={dialRadius}
@@ -155,7 +179,7 @@ class CircularSlider extends Component {
 	}
 }
 
-CircularSlider.defaultProps = {
+/*CircularSlider.defaultProps = {
 	knobRadius: 13,
 	dialRadius: 130,
 	dialWidth: 25,
@@ -165,9 +189,9 @@ CircularSlider.defaultProps = {
 	startGradient: '#12D8FA',
 	endGradient: '#A6FFCB',
 	backgroundColor: 'white',
-	startCoord: 0,
-	maxCoord: 360,
+	minValue: 0,
+	maxValue: 100,
 	onValueChange: (x) => x
-};
+};*/
 
 export default CircularSlider;

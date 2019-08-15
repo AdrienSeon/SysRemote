@@ -20,7 +20,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import debounce from 'debounce';
-import axios from 'axios'
+import axios from 'axios';
 import AppConfig from '../constants/AppConfig';
 import store from '../store';
 
@@ -41,108 +41,105 @@ class TemperatureScreen extends Component {
 			)
 	});
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			setpoint: 23,
-			minSetpoint: 15,
-			maxSetpoint: 30,
-			startCoord: 70,
-			maxCoord: 290,
-			thermostatSliderValue: 70
-		};
-
-		this.handleThermostatSliderValueChange = this.handleThermostatSliderValueChange.bind(this);
-		this.sliderValueToDegree = this.sliderValueToDegree.bind(this);
-		this.setpointToSliderValue = this.setpointToSliderValue.bind(this);
-	}
-
 	componentDidMount() {
-		this.setState({
-			thermostatSliderValue: this.setpointToSliderValue(this.state.setpoint)
-		});
-
-		this.getData()
+		this.getData();
 
 		this.interval = setInterval(() => {
-			this.getData()
-		}, 10000)
+			this.getData();
+		}, 30000);
 	}
 
-	componentWillUnmount () {
+	componentWillUnmount() {
 		clearInterval(this.interval);
 	}
 
 	getData() {
-		this.props.actions.getFanSpeedValue()
-		this.props.actions.getFanSpeedAuto()
+		this.props.actions.getFanSpeed();
+		this.props.actions.getFanSpeedAuto();
+		this.props.actions.getOutdoorTemperature();
+		this.props.actions.getSpaceHumidity();
+		this.props.actions.getSpaceTemperature();
+		this.props.actions.getSetpoint();
 	}
 
-	setpointToSliderValue(value) {
-		const linearScale = LinearScale(
-			[this.state.minSetpoint, this.state.maxSetpoint],
-			[this.state.startCoord, this.state.maxCoord]
-		);
-		const radian = linearScale(value);
-		return radian;
-	}
+	handleThermostatSliderValueChange = (value) => {
+		this.props.actions.setUISetpointOffset(value);
+		this.props.actions.setUISetpoint(this.props.UISetpoint.baseValue + value);
+		this.debouncedSetSetpointOffset(value);
+	};
 
-	sliderValueToDegree(value) {
-		const linearScale = LinearScale(
-			[this.state.startCoord, this.state.maxCoord],
-			[this.state.minSetpoint, this.state.maxSetpoint]
-		);
-		let setpoint = linearScale(value);
-		setpoint = +setpoint.toFixed(1);
-		return setpoint;
-	}
-
-	handleThermostatSliderValueChange(value) {
-		this.setState({ thermostatSliderValue: value });
-		this.setState({ setpoint: this.sliderValueToDegree(value) });
-	}
+	debouncedSetSetpointOffset = debounce((value) => {
+		this.props.actions.setSetpointOffset(value);
+	}, 200);
 
 	handleFanSpeedSliderValue = debounce((value) => {
-		this.props.actions.setFanSpeedValue(value)
+		this.props.actions.setFanSpeed(value);
 	}, 200);
 
 	handleFanSpeedAuto = () => {
-		this.props.actions.setFanSpeedAuto()
-	}
+		this.props.actions.setFanSpeedAuto();
+	};
 
-axiosTest = () => {
-			const url = 'http://' + AppConfig.device.host + '/api/rest/v1/protocols/bacnet/local/objects/' + 'multistate-value' + '/' + '3' + '/properties/present-value';
-			console.log(url)
-				axios.post(url, {value: "5"},{
-					auth: {
-						username: AppConfig.device.username,
-						password: AppConfig.device.password
-					},
-			})
+	axiosTest = () => {
+		const host = AppConfig.device.host;
+		const objectType = 'analogValue';
+		const objectInstance = 34;
+		const url =
+			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
+		const data = {
+			encode: 'text',
+			propertyReferences: [
+				{
+					type: objectType,
+					instance: objectInstance,
+					property: 'presentValue',
+					arrayIndex: -1
+				},
+				{
+					type: objectType,
+					instance: objectInstance,
+					property: 'units',
+					arrayIndex: -1
+				}
+			]
+		};
+		const params = {
+			auth: {
+				username: AppConfig.device.username,
+				password: AppConfig.device.password
+			}
+		};
+		console.log(url);
+		console.log(data);
+		axios
+			.post(url, data, params)
 			.then((response) => {
-				
-				 console.log('response : ' + response.data)
+				const value = parseFloat(response.data[0].value);
+				const unit = response.data[1].value;
+				console.log(value + unit);
 			})
 			.catch((error) => {
 				console.log('error : ' + error);
-			})
-}
+			});
+	};
 
 	render() {
 		const colorScale = LinearScale(
-			[this.state.minSetpoint, this.state.maxSetpoint],
+			[this.props.setpointOffsetRange.min, this.props.setpointOffsetRange.max],
 			[222, 359]
 		);
 
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<Button onPress={this.axiosTest} title='test'/>
+					<Button onPress={this.axiosTest} title="test" />
 					<View style={styles.valuesPanelContainer}>
 						<View style={styles.valuesPanelRow}>
 							<View style={styles.valuesPanelValueContainer}>
-								<Text style={styles.valuesPanelValue}>27.2</Text>
+								<Text style={styles.valuesPanelValue}>
+									{this.props.outdoorTemperature.value +
+										this.props.outdoorTemperature.unit}
+								</Text>
 								<Text style={styles.valuesPanelLabel}>Température extérieure</Text>
 							</View>
 							<View
@@ -150,7 +147,9 @@ axiosTest = () => {
 									styles.valuesPanelValueContainer,
 									styles.valuesPanelLastValueOfRow
 								])}>
-								<Text style={styles.valuesPanelValue}>69%</Text>
+								<Text style={styles.valuesPanelValue}>
+									{this.props.spaceHumidity.value + this.props.spaceHumidity.unit}
+								</Text>
 								<Text style={styles.valuesPanelLabel}>Humidité extérieure</Text>
 							</View>
 						</View>
@@ -160,7 +159,10 @@ axiosTest = () => {
 								styles.valuesPanelLastRow
 							])}>
 							<View style={styles.valuesPanelValueContainer}>
-								<Text style={styles.valuesPanelValue}>23.1°C</Text>
+								<Text style={styles.valuesPanelValue}>
+									{this.props.spaceTemperature.value +
+										this.props.spaceTemperature.unit}
+								</Text>
 								<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
 							</View>
 						</View>
@@ -168,17 +170,17 @@ axiosTest = () => {
 					<View style={styles.thermostat}>
 						<CircularSlider
 							style={styles.circularSlider}
-							value={this.state.thermostatSliderValue}
+							value={this.props.UISetpointOffset.value}
 							dialRadius={130}
 							dialWidth={5}
 							knobRadius={14}
 							knobColor={Colors.inverted}
 							startGradient="#5D87E7"
 							endGradient="#FF7978"
-							startCoord={this.state.startCoord}
-							maxCoord={this.state.maxCoord}
+							minValue={this.props.setpointOffsetRange.min}
+							maxValue={this.props.setpointOffsetRange.max}
 							backgroundColor={Colors.appBackground}
-							onValueChange={(value) => this.handleThermostatSliderValueChange(value)}
+							onValueChange={this.handleThermostatSliderValueChange}
 						/>
 						<View style={styles.verticalDash} />
 						<View style={styles.horizontalDash} />
@@ -187,11 +189,15 @@ axiosTest = () => {
 								styles.middleThermostat,
 								{
 									shadowColor: `hsla(${colorScale(
-										this.state.setpoint
+										this.props.UISetpointOffset.value
 									)}, 40%, 91%, 0.8)`
 								}
 							])}>
-							<Text style={styles.setpointValue}>{`${this.state.setpoint}°C`}</Text>
+							<Text style={styles.setpointValue}>
+								{this.props.UISetpoint.effectiveValue.toString() +
+									this.props.UISetpoint.unit}
+							</Text>
+							<Text style={styles.setpointLabel}>Consigne ambiante</Text>
 						</View>
 					</View>
 					<View style={styles.fanSpeedContainer}>
@@ -202,7 +208,11 @@ axiosTest = () => {
 						/>
 						<View style={styles.fanSpeedSliderContainer}>
 							<Slider
-								value={this.props.fanSpeedValue}
+								value={
+									this.props.fanSpeed.value === '--'
+										? 0
+										: this.props.fanSpeed.value
+								}
 								onValueChange={this.handleFanSpeedSliderValue}
 								animateTransitions
 								animationType="spring"
@@ -225,16 +235,21 @@ axiosTest = () => {
 						<TouchableOpacity
 							style={StyleSheet.flatten([
 								styles.autoIconContainer,
-								this.props.fanSpeedAuto ? styles.autoIconActive : styles.autoIconInactive
+								this.props.fanSpeedAuto.value
+									? styles.autoIconActive
+									: styles.autoIconInactive
 							])}
 							onPress={this.handleFanSpeedAuto}
-							disabled={this.props.fanSpeedAuto ? true : false}
-							 >
-							<Text 
+							disabled={this.props.fanSpeedAuto.value ? true : false}>
+							<Text
 								style={StyleSheet.flatten([
 									styles.autoIconText,
-									this.props.fanSpeedAuto ? styles.autoIconActive : styles.autoIconInactive
-								])}>A</Text>
+									this.props.fanSpeedAuto.value
+										? styles.autoIconActive
+										: styles.autoIconInactive
+								])}>
+								A
+							</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -244,11 +259,30 @@ axiosTest = () => {
 }
 
 function mapStateToProps({ temperatureScreen }) {
-	const { fanSpeedValue, fanSpeedAuto } = temperatureScreen;
-	console.log(JSON.stringify(store.getState(),0,4))
+	const {
+		fanSpeed,
+		fanSpeedAuto,
+		outdoorTemperature,
+		spaceHumidity,
+		spaceTemperature,
+		setpointOffset,
+		setpointOffsetRange,
+		effectiveSetpoint,
+		UISetpointOffset,
+		UISetpoint
+	} = temperatureScreen;
+	//console.log(JSON.stringify(store.getState(), 0, 4));
 	return {
-		fanSpeedValue: fanSpeedValue,
-		fanSpeedAuto: fanSpeedAuto
+		fanSpeed,
+		fanSpeedAuto,
+		outdoorTemperature,
+		spaceHumidity,
+		spaceTemperature,
+		setpointOffset,
+		setpointOffsetRange,
+		effectiveSetpoint,
+		UISetpointOffset,
+		UISetpoint
 	};
 }
 
@@ -374,6 +408,11 @@ const styles = StyleSheet.create({
 		fontSize: 36,
 		color: Colors.primaryText
 	},
+	setpointLabel: {
+		fontFamily: 'OpenSans',
+		fontSize: 12,
+		color: Colors.secondaryText
+	},
 	fanSpeedContainer: {
 		flex: 1,
 		flexDirection: 'row',
@@ -427,7 +466,7 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		justifyContent: 'center',
 		alignItems: 'center',
-		alignSelf: 'center',
+		alignSelf: 'center'
 	},
 	autoIconText: {
 		fontFamily: 'OpenSans',
@@ -436,11 +475,11 @@ const styles = StyleSheet.create({
 	},
 	autoIconActive: {
 		backgroundColor: 'rgb(108, 204, 53)',
-		color: Colors.inverted,
+		color: Colors.inverted
 	},
 	autoIconInactive: {
 		backgroundColor: Colors.inverted,
-		color: 'rgb(108, 204, 53)',
+		color: 'rgb(108, 204, 53)'
 	}
 });
 
