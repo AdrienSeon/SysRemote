@@ -9,10 +9,12 @@ import {
 	SET_FANSPEED_AUTO_FAIL,
 	GET_OUTDOORTEMPERATURE_SUCCESS,
 	GET_OUTDOORTEMPERATURE_FAIL,
-	GET_SPACEHUMIDITY_SUCCESS,
-	GET_SPACEHUMIDITY_FAIL,
+	GET_OUTDOORHUMIDITY_SUCCESS,
+	GET_OUTDOORHUMIDITY_FAIL,
 	GET_SPACETEMPERATURE_SUCCESS,
 	GET_SPACETEMPERATURE_FAIL,
+	GET_SPACEHUMIDITY_SUCCESS,
+	GET_SPACEHUMIDITY_FAIL,
 	SET_SETPOINTOFFSET_SUCCESS,
 	SET_SETPOINTOFFSET_FAIL,
 	GET_SETPOINTOFFSET_SUCCESS,
@@ -63,6 +65,7 @@ export const getFanSpeedSuccess = (status, value) => {
 	return {
 		type: GET_FANSPEED_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value
 		}
@@ -116,6 +119,7 @@ export const setFanSpeedSuccess = (status, value) => {
 	return {
 		type: SET_FANSPEED_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value
 		}
@@ -165,6 +169,7 @@ export const getFanSpeedAutoSuccess = (status, value) => {
 	return {
 		type: GET_FANSPEED_AUTO_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value
 		}
@@ -216,6 +221,7 @@ export const setFanSpeedAutoSuccess = (status, value) => {
 	return {
 		type: SET_FANSPEED_AUTO_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value
 		}
@@ -282,6 +288,7 @@ export const getOutdoorTemperatureSuccess = (status, value, unit) => {
 	return {
 		type: GET_OUTDOORTEMPERATURE_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value,
 			unit
@@ -295,11 +302,11 @@ export const getOutdoorTemperatureFail = () => {
 	};
 };
 
-export const getSpaceHumidity = () => {
+export const getOutdoorHumidity = () => {
 	return (dispatch) => {
 		const host = AppConfig.device.host;
 		const objectType = 'analogValue';
-		const objectInstance = 34;
+		const objectInstance = 999;
 		const url =
 			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
 		const data = {
@@ -333,22 +340,23 @@ export const getSpaceHumidity = () => {
 				const unit = response.data[1].value;
 				const error = response.data[0].error;
 				if (error) {
-					dispatch(getSpaceHumidityFail());
+					dispatch(getOutdoorHumidityFail());
 				} else {
-					dispatch(getSpaceHumiditySuccess(response.status, value, unit));
+					dispatch(getOutdoorHumiditySuccess(response.status, value, unit));
 				}
 			})
 			.catch((error) => {
 				console.log(error);
-				dispatch(getSpaceHumidityFail());
+				dispatch(getOutdoorHumidityFail());
 			});
 	};
 };
 
-export const getSpaceHumiditySuccess = (status, value, unit) => {
+export const getOutdoorHumiditySuccess = (status, value, unit) => {
 	return {
-		type: GET_SPACEHUMIDITY_SUCCESS,
+		type: GET_OUTDOORHUMIDITY_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value,
 			unit
@@ -356,9 +364,9 @@ export const getSpaceHumiditySuccess = (status, value, unit) => {
 	};
 };
 
-export const getSpaceHumidityFail = () => {
+export const getOutdoorHumidityFail = () => {
 	return {
-		type: GET_SPACEHUMIDITY_FAIL
+		type: GET_OUTDOORHUMIDITY_FAIL
 	};
 };
 
@@ -416,6 +424,7 @@ export const getSpaceTemperatureSuccess = (status, value, unit) => {
 	return {
 		type: GET_SPACETEMPERATURE_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value,
 			unit
@@ -426,6 +435,74 @@ export const getSpaceTemperatureSuccess = (status, value, unit) => {
 export const getSpaceTemperatureFail = () => {
 	return {
 		type: GET_SPACETEMPERATURE_FAIL
+	};
+};
+
+export const getSpaceHumidity = () => {
+	return (dispatch) => {
+		const host = AppConfig.device.host;
+		const objectType = 'analogValue';
+		const objectInstance = 34;
+		const url =
+			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
+		const data = {
+			encode: 'text',
+			propertyReferences: [
+				{
+					type: objectType,
+					instance: objectInstance,
+					property: 'presentValue',
+					arrayIndex: -1
+				},
+				{
+					type: objectType,
+					instance: objectInstance,
+					property: 'units',
+					arrayIndex: -1
+				}
+			]
+		};
+		const params = {
+			auth: {
+				username: AppConfig.device.username,
+				password: AppConfig.device.password
+			}
+		};
+
+		return axios
+			.post(url, data, params)
+			.then((response) => {
+				const value = parseFloat(response.data[0].value);
+				const unit = response.data[1].value;
+				const error = response.data[0].error;
+				if (error) {
+					dispatch(getSpaceHumidityFail());
+				} else {
+					dispatch(getSpaceHumiditySuccess(response.status, value, unit));
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+				dispatch(getSpaceHumidityFail());
+			});
+	};
+};
+
+export const getSpaceHumiditySuccess = (status, value, unit) => {
+	return {
+		type: GET_SPACEHUMIDITY_SUCCESS,
+		payload: {
+			isLoaded: true,
+			status,
+			value,
+			unit
+		}
+	};
+};
+
+export const getSpaceHumidityFail = () => {
+	return {
+		type: GET_SPACEHUMIDITY_FAIL
 	};
 };
 
@@ -468,6 +545,7 @@ export const setSetpointOffsetSuccess = (status, value) => {
 	return {
 		type: SET_SETPOINTOFFSET_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value
 		}
@@ -477,12 +555,6 @@ export const setSetpointOffsetSuccess = (status, value) => {
 export const setSetpointOffsetFail = () => {
 	return {
 		type: SET_SETPOINTOFFSET_FAIL
-	};
-};
-
-export const getSetpointOffsetRangeFail = () => {
-	return {
-		type: GET_SETPOINTOFFSETRANGE_FAIL
 	};
 };
 
@@ -586,6 +658,7 @@ export const getEffectiveSetpointSuccess = (status, value, unit) => {
 	return {
 		type: GET_EFFECTIVESETPOINT_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value,
 			unit
@@ -597,6 +670,7 @@ export const getSetpointOffsetSuccess = (status, value, unit) => {
 	return {
 		type: GET_SETPOINTOFFSET_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			value,
 			unit
@@ -608,6 +682,7 @@ export const getSetpointOffsetRangeSuccess = (status, min, max, unit) => {
 	return {
 		type: GET_SETPOINTOFFSETRANGE_SUCCESS,
 		payload: {
+			isLoaded: true,
 			status,
 			min,
 			max,
@@ -620,6 +695,7 @@ export const getUISetpointOffset = (value, unit) => {
 	return {
 		type: GET_UISETPOINTOFFSET,
 		payload: {
+			isLoaded: true,
 			value,
 			unit
 		}
@@ -641,6 +717,7 @@ export const getUISetpoint = (effectiveSetpointValue, baseSetpointValue, unit) =
 	return {
 		type: GET_UISETPOINT,
 		payload: {
+			isLoaded: true,
 			effectiveValue: effectiveSetpointValue,
 			baseValue: formatedValue,
 			unit
@@ -652,6 +729,7 @@ export const setUISetpoint = (value) => {
 	let formatedValue = value;
 	formatedValue = +formatedValue.toFixed(1);
 	return {
+		isLoaded: true,
 		type: SET_UISETPOINT,
 		effectiveValue: formatedValue
 	};

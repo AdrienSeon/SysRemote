@@ -9,10 +9,12 @@ import {
 	SET_FANSPEED_AUTO_FAIL,
 	GET_OUTDOORTEMPERATURE_SUCCESS,
 	GET_OUTDOORTEMPERATURE_FAIL,
-	GET_SPACEHUMIDITY_SUCCESS,
-	GET_SPACEHUMIDITY_FAIL,
+	GET_OUTDOORHUMIDITY_SUCCESS,
+	GET_OUTDOORHUMIDITY_FAIL,
 	GET_SPACETEMPERATURE_SUCCESS,
 	GET_SPACETEMPERATURE_FAIL,
+	GET_SPACEHUMIDITY_SUCCESS,
+	GET_SPACEHUMIDITY_FAIL,
 	SET_SETPOINTOFFSET_SUCCESS,
 	SET_SETPOINTOFFSET_FAIL,
 	GET_SETPOINTOFFSET_SUCCESS,
@@ -26,57 +28,67 @@ import {
 } from '../actions/types';
 
 const INITAL_STATE = {
-	/*	setpoint: 23,
-	minSetpoint: 15,
-	maxSetpoint: 30,
-	startCoord: 70,
-	maxCoord: 290,
-	thermostatSliderValue: 70,*/
 	fanSpeed: {
+		isLoaded: false,
 		status: 404,
 		value: '--',
 		unit: ''
 	},
 	fanSpeedAuto: {
+		isLoaded: false,
 		status: 404,
 		value: false
 	},
 	outdoorTemperature: {
+		isLoaded: false,
 		status: 404,
 		value: '--',
 		unit: ''
 	},
-	spaceHumidity: {
+	outdoorHumidity: {
+		isLoaded: false,
 		status: 404,
 		value: '--',
 		unit: ''
 	},
 	spaceTemperature: {
+		isLoaded: false,
+		status: 404,
+		value: '--',
+		unit: ''
+	},
+	spaceHumidity: {
+		isLoaded: false,
 		status: 404,
 		value: '--',
 		unit: ''
 	},
 	setpointOffset: {
+		isLoaded: false,
 		status: 404,
 		value: '--',
 		unit: ''
 	},
 	setpointOffsetRange: {
+		isLoaded: false,
 		status: 404,
 		min: -3,
 		max: 3,
 		unit: ''
 	},
 	effectiveSetpoint: {
+		isLoaded: false,
 		status: 404,
 		value: '--',
 		unit: ''
 	},
 	UISetpointOffset: {
+		isLoaded: false,
 		value: 0,
 		unit: ''
 	},
 	UISetpoint: {
+		isLoaded: false,
 		effectiveValue: 22.5,
 		baseValue: 22.5,
 		unit: '°C'
@@ -85,11 +97,11 @@ const INITAL_STATE = {
 
 export default (state = INITAL_STATE, action) => {
 	switch (action.type) {
-		case SET_FANSPEED_SUCCESS:
+		case GET_FANSPEED_SUCCESS:
 			return { ...state, fanSpeed: action.payload };
 		case GET_FANSPEED_FAIL:
 			return { ...state };
-		case GET_FANSPEED_SUCCESS:
+		case SET_FANSPEED_SUCCESS:
 			return { ...state, fanSpeed: action.payload };
 		case SET_FANSPEED_FAIL:
 			return { ...state };
@@ -105,13 +117,17 @@ export default (state = INITAL_STATE, action) => {
 			return { ...state, outdoorTemperature: action.payload };
 		case GET_OUTDOORTEMPERATURE_FAIL:
 			return { ...state };
-		case GET_SPACEHUMIDITY_SUCCESS:
-			return { ...state, spaceHumidity: action.payload };
-		case GET_SPACEHUMIDITY_FAIL:
+		case GET_OUTDOORHUMIDITY_SUCCESS:
+			return { ...state, outdoorHumidity: action.payload };
+		case GET_OUTDOORHUMIDITY_FAIL:
 			return { ...state };
 		case GET_SPACETEMPERATURE_SUCCESS:
 			return { ...state, spaceTemperature: action.payload };
 		case GET_SPACETEMPERATURE_FAIL:
+			return { ...state };
+		case GET_SPACEHUMIDITY_SUCCESS:
+			return { ...state, spaceHumidity: action.payload };
+		case GET_SPACEHUMIDITY_FAIL:
 			return { ...state };
 		case SET_SETPOINTOFFSET_SUCCESS:
 			return { ...state, setpointOffset: action.payload };

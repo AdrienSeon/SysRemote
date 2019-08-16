@@ -8,6 +8,7 @@ import {
 	TouchableNativeFeedback
 } from 'react-native';
 import { Header } from 'react-navigation';
+import * as Animatable from "react-native-animatable";
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import LightsTopIcon from '../components/icons/LightsTop';
@@ -66,7 +67,7 @@ class LightsScreen extends Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<View style={styles.listButtonContainer}>
+					<Animatable.View animation="fadeIn" delay={300} duration={300} easing='ease-out' useNativeDriver style={styles.listButtonContainer}>
 						<TouchableOpacity
 							style={styles.listButtonTouchable}
 							onPress={() => this.props.navigation.navigate('LightsList')}
@@ -100,8 +101,8 @@ class LightsScreen extends Component {
 								</View>
 							</View>
 						</TouchableOpacity>
-					</View>
-					<View style={styles.switchContainer}>
+					</Animatable.View>
+					<Animatable.View animation="fadeIn" delay={500} duration={300} easing='ease-out' useNativeDriver style={styles.switchContainer}>
 						<Switch
 							onChange={this.handleSwitchValue}
 							value={this.state.switchValue}
@@ -114,8 +115,8 @@ class LightsScreen extends Component {
 							trackStyle={styles.switchTrackStyle}
 							knobStyle={styles.switchKnobStyle}
 						/>
-					</View>
-					<View style={styles.sliderContainer}>
+					</Animatable.View>
+					<Animatable.View animation="fadeIn" delay={700} duration={300} easing='ease-out' useNativeDriver style={styles.sliderContainer}>
 						<Slider
 							value={this.state.sliderValue}
 							onValueChange={this.handleSliderValue}
@@ -138,7 +139,7 @@ class LightsScreen extends Component {
 							thumbTintColor={Colors.inverted}
 							thumbStyle={styles.sliderthumbStyle}
 						/>
-					</View>
+					</Animatable.View>
 				</View>
 			</SafeAreaView>
 		);

@@ -11,16 +11,18 @@ import {
 } from 'react-native';
 import { Header } from 'react-navigation';
 import LinearScale from 'linear-scale';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import debounce from 'debounce';
+import axios from 'axios';
+import * as Animatable from 'react-native-animatable';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import WindIcon from '../components/icons/Wind';
 import CircularSlider from '../components/CircularSlider';
 import Slider from '../components/Slider';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as Actions from '../actions';
-import debounce from 'debounce';
-import axios from 'axios';
 import AppConfig from '../constants/AppConfig';
 import store from '../store';
 
@@ -41,6 +43,10 @@ class TemperatureScreen extends Component {
 			)
 	});
 
+	debouncedSetSetpointOffset = debounce((value) => {
+		this.props.actions.setSetpointOffset(value);
+	}, 200);
+
 	componentDidMount() {
 		this.getData();
 
@@ -57,8 +63,9 @@ class TemperatureScreen extends Component {
 		this.props.actions.getFanSpeed();
 		this.props.actions.getFanSpeedAuto();
 		this.props.actions.getOutdoorTemperature();
-		this.props.actions.getSpaceHumidity();
+		this.props.actions.getOutdoorHumidity();
 		this.props.actions.getSpaceTemperature();
+		this.props.actions.getSpaceHumidity();
 		this.props.actions.getSetpoint();
 	}
 
@@ -68,59 +75,12 @@ class TemperatureScreen extends Component {
 		this.debouncedSetSetpointOffset(value);
 	};
 
-	debouncedSetSetpointOffset = debounce((value) => {
-		this.props.actions.setSetpointOffset(value);
-	}, 200);
-
 	handleFanSpeedSliderValue = debounce((value) => {
 		this.props.actions.setFanSpeed(value);
 	}, 200);
 
 	handleFanSpeedAuto = () => {
 		this.props.actions.setFanSpeedAuto();
-	};
-
-	axiosTest = () => {
-		const host = AppConfig.device.host;
-		const objectType = 'analogValue';
-		const objectInstance = 34;
-		const url =
-			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
-		const data = {
-			encode: 'text',
-			propertyReferences: [
-				{
-					type: objectType,
-					instance: objectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
-				},
-				{
-					type: objectType,
-					instance: objectInstance,
-					property: 'units',
-					arrayIndex: -1
-				}
-			]
-		};
-		const params = {
-			auth: {
-				username: AppConfig.device.username,
-				password: AppConfig.device.password
-			}
-		};
-		console.log(url);
-		console.log(data);
-		axios
-			.post(url, data, params)
-			.then((response) => {
-				const value = parseFloat(response.data[0].value);
-				const unit = response.data[1].value;
-				console.log(value + unit);
-			})
-			.catch((error) => {
-				console.log('error : ' + error);
-			});
 	};
 
 	render() {
@@ -132,56 +92,138 @@ class TemperatureScreen extends Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<Button onPress={this.axiosTest} title="test" />
-					<View style={styles.valuesPanelContainer}>
-						<View style={styles.valuesPanelRow}>
-							<View style={styles.valuesPanelValueContainer}>
-								<Text style={styles.valuesPanelValue}>
-									{this.props.outdoorTemperature.value +
-										this.props.outdoorTemperature.unit}
-								</Text>
-								<Text style={styles.valuesPanelLabel}>Température extérieure</Text>
+					<Animatable.View
+						animation="fadeIn"
+						delay={500}
+						duration={300}
+						easing="ease-out"
+						useNativeDriver
+						style={StyleSheet.flatten([
+							styles.valuesPanelContainer,
+							{
+								flex:
+									this.props.outdoorTemperature.isLoaded ||
+									this.props.outdoorHumidity.isLoaded
+										? 3
+										: 1.5
+							}
+						])}>
+						{(this.props.outdoorTemperature.isLoaded ||
+							this.props.outdoorHumidity.isLoaded) && (
+							<View style={styles.valuesPanelRow}>
+								{this.props.outdoorTemperature.isLoaded && (
+									<Animatable.View
+										animation="fadeIn"
+										duration={300}
+										easing="ease-out"
+										useNativeDriver
+										style={styles.valuesPanelValueContainer}>
+										<Text style={styles.valuesPanelValue}>
+											{this.props.outdoorTemperature.value +
+												this.props.outdoorTemperature.unit}
+										</Text>
+										<Text style={styles.valuesPanelLabel}>
+											Température extérieure
+										</Text>
+									</Animatable.View>
+								)}
+								{this.props.outdoorHumidity.isLoaded && (
+									<Animatable.View
+										animation="fadeIn"
+										duration={300}
+										easing="ease-out"
+										useNativeDriver
+										style={StyleSheet.flatten([
+											styles.valuesPanelValueContainer,
+											styles.valuesPanelLastValueOfRow
+										])}>
+										<Text style={styles.valuesPanelValue}>
+											{this.props.outdoorHumidity.value +
+												this.props.outdoorHumidity.unit}
+										</Text>
+										<Text style={styles.valuesPanelLabel}>
+											Humidité extérieure
+										</Text>
+									</Animatable.View>
+								)}
 							</View>
-							<View
-								style={StyleSheet.flatten([
-									styles.valuesPanelValueContainer,
-									styles.valuesPanelLastValueOfRow
-								])}>
-								<Text style={styles.valuesPanelValue}>
-									{this.props.spaceHumidity.value + this.props.spaceHumidity.unit}
-								</Text>
-								<Text style={styles.valuesPanelLabel}>Humidité extérieure</Text>
-							</View>
-						</View>
+						)}
 						<View
 							style={StyleSheet.flatten([
 								styles.valuesPanelRow,
 								styles.valuesPanelLastRow
 							])}>
-							<View style={styles.valuesPanelValueContainer}>
-								<Text style={styles.valuesPanelValue}>
-									{this.props.spaceTemperature.value +
-										this.props.spaceTemperature.unit}
-								</Text>
-								<Text style={styles.valuesPanelLabel}>Température ambiante</Text>
-							</View>
+							{this.props.spaceTemperature.isLoaded && (
+								<Animatable.View
+									animation="fadeIn"
+									duration={300}
+									easing="ease-out"
+									useNativeDriver
+									style={styles.valuesPanelValueContainer}>
+									<Text style={styles.valuesPanelValue}>
+										{this.props.spaceTemperature.value +
+											this.props.spaceTemperature.unit}
+									</Text>
+									<Text style={styles.valuesPanelLabel}>
+										Température ambiante
+									</Text>
+								</Animatable.View>
+							)}
+							{this.props.spaceHumidity.isLoaded && (
+								<Animatable.View
+									animation="fadeIn"
+									duration={300}
+									easing="ease-out"
+									useNativeDriver
+									style={StyleSheet.flatten([
+										styles.valuesPanelValueContainer,
+										styles.valuesPanelLastValueOfRow
+									])}>
+									<Text style={styles.valuesPanelValue}>
+										{this.props.spaceHumidity.value +
+											this.props.spaceHumidity.unit}
+									</Text>
+									<Text style={styles.valuesPanelLabel}>Humidité ambiante</Text>
+								</Animatable.View>
+							)}
 						</View>
-					</View>
-					<View style={styles.thermostat}>
-						<CircularSlider
-							style={styles.circularSlider}
-							value={this.props.UISetpointOffset.value}
-							dialRadius={130}
-							dialWidth={5}
-							knobRadius={14}
-							knobColor={Colors.inverted}
-							startGradient="#5D87E7"
-							endGradient="#FF7978"
-							minValue={this.props.setpointOffsetRange.min}
-							maxValue={this.props.setpointOffsetRange.max}
-							backgroundColor={Colors.appBackground}
-							onValueChange={this.handleThermostatSliderValueChange}
-						/>
+					</Animatable.View>
+					<Animatable.View
+						animation="fadeIn"
+						delay={500}
+						duration={300}
+						easing="ease-out"
+						useNativeDriver
+						style={StyleSheet.flatten([
+							styles.thermostat,
+							{
+								marginTop:
+									this.props.outdoorTemperature.isLoaded ||
+									this.props.outdoorHumidity.isLoaded
+										? 50
+										: 70
+							}
+						])}>
+						<Animatable.View
+							animation="fadeIn"
+							duration={300}
+							easing="ease-out"
+							useNativeDriver>
+							<CircularSlider
+								style={styles.circularSlider}
+								value={this.props.UISetpointOffset.value}
+								dialRadius={130}
+								dialWidth={5}
+								knobRadius={14}
+								knobColor={Colors.inverted}
+								startGradient="#5D87E7"
+								endGradient="#FF7978"
+								minValue={this.props.setpointOffsetRange.min}
+								maxValue={this.props.setpointOffsetRange.max}
+								backgroundColor={Colors.appBackground}
+								onValueChange={this.handleThermostatSliderValueChange}
+							/>
+						</Animatable.View>
 						<View style={styles.verticalDash} />
 						<View style={styles.horizontalDash} />
 						<View
@@ -193,65 +235,86 @@ class TemperatureScreen extends Component {
 									)}, 40%, 91%, 0.8)`
 								}
 							])}>
-							<Text style={styles.setpointValue}>
-								{this.props.UISetpoint.effectiveValue.toString() +
-									this.props.UISetpoint.unit}
-							</Text>
+							{this.props.UISetpoint.isLoaded && (
+								<Animatable.Text
+									animation="fadeIn"
+									duration={300}
+									easing="ease-out"
+									useNativeDriver
+									style={styles.setpointValue}>
+									{this.props.UISetpoint.effectiveValue.toString() +
+										this.props.UISetpoint.unit}
+								</Animatable.Text>
+							)}
 							<Text style={styles.setpointLabel}>Consigne ambiante</Text>
 						</View>
-					</View>
-					<View style={styles.fanSpeedContainer}>
-						<WindIcon
-							style={styles.windIconLeft}
-							color={Colors.primaryBrand33}
-							size={24}
-						/>
-						<View style={styles.fanSpeedSliderContainer}>
-							<Slider
-								value={
-									this.props.fanSpeed.value === '--'
-										? 0
-										: this.props.fanSpeed.value
-								}
-								onValueChange={this.handleFanSpeedSliderValue}
-								animateTransitions
-								animationType="spring"
-								minimumValue={1}
-								maximumValue={4}
-								step={1}
-								trackSizeProp={10}
-								thumbSizeProp={20}
-								fanSpeedBackground
-								thumbTintColor={Colors.inverted}
-								thumbStyle={styles.fanSpeedSliderThumbStyle}
-								style={styles.fanSpeedSliderTrackStyle}
+					</Animatable.View>
+					<Animatable.View
+						animation="fadeIn"
+						delay={500}
+						duration={300}
+						easing="ease-out"
+						useNativeDriver
+						style={styles.fanSpeedContainer}>
+						{this.props.fanSpeed.isLoaded && (
+							<WindIcon
+								style={styles.windIconLeft}
+								color={Colors.primaryBrand33}
+								size={24}
 							/>
-						</View>
-						<WindIcon
-							style={styles.windIconRight}
-							color={Colors.primaryBrand}
-							size={32}
-						/>
-						<TouchableOpacity
-							style={StyleSheet.flatten([
-								styles.autoIconContainer,
-								this.props.fanSpeedAuto.value
-									? styles.autoIconActive
-									: styles.autoIconInactive
-							])}
-							onPress={this.handleFanSpeedAuto}
-							disabled={this.props.fanSpeedAuto.value ? true : false}>
-							<Text
+						)}
+						{this.props.fanSpeed.isLoaded && (
+							<View style={styles.fanSpeedSliderContainer}>
+								<Slider
+									value={
+										this.props.fanSpeed.value === '--'
+											? 0
+											: this.props.fanSpeed.value
+									}
+									onValueChange={this.handleFanSpeedSliderValue}
+									animateTransitions
+									animationType="spring"
+									minimumValue={1}
+									maximumValue={4}
+									step={1}
+									trackSizeProp={10}
+									thumbSizeProp={20}
+									fanSpeedBackground
+									thumbTintColor={Colors.inverted}
+									thumbStyle={styles.fanSpeedSliderThumbStyle}
+									style={styles.fanSpeedSliderTrackStyle}
+								/>
+							</View>
+						)}
+						{this.props.fanSpeed.isLoaded && (
+							<WindIcon
+								style={styles.windIconRight}
+								color={Colors.primaryBrand}
+								size={32}
+							/>
+						)}
+						{this.props.fanSpeedAuto.isLoaded && (
+							<TouchableOpacity
 								style={StyleSheet.flatten([
-									styles.autoIconText,
+									styles.autoIconContainer,
 									this.props.fanSpeedAuto.value
 										? styles.autoIconActive
 										: styles.autoIconInactive
-								])}>
-								A
-							</Text>
-						</TouchableOpacity>
-					</View>
+								])}
+								onPress={this.handleFanSpeedAuto}
+								disabled={this.props.fanSpeedAuto.value}>
+								<Text
+									style={StyleSheet.flatten([
+										styles.autoIconText,
+										this.props.fanSpeedAuto.value
+											? styles.autoIconActive
+											: styles.autoIconInactive
+									])}>
+									A
+								</Text>
+							</TouchableOpacity>
+						)}
+					</Animatable.View>
 				</View>
 			</SafeAreaView>
 		);
@@ -263,21 +326,23 @@ function mapStateToProps({ temperatureScreen }) {
 		fanSpeed,
 		fanSpeedAuto,
 		outdoorTemperature,
-		spaceHumidity,
+		outdoorHumidity,
 		spaceTemperature,
+		spaceHumidity,
 		setpointOffset,
 		setpointOffsetRange,
 		effectiveSetpoint,
 		UISetpointOffset,
 		UISetpoint
 	} = temperatureScreen;
-	//console.log(JSON.stringify(store.getState(), 0, 4));
+	// console.log(JSON.stringify(store.getState(), 0, 4));
 	return {
 		fanSpeed,
 		fanSpeedAuto,
 		outdoorTemperature,
-		spaceHumidity,
+		outdoorHumidity,
 		spaceTemperature,
+		spaceHumidity,
 		setpointOffset,
 		setpointOffsetRange,
 		effectiveSetpoint,
@@ -291,6 +356,63 @@ function mapDispatchToProps(dispatch) {
 		actions: bindActionCreators(Actions, dispatch)
 	};
 }
+
+/*TemperatureScreen.propTypes = {
+	actions: PropTypes.exact({
+		getFanSpeed: PropTypes.func,
+		getFanSpeedAuto: PropTypes.func,
+		getOutdoorTemperature: PropTypes.func,
+		getSpaceHumidity: PropTypes.func,
+		getSpaceTemperature: PropTypes.func,
+		getSetpoint: PropTypes.func,
+		setUISetpointOffset: PropTypes.func,
+		setUISetpoint: PropTypes.func,
+		setSetpointOffset: PropTypes.func,
+		setFanSpeed: PropTypes.func,
+		setFanSpeedAuto: PropTypes.func
+	}).isRequired,
+	UISetpoint: PropTypes.exact({
+		baseValue: PropTypes.number,
+		effectiveValue: PropTypes.number,
+		unit: PropTypes.string
+	}).isRequired,
+	UISetpointOffset: PropTypes.exact({
+		value: PropTypes.number,
+		unit: PropTypes.string
+	}).isRequired,
+	setpointOffsetRange: PropTypes.exact({
+		status: PropTypes.number,
+		min: PropTypes.number,
+		max: PropTypes.number,
+		unit: PropTypes.string
+	}).isRequired,
+	outdoorTemperature: PropTypes.exact({
+		status: PropTypes.number,
+		value: PropTypes.number,
+		unit: PropTypes.string
+	}).isRequired,
+	spaceHumidity: PropTypes.exact({
+		status: PropTypes.number,
+		value: PropTypes.number,
+		unit: PropTypes.string
+	}).isRequired,
+	spaceTemperature: PropTypes.exact({
+		status: PropTypes.number,
+		value: PropTypes.number,
+		unit: PropTypes.string
+	}).isRequired,
+	UISetpointOffset: PropTypes.exact({
+		value: PropTypes.number
+	}).isRequired,
+	fanSpeed: PropTypes.exact({
+		status: PropTypes.number,
+		value: PropTypes.number
+	}).isRequired,
+	fanSpeedAuto: PropTypes.exact({
+		status: PropTypes.number,
+		value: PropTypes.boolean
+	}).isRequired
+};*/
 
 const styles = StyleSheet.create({
 	safearea: {
@@ -307,7 +429,6 @@ const styles = StyleSheet.create({
 		marginLeft: 16
 	},
 	valuesPanelContainer: {
-		flex: 3,
 		marginHorizontal: 40,
 		borderRadius: 10,
 		backgroundColor: Colors.inverted,
@@ -355,7 +476,7 @@ const styles = StyleSheet.create({
 	thermostat: {
 		flex: 8,
 		alignSelf: 'center',
-		marginTop: 30
+		marginBottom: 30
 	},
 	verticalDash: {
 		backgroundColor: Colors.tertiaryText,

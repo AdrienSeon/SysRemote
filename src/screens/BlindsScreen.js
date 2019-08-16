@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, SafeAreaView, View, StyleSheet, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
 import { Header } from 'react-navigation';
+import * as Animatable from "react-native-animatable";
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import BlindsIconAnimated from '../components/icons/BlindsAnimated';
@@ -71,7 +72,7 @@ class BlindsScreen extends Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<View style={styles.listButtonContainer}>
+					<Animatable.View animation="fadeIn" delay={300} duration={300} easing='ease-out' useNativeDriver style={styles.listButtonContainer}>
 						<TouchableOpacity
 							style={styles.listButtonTouchable}
 							onPress={() => this.props.navigation.navigate('BlindsList')}
@@ -98,8 +99,8 @@ class BlindsScreen extends Component {
 								</View>
 							</View>
 						</TouchableOpacity>
-					</View>
-					<View style={styles.blindsCommands}>
+					</Animatable.View>
+					<Animatable.View animation="fadeIn" delay={500} duration={300} easing='ease-out' useNativeDriver style={styles.blindsCommands}>
 						<View style={styles.orientationContainer}>
 							{this.state.orientationButtons.map((item) => {
 								const Icon = item.icon;
@@ -150,7 +151,7 @@ class BlindsScreen extends Component {
 								thumbStyle={styles.sliderthumbStyle}
 							/>
 						</View>
-					</View>
+					</Animatable.View>
 				</View>
 			</SafeAreaView>
 		);
