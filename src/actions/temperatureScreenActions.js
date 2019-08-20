@@ -52,7 +52,7 @@ export const getFanSpeed = () => {
 		return axios
 			.get(url, params)
 			.then((response) => {
-				dispatch(getFanSpeedSuccess(response.status, parseInt(response.data.value)));
+				dispatch(getFanSpeedSuccess(parseInt(response.data.value)));
 			})
 			.catch((error) => {
 				console.log(error);
@@ -61,12 +61,11 @@ export const getFanSpeed = () => {
 	};
 };
 
-export const getFanSpeedSuccess = (status, value) => {
+export const getFanSpeedSuccess = (value) => {
 	return {
 		type: GET_FANSPEED_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value
 		}
 	};
@@ -91,8 +90,10 @@ export const setFanSpeed = (value = 0) => {
 			'/' +
 			objectInstance.toString() +
 			'/properties/present-value';
+		// ajust to match FanSpeedCmd enum
+		const ajustedValue = value + 1;
 		const data = {
-			value: value.toString()
+			value: ajustedValue.toString()
 		};
 		const params = {
 			auth: {
@@ -100,13 +101,11 @@ export const setFanSpeed = (value = 0) => {
 				password: AppConfig.device.password
 			}
 		};
-		// ajust to match FanSpeedCmd enum
-		value = value + 1;
 
 		return axios
 			.post(url, data, params)
 			.then((response) => {
-				dispatch(setFanSpeedSuccess(response.status, value - 1)); // ajust to match slider range
+				dispatch(setFanSpeedSuccess(ajustedValue - 1)); // ajust to match slider range
 			})
 			.catch((error) => {
 				console.log(error);
@@ -115,12 +114,11 @@ export const setFanSpeed = (value = 0) => {
 	};
 };
 
-export const setFanSpeedSuccess = (status, value) => {
+export const setFanSpeedSuccess = (value) => {
 	return {
 		type: SET_FANSPEED_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value
 		}
 	};
@@ -156,7 +154,7 @@ export const getFanSpeedAuto = () => {
 			.get(url, params)
 			.then((response) => {
 				const autoState = parseInt(response.data.value) === 1 ? true : false;
-				dispatch(getFanSpeedAutoSuccess(response.status, autoState));
+				dispatch(getFanSpeedAutoSuccess(autoState));
 			})
 			.catch((error) => {
 				console.log(error);
@@ -165,12 +163,11 @@ export const getFanSpeedAuto = () => {
 	};
 };
 
-export const getFanSpeedAutoSuccess = (status, value) => {
+export const getFanSpeedAutoSuccess = (value) => {
 	return {
 		type: GET_FANSPEED_AUTO_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value
 		}
 	};
@@ -208,7 +205,7 @@ export const setFanSpeedAuto = (value = true) => {
 		return axios
 			.post(url, data, params)
 			.then((response) => {
-				dispatch(setFanSpeedAutoSuccess(response.status, true));
+				dispatch(setFanSpeedAutoSuccess(true));
 			})
 			.catch((error) => {
 				console.log(error);
@@ -217,12 +214,11 @@ export const setFanSpeedAuto = (value = true) => {
 	};
 };
 
-export const setFanSpeedAutoSuccess = (status, value) => {
+export const setFanSpeedAutoSuccess = (value) => {
 	return {
 		type: SET_FANSPEED_AUTO_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value
 		}
 	};
@@ -247,14 +243,12 @@ export const getOutdoorTemperature = () => {
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				},
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'units',
-					arrayIndex: -1
+					property: 'units'
 				}
 			]
 		};
@@ -274,7 +268,7 @@ export const getOutdoorTemperature = () => {
 				if (error) {
 					dispatch(getOutdoorTemperatureFail());
 				} else {
-					dispatch(getOutdoorTemperatureSuccess(response.status, value, unit));
+					dispatch(getOutdoorTemperatureSuccess(value, unit));
 				}
 			})
 			.catch((error) => {
@@ -284,12 +278,11 @@ export const getOutdoorTemperature = () => {
 	};
 };
 
-export const getOutdoorTemperatureSuccess = (status, value, unit) => {
+export const getOutdoorTemperatureSuccess = (value, unit) => {
 	return {
 		type: GET_OUTDOORTEMPERATURE_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value,
 			unit
 		}
@@ -315,14 +308,12 @@ export const getOutdoorHumidity = () => {
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				},
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'units',
-					arrayIndex: -1
+					property: 'units'
 				}
 			]
 		};
@@ -342,7 +333,7 @@ export const getOutdoorHumidity = () => {
 				if (error) {
 					dispatch(getOutdoorHumidityFail());
 				} else {
-					dispatch(getOutdoorHumiditySuccess(response.status, value, unit));
+					dispatch(getOutdoorHumiditySuccess(value, unit));
 				}
 			})
 			.catch((error) => {
@@ -352,12 +343,11 @@ export const getOutdoorHumidity = () => {
 	};
 };
 
-export const getOutdoorHumiditySuccess = (status, value, unit) => {
+export const getOutdoorHumiditySuccess = (value, unit) => {
 	return {
 		type: GET_OUTDOORHUMIDITY_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value,
 			unit
 		}
@@ -383,14 +373,12 @@ export const getSpaceTemperature = () => {
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				},
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'units',
-					arrayIndex: -1
+					property: 'units'
 				}
 			]
 		};
@@ -410,7 +398,7 @@ export const getSpaceTemperature = () => {
 				if (error) {
 					dispatch(getSpaceTemperatureFail());
 				} else {
-					dispatch(getSpaceTemperatureSuccess(response.status, value, unit));
+					dispatch(getSpaceTemperatureSuccess(value, unit));
 				}
 			})
 			.catch((error) => {
@@ -420,12 +408,11 @@ export const getSpaceTemperature = () => {
 	};
 };
 
-export const getSpaceTemperatureSuccess = (status, value, unit) => {
+export const getSpaceTemperatureSuccess = (value, unit) => {
 	return {
 		type: GET_SPACETEMPERATURE_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value,
 			unit
 		}
@@ -451,14 +438,12 @@ export const getSpaceHumidity = () => {
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				},
 				{
 					type: objectType,
 					instance: objectInstance,
-					property: 'units',
-					arrayIndex: -1
+					property: 'units'
 				}
 			]
 		};
@@ -478,7 +463,7 @@ export const getSpaceHumidity = () => {
 				if (error) {
 					dispatch(getSpaceHumidityFail());
 				} else {
-					dispatch(getSpaceHumiditySuccess(response.status, value, unit));
+					dispatch(getSpaceHumiditySuccess(value, unit));
 				}
 			})
 			.catch((error) => {
@@ -488,12 +473,11 @@ export const getSpaceHumidity = () => {
 	};
 };
 
-export const getSpaceHumiditySuccess = (status, value, unit) => {
+export const getSpaceHumiditySuccess = (value, unit) => {
 	return {
 		type: GET_SPACEHUMIDITY_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value,
 			unit
 		}
@@ -532,7 +516,7 @@ export const setSetpointOffset = (value = 0) => {
 		return axios
 			.post(url, data, params)
 			.then((response) => {
-				dispatch(setSetpointOffsetSuccess(response.status, value));
+				dispatch(setSetpointOffsetSuccess(value));
 			})
 			.catch((error) => {
 				console.log(error);
@@ -541,12 +525,11 @@ export const setSetpointOffset = (value = 0) => {
 	};
 };
 
-export const setSetpointOffsetSuccess = (status, value) => {
+export const setSetpointOffsetSuccess = (value) => {
 	return {
 		type: SET_SETPOINTOFFSET_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value
 		}
 	};
@@ -573,26 +556,22 @@ export const getSetpoint = () => {
 				{
 					type: objectType,
 					instance: effectiveSetpointObjectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				},
 				{
 					type: objectType,
 					instance: effectiveSetpointObjectInstance,
-					property: 'units',
-					arrayIndex: -1
+					property: 'units'
 				},
 				{
 					type: objectType,
 					instance: setpointOffsetRangeObjectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				},
 				{
 					type: objectType,
 					instance: setpointOffsetObjectInstance,
-					property: 'presentValue',
-					arrayIndex: -1
+					property: 'presentValue'
 				}
 			]
 		};
@@ -614,9 +593,7 @@ export const getSetpoint = () => {
 				if (error) {
 					dispatch(getSetpointFail());
 				} else {
-					dispatch(
-						getEffectiveSetpointSuccess(response.status, effectiveSetpointValue, unit)
-					);
+					dispatch(getEffectiveSetpointSuccess(effectiveSetpointValue, unit));
 					dispatch(
 						getUISetpoint(
 							effectiveSetpointValue,
@@ -625,7 +602,7 @@ export const getSetpoint = () => {
 						)
 					);
 
-					dispatch(getSetpointOffsetSuccess(response.status, setpointOffsetValue, unit));
+					dispatch(getSetpointOffsetSuccess(setpointOffsetValue, unit));
 					dispatch(getUISetpointOffset(setpointOffsetValue, unit));
 
 					const setpointOffsetRangeMin =
@@ -633,7 +610,6 @@ export const getSetpoint = () => {
 					const setpointOffsetRangeMax = setpointOffsetRangeValue;
 					dispatch(
 						getSetpointOffsetRangeSuccess(
-							response.status,
 							setpointOffsetRangeMin,
 							setpointOffsetRangeMax,
 							unit
@@ -654,36 +630,33 @@ export const getSetpointFail = () => {
 	};
 };
 
-export const getEffectiveSetpointSuccess = (status, value, unit) => {
+export const getEffectiveSetpointSuccess = (value, unit) => {
 	return {
 		type: GET_EFFECTIVESETPOINT_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value,
 			unit
 		}
 	};
 };
 
-export const getSetpointOffsetSuccess = (status, value, unit) => {
+export const getSetpointOffsetSuccess = (value, unit) => {
 	return {
 		type: GET_SETPOINTOFFSET_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			value,
 			unit
 		}
 	};
 };
 
-export const getSetpointOffsetRangeSuccess = (status, min, max, unit) => {
+export const getSetpointOffsetRangeSuccess = (min, max, unit) => {
 	return {
 		type: GET_SETPOINTOFFSETRANGE_SUCCESS,
 		payload: {
 			isLoaded: true,
-			status,
 			min,
 			max,
 			unit

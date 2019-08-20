@@ -8,7 +8,10 @@ import {
 	TouchableNativeFeedback
 } from 'react-native';
 import { Header } from 'react-navigation';
-import * as Animatable from "react-native-animatable";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import debounce from 'debounce';
+import * as Animatable from 'react-native-animatable';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import LightsTopIcon from '../components/icons/LightsTop';
@@ -16,6 +19,8 @@ import LightsBotIcon from '../components/icons/LightsBot';
 import NextIcon from '../components/icons/Next';
 import Switch from '../components/Switch';
 import Slider from '../components/Slider';
+import * as Actions from '../actions';
+import store from '../store';
 
 class LightsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
@@ -34,40 +39,51 @@ class LightsScreen extends Component {
 			)
 	});
 
-	constructor(props) {
-		super(props);
+	debouncedSetAllLightsUIsliderValue = debounce((value) => {
+		this.props.actions.setAllLightsSliderValue(value);
+	}, 200);
 
-		this.state = {
-			switchValue: true,
-			sliderValue: 80
-		};
+	debouncedSetAllLightsUIswitchValue = debounce((value) => {
+		this.props.actions.setAllLightsSwitchValue(value);
+	}, 200);
+
+	componentDidMount() {
+		this.getData();
+
+		this.interval = setInterval(() => {
+			this.getData();
+		}, 30000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
+	getData() {
+		this.props.actions.getAllLights();
 	}
 
 	handleSliderValue = (value) => {
-		this.setState({ sliderValue: value });
-
-		if (value > 0) {
-			this.setState({ switchValue: true });
-		} else {
-			this.setState({ switchValue: false });
-		}
+		this.props.actions.setAllLightsUIsliderValue(value);
+		this.debouncedSetAllLightsUIsliderValue(value);
 	};
 
 	handleSwitchValue = (value) => {
-		this.setState({ switchValue: value });
-
-		if (value) {
-			this.setState({ sliderValue: 100 });
-		} else {
-			this.setState({ sliderValue: 0 });
-		}
+		this.props.actions.setAllLightsUIswitchValue(value);
+		this.debouncedSetAllLightsUIswitchValue(value);
 	};
 
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<Animatable.View animation="fadeIn" delay={300} duration={300} easing='ease-out' useNativeDriver style={styles.listButtonContainer}>
+					<Animatable.View
+						animation="fadeIn"
+						delay={300}
+						duration={300}
+						easing="ease-out"
+						useNativeDriver
+						style={styles.listButtonContainer}>
 						<TouchableOpacity
 							style={styles.listButtonTouchable}
 							onPress={() => this.props.navigation.navigate('LightsList')}
@@ -83,12 +99,12 @@ class LightsScreen extends Component {
 										style={StyleSheet.flatten([
 											styles.botIcon,
 											{
-												shadowColor: `rgba(255, 221, 136, ${this.state
-													.sliderValue / 100})`
+												shadowColor: `rgba(255, 221, 136, ${this.props
+													.allLights.UIsliderValue / 100})`
 											}
 										])}
-										color={`rgba(255, 220, 133, ${this.state.sliderValue /
-											100})`}
+										color={`rgba(255, 220, 133, ${this.props.allLights
+											.UIsliderValue / 100})`}
 										size={128}
 									/>
 								</View>
@@ -102,10 +118,16 @@ class LightsScreen extends Component {
 							</View>
 						</TouchableOpacity>
 					</Animatable.View>
-					<Animatable.View animation="fadeIn" delay={500} duration={300} easing='ease-out' useNativeDriver style={styles.switchContainer}>
+					<Animatable.View
+						animation="fadeIn"
+						delay={500}
+						duration={300}
+						easing="ease-out"
+						useNativeDriver
+						style={styles.switchContainer}>
 						<Switch
 							onChange={this.handleSwitchValue}
-							value={this.state.switchValue}
+							value={this.props.allLights.UIswitchValue}
 							trackOnColor={Colors.primaryBrand}
 							trackOffColor={Colors.inverted}
 							knobOnColor={Colors.inverted}
@@ -116,9 +138,15 @@ class LightsScreen extends Component {
 							knobStyle={styles.switchKnobStyle}
 						/>
 					</Animatable.View>
-					<Animatable.View animation="fadeIn" delay={700} duration={300} easing='ease-out' useNativeDriver style={styles.sliderContainer}>
+					<Animatable.View
+						animation="fadeIn"
+						delay={700}
+						duration={300}
+						easing="ease-out"
+						useNativeDriver
+						style={styles.sliderContainer}>
 						<Slider
-							value={this.state.sliderValue}
+							value={this.props.allLights.UIsliderValue}
 							onValueChange={this.handleSliderValue}
 							animateTransitions
 							animationType="spring"
@@ -144,6 +172,20 @@ class LightsScreen extends Component {
 			</SafeAreaView>
 		);
 	}
+}
+
+function mapStateToProps({ lightsScreenReducer }) {
+	const { allLights } = lightsScreenReducer;
+	console.log(JSON.stringify(store.getState(), 0, 4));
+	return {
+		allLights
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: bindActionCreators(Actions, dispatch)
+	};
 }
 
 const styles = StyleSheet.create({
@@ -271,4 +313,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default LightsScreen;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(LightsScreen);

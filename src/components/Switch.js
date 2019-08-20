@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Animated, Easing, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
-class BlindsOrientationCommand extends Component {
+class Switch extends Component {
 	constructor(props) {
 		super(props);
 
@@ -80,7 +80,7 @@ class BlindsOrientationCommand extends Component {
 	}
 }
 
-BlindsOrientationCommand.propTypes = {
+Switch.propTypes = {
 	value: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
 	trackOnColor: PropTypes.string,
@@ -93,7 +93,7 @@ BlindsOrientationCommand.propTypes = {
 	trackStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 };
 
-BlindsOrientationCommand.defaultProps = {
+Switch.defaultProps = {
 	value: false,
 	trackOnColor: 'limegreen',
 	trackOffColor: 'gray',
@@ -105,4 +105,4 @@ BlindsOrientationCommand.defaultProps = {
 	trackStyle: {}
 };
 
-export default BlindsOrientationCommand;
+export default Switch;

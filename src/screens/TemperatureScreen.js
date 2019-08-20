@@ -7,7 +7,6 @@ import {
 	Text,
 	TouchableOpacity,
 	TouchableNativeFeedback,
-	Button
 } from 'react-native';
 import { Header } from 'react-navigation';
 import LinearScale from 'linear-scale';
@@ -15,7 +14,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import axios from 'axios';
 import * as Animatable from 'react-native-animatable';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
@@ -23,7 +21,6 @@ import WindIcon from '../components/icons/Wind';
 import CircularSlider from '../components/CircularSlider';
 import Slider from '../components/Slider';
 import * as Actions from '../actions';
-import AppConfig from '../constants/AppConfig';
 import store from '../store';
 
 class TemperatureScreen extends Component {
@@ -76,6 +73,7 @@ class TemperatureScreen extends Component {
 	};
 
 	handleFanSpeedSliderValue = debounce((value) => {
+		console.log(value)
 		this.props.actions.setFanSpeed(value);
 	}, 200);
 
@@ -321,7 +319,7 @@ class TemperatureScreen extends Component {
 	}
 }
 
-function mapStateToProps({ temperatureScreen }) {
+function mapStateToProps({ temperatureScreenReducer }) {
 	const {
 		fanSpeed,
 		fanSpeedAuto,
@@ -334,7 +332,7 @@ function mapStateToProps({ temperatureScreen }) {
 		effectiveSetpoint,
 		UISetpointOffset,
 		UISetpoint
-	} = temperatureScreen;
+	} = temperatureScreenReducer;
 	// console.log(JSON.stringify(store.getState(), 0, 4));
 	return {
 		fanSpeed,

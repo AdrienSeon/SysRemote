@@ -25,3 +25,12 @@ export const SET_UISETPOINTOFFSET = 'set_uisetpointoffset';
 export const GET_UISETPOINT = 'get_uisetpoint';
 export const SET_UISETPOINT = 'set_uisetpoint';
 export const GET_SETPOINT_FAIL = 'get_setpoint_fail';
+
+// Lights screen
+export const GET_ALLLIGHTS_SUCCESS = 'get_alllights_success';
+export const GET_SINGLELIGHT_SUCCESS = 'get_singlelight_success';
+export const GET_ALLLIGHTS_FAIL = 'get_alllights_fail';
+export const SET_ALLLIGHTS_SUCCESS = 'set_alllights_success';
+export const SET_ALLLIGHTS_FAIL = 'set_alllights_fail';
+export const SET_ALLLIGHTSSLIDERVALUE_SUCCESS = 'set_alllightsslidervalue_success';
+export const SET_ALLLIGHTSSWITCHVALUE_SUCCESS = 'set_alllightsswitchvalue_success';

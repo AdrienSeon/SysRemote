@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import temperatureScreen from './temperatureScreenReducer';
+import temperatureScreenReducer from './temperatureScreenReducer';
+import lightsScreenReducer from './lightsScreenReducer';
 
 export default combineReducers({
-    temperatureScreen
+    temperatureScreenReducer,
+    lightsScreenReducer
 });

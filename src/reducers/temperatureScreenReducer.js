@@ -30,55 +30,46 @@ import {
 const INITAL_STATE = {
 	fanSpeed: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
 	fanSpeedAuto: {
 		isLoaded: false,
-		status: 404,
 		value: false
 	},
 	outdoorTemperature: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
 	outdoorHumidity: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
 	spaceTemperature: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
 	spaceHumidity: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
 	setpointOffset: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
 	setpointOffsetRange: {
 		isLoaded: false,
-		status: 404,
 		min: -3,
 		max: 3,
 		unit: ''
 	},
 	effectiveSetpoint: {
 		isLoaded: false,
-		status: 404,
 		value: '--',
 		unit: ''
 	},
