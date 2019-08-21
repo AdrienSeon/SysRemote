@@ -22,6 +22,7 @@ const INITAL_STATE = {
 		{
 			id: 'light1',
 			name: 'Luminaire 1',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -33,6 +34,7 @@ const INITAL_STATE = {
 		{
 			id: 'light2',
 			name: 'Luminaire 2',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -44,6 +46,7 @@ const INITAL_STATE = {
 		{
 			id: 'light3',
 			name: 'Luminaire 3',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -55,6 +58,7 @@ const INITAL_STATE = {
 		{
 			id: 'light4',
 			name: 'Luminaire 4',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -66,6 +70,7 @@ const INITAL_STATE = {
 		{
 			id: 'light5',
 			name: 'Luminaire 5',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -77,6 +82,7 @@ const INITAL_STATE = {
 		{
 			id: 'light6',
 			name: 'Luminaire 6',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -88,6 +94,7 @@ const INITAL_STATE = {
 		{
 			id: 'light7',
 			name: 'Luminaire 7',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -99,6 +106,7 @@ const INITAL_STATE = {
 		{
 			id: 'light8',
 			name: 'Luminaire 8',
+			isDimmable: true,
 			switchValue: false,
 			sliderValue: '--',
 			UIsliderValue: 0,
@@ -121,7 +129,7 @@ export default (state = INITAL_STATE, action) => {
 			const newLightsData = update(state.lightsData, {
 				[index]: {
 					isLoaded: { $set: action.payload.isLoaded },
-					status: { $set: action.payload.status },
+					isDimmable: { $set: action.payload.isDimmable },
 					switchValue: { $set: action.payload.switchValue },
 					sliderValue: { $set: action.payload.sliderValue },
 					unit: { $set: action.payload.unit }
@@ -131,12 +139,12 @@ export default (state = INITAL_STATE, action) => {
 		case SET_ALLLIGHTSSLIDERVALUE_SUCCESS:
 			return {
 				...state,
-				allLights: { ...state.allLights, UIsliderValue: action.payload.UIsliderValue, UIswitchValue: action.payload.UIswitchValue }
+				allLights: { ...state.allLights, sliderValue: action.payload.sliderValue, UIsliderValue: action.payload.UIsliderValue, switchValue: action.payload.switchValue, UIswitchValue: action.payload.UIswitchValue }
 			};
 		case SET_ALLLIGHTSSWITCHVALUE_SUCCESS:
 			return {
 				...state,
-				allLights: { ...state.allLights, UIsliderValue: action.payload.UIsliderValue, UIswitchValue: action.payload.UIswitchValue }
+				allLights: { ...state.allLights, sliderValue: action.payload.sliderValue, UIsliderValue: action.payload.UIsliderValue, switchValue: action.payload.switchValue, UIswitchValue: action.payload.UIswitchValue }
 			};
 		case SET_ALLLIGHTS_SUCCESS:
 			return { ...state, allLights: action.payload };

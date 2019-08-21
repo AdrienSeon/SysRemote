@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { List, ListItem } from 'native-base';
+import {
+	Platform,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	StyleSheet,
+	TouchableOpacity
+} from 'react-native';
+import { List, ListItem, Separator } from 'native-base';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import BacnetSettingsRow from '../components/BacnetSettingsRow';
@@ -9,7 +16,7 @@ import KeyboardShift from '../components/KeyboardShift';
 class BacnetSettingsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Gestion Bacnet',
-		headerBackImage: (
+		headerBackImage:
 			Platform.OS === 'ios' ? (
 				<TouchableOpacity activeOpacity={0.5}>
 					<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
@@ -17,7 +24,6 @@ class BacnetSettingsScreen extends Component {
 			) : (
 				<BackIcon style={styles.backBtn} color={Colors.primaryText} size={32} />
 			)
-		)
 	});
 
 	constructor(props) {
@@ -158,9 +164,9 @@ class BacnetSettingsScreen extends Component {
 					<SafeAreaView style={styles.safearea}>
 						<ScrollView style={styles.container}>
 							<List style={styles.listContainer}>
-								<ListItem itemHeader first style={styles.listHeader}>
+								<Separator bordered>
 									<Text>CVC</Text>
-								</ListItem>
+								</Separator>
 								<ListItem style={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.outsideTemperature} />
 								</ListItem>
@@ -188,9 +194,9 @@ class BacnetSettingsScreen extends Component {
 								<ListItem last style={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.fanspeed} />
 								</ListItem>
-								<ListItem itemHeader style={styles.listHeader}>
+								<Separator bordered>
 									<Text>LUMINAIRES</Text>
-								</ListItem>
+								</Separator>
 								<ListItem tyle={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.LightsValue} />
 								</ListItem>
@@ -206,9 +212,9 @@ class BacnetSettingsScreen extends Component {
 								<ListItem last tyle={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.Light4Value} />
 								</ListItem>
-								<ListItem itemHeader style={styles.listHeader}>
+								<Separator bordered>
 									<Text>STORES</Text>
-								</ListItem>
+								</Separator>
 								<ListItem tyle={styles.rowContainer}>
 									<BacnetSettingsRow point={this.state.blindsPosition} />
 								</ListItem>
@@ -262,9 +268,6 @@ const styles = StyleSheet.create({
 	listContainer: {
 		flex: 1,
 		backgroundColor: '#fff'
-	},
-	listHeader: {
-		backgroundColor: Colors.appBackground
 	},
 	rowContainer: {
 		flex: 1

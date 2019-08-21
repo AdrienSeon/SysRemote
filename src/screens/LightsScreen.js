@@ -39,11 +39,11 @@ class LightsScreen extends Component {
 			)
 	});
 
-	debouncedSetAllLightsUIsliderValue = debounce((value) => {
+	debouncedSetAllLightsSliderValue = debounce((value) => {
 		this.props.actions.setAllLightsSliderValue(value);
 	}, 200);
 
-	debouncedSetAllLightsUIswitchValue = debounce((value) => {
+	debouncedSetAllLightsSwitchValue = debounce((value) => {
 		this.props.actions.setAllLightsSwitchValue(value);
 	}, 200);
 
@@ -65,12 +65,12 @@ class LightsScreen extends Component {
 
 	handleSliderValue = (value) => {
 		this.props.actions.setAllLightsUIsliderValue(value);
-		this.debouncedSetAllLightsUIsliderValue(value);
+		this.debouncedSetAllLightsSliderValue(value);
 	};
 
 	handleSwitchValue = (value) => {
 		this.props.actions.setAllLightsUIswitchValue(value);
-		this.debouncedSetAllLightsUIswitchValue(value);
+		this.debouncedSetAllLightsSwitchValue(value);
 	};
 
 	render() {

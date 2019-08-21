@@ -13,62 +13,63 @@ import axios from 'axios';
 export const getAllLights = () => {
 	return (dispatch) => {
 		const host = AppConfig.device.host;
-		const objectType = 'analogValue';
-		const objectInstanceLight1 = 23;
-		const objectInstanceLight2 = 24;
-		const objectInstanceLight3 = 25;
-		const objectInstanceLight4 = 104;
-		const objectInstanceLight5 = 105;
-		const objectInstanceLight6 = 106;
-		const objectInstanceLight7 = 107;
-		const objectInstanceLight8 = 108;
+		const objectType1to4 = 'analogOutput';
+		const objectType5to8 = 'binaryOutput';
+		const objectInstanceLight1 = 8121;
+		const objectInstanceLight2 = 8122;
+		const objectInstanceLight3 = 8123;
+		const objectInstanceLight4 = 8124;
+		const objectInstanceLight5 = 8321;
+		const objectInstanceLight6 = 8323;
+		const objectInstanceLight7 = 8323;
+		const objectInstanceLight8 = 8324;
 		const url =
 			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
 		const data = {
 			encode: 'text',
 			propertyReferences: [
 				{
-					type: objectType,
+					type: objectType1to4,
 					instance: objectInstanceLight1,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType1to4,
 					instance: objectInstanceLight1,
 					property: 'units'
 				},
 				{
-					type: objectType,
+					type: objectType1to4,
 					instance: objectInstanceLight2,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType1to4,
 					instance: objectInstanceLight3,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType1to4,
 					instance: objectInstanceLight4,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType5to8,
 					instance: objectInstanceLight5,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType5to8,
 					instance: objectInstanceLight6,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType5to8,
 					instance: objectInstanceLight7,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
+					type: objectType5to8,
 					instance: objectInstanceLight8,
 					property: 'presentValue'
 				}
@@ -84,22 +85,22 @@ export const getAllLights = () => {
 		return axios
 			.post(url, data, params)
 			.then((response) => {
-				const light1Value = parseFloat(response.data[0].value);
+				const light1Value = response.data[0].value;
 				const light1Error = response.data[0].error;
 				const unit = response.data[1].value;
-				const light2Value = parseFloat(response.data[2].value);
+				const light2Value = response.data[2].value;
 				const light2Error = response.data[2].error;
-				const light3Value = parseFloat(response.data[3].value);
+				const light3Value = response.data[3].value;
 				const light3Error = response.data[3].error;
-				const light4Value = parseFloat(response.data[4].value);
+				const light4Value = response.data[4].value;
 				const light4Error = response.data[4].error;
-				const light5Value = parseFloat(response.data[5].value);
+				const light5Value = response.data[5].value;
 				const light5Error = response.data[5].error;
-				const light6Value = parseFloat(response.data[6].value);
+				const light6Value = response.data[6].value;
 				const light6Error = response.data[6].error;
-				const light7Value = parseFloat(response.data[7].value);
+				const light7Value = response.data[7].value;
 				const light7Error = response.data[7].error;
-				const light8Value = parseFloat(response.data[8].value);
+				const light8Value = response.data[8].value;
 				const light8Error = response.data[8].error;
 
 				if (
@@ -115,56 +116,136 @@ export const getAllLights = () => {
 					dispatch(getAllLightsFail());
 				} else {
 					let lightValues = [];
-					if (!light1Error) {
-						lightValues.push(light1Value);
-					}
-					if (!light2Error) {
-						lightValues.push(light2Value);
-					}
-					if (!light3Error) {
-						lightValues.push(light3Value);
-					}
-					if (!light4Error) {
-						lightValues.push(light4Value);
-					}
-					if (!light5Error) {
-						lightValues.push(light5Value);
-					}
-					if (!light6Error) {
-						lightValues.push(light6Value);
-					}
-					if (!light7Error) {
-						lightValues.push(light7Value);
-					}
-					if (!light8Error) {
-						lightValues.push(light8Value);
-					}
-					dispatch(getAllLightsSuccess(lightValues, unit));
 
 					if (!light1Error) {
-						dispatch(getSingleLightSuccess(light1Value, unit, 1));
+						let dispatchedLight1Value;
+						let dispatchedLight1isDimmable;
+						if (light1Value === 'Active') {
+							dispatchedLight1Value = 100;
+							dispatchedLight1isDimmable = false
+						} else if (light1Value === 'Inactive') {
+							dispatchedLight1Value = 0;
+							dispatchedLight1isDimmable = false
+						} else {
+							dispatchedLight1Value = parseFloat(light1Value);
+							dispatchedLight1isDimmable = true
+						}
+						lightValues.push(dispatchedLight1Value);
+						dispatch(getSingleLightSuccess(dispatchedLight1Value, unit, 1, dispatchedLight1isDimmable));
 					}
 					if (!light2Error) {
-						dispatch(getSingleLightSuccess(light2Value, unit, 2));
+						let dispatchedLight2Value;
+						let dispatchedLight2isDimmable;
+						if (light2Value === 'Active') {
+							dispatchedLight2Value = 100;
+							dispatchedLight2isDimmable = false
+						} else if (light2Value === 'Inactive') {
+							dispatchedLight2Value = 0;
+							dispatchedLight2isDimmable = false
+						} else {
+							dispatchedLight2Value = parseFloat(light2Value);
+							dispatchedLight2isDimmable = true
+						}
+						lightValues.push(dispatchedLight2Value);
+						dispatch(getSingleLightSuccess(dispatchedLight2Value, unit, 2, dispatchedLight2isDimmable));
 					}
 					if (!light3Error) {
-						dispatch(getSingleLightSuccess(light3Value, unit, 3));
+						let dispatchedLight3Value;
+						let dispatchedLight3isDimmable;
+						if (light3Value === 'Active') {
+							dispatchedLight3Value = 100;
+							dispatchedLight3isDimmable = false
+						} else if (light3Value === 'Inactive') {
+							dispatchedLight3Value = 0;
+							dispatchedLight3isDimmable = false
+						} else {
+							dispatchedLight3Value = parseFloat(light3Value);
+							dispatchedLight3isDimmable = true
+						}
+						lightValues.push(dispatchedLight3Value);
+						dispatch(getSingleLightSuccess(dispatchedLight3Value, unit, 3, dispatchedLight3isDimmable));
 					}
 					if (!light4Error) {
-						dispatch(getSingleLightSuccess(light4Value, unit, 4));
+						let dispatchedLight4Value;
+						let dispatchedLight4isDimmable;
+						if (light4Value === 'Active') {
+							dispatchedLight4Value = 100;
+							dispatchedLight4isDimmable = false
+						} else if (light4Value === 'Inactive') {
+							dispatchedLight4Value = 0;
+							dispatchedLight4isDimmable = false
+						} else {
+							dispatchedLight4Value = parseFloat(light4Value);
+							dispatchedLight4isDimmable = true
+						}
+						lightValues.push(dispatchedLight4Value);
+						dispatch(getSingleLightSuccess(dispatchedLight4Value, unit, 4, dispatchedLight4isDimmable));
 					}
 					if (!light5Error) {
-						dispatch(getSingleLightSuccess(light5Value, unit, 5));
+						let dispatchedLight5Value;
+						let dispatchedLight5isDimmable;
+						if (light5Value === 'Active') {
+							dispatchedLight5Value = 100;
+							dispatchedLight5isDimmable = false
+						} else if (light5Value === 'Inactive') {
+							dispatchedLight5Value = 0;
+							dispatchedLight5isDimmable = false
+						} else {
+							dispatchedLight5Value = parseFloat(light5Value);
+							dispatchedLight5isDimmable = true
+						}
+						lightValues.push(dispatchedLight5Value);
+						dispatch(getSingleLightSuccess(dispatchedLight5Value, unit, 5, dispatchedLight5isDimmable));
 					}
 					if (!light6Error) {
-						dispatch(getSingleLightSuccess(light6Value, unit, 6));
+						let dispatchedLight6Value;
+						let dispatchedLight6isDimmable;
+						if (light6Value === 'Active') {
+							dispatchedLight6Value = 100;
+							dispatchedLight6isDimmable = false
+						} else if (light6Value === 'Inactive') {
+							dispatchedLight6Value = 0;
+							dispatchedLight6isDimmable = false
+						} else {
+							dispatchedLight6Value = parseFloat(light6Value);
+							dispatchedLight6isDimmable = true
+						}
+						lightValues.push(dispatchedLight6Value);
+						dispatch(getSingleLightSuccess(dispatchedLight6Value, unit, 6, dispatchedLight6isDimmable));
 					}
 					if (!light7Error) {
-						dispatch(getSingleLightSuccess(light7Value, unit, 7));
+						let dispatchedLight7Value;
+						let dispatchedLight7isDimmable;
+						if (light7Value === 'Active') {
+							dispatchedLight7Value = 100;
+							dispatchedLight7isDimmable = false
+						} else if (light7Value === 'Inactive') {
+							dispatchedLight7Value = 0;
+							dispatchedLight7isDimmable = false
+						} else {
+							dispatchedLight7Value = parseFloat(light7Value);
+							dispatchedLight7isDimmable = true
+						}
+						lightValues.push(dispatchedLight7Value);
+						dispatch(getSingleLightSuccess(dispatchedLight7Value, unit, 7, dispatchedLight7isDimmable));
 					}
 					if (!light8Error) {
-						dispatch(getSingleLightSuccess(light8Value, unit, 8));
+						let dispatchedLight8Value;
+						let dispatchedLight8isDimmable;
+						if (light8Value === 'Active') {
+							dispatchedLight8Value = 100;
+							dispatchedLight8isDimmable = false
+						} else if (light8Value === 'Inactive') {
+							dispatchedLight8Value = 0;
+							dispatchedLight8isDimmable = false
+						} else {
+							dispatchedLight8Value = parseFloat(light8Value);
+							dispatchedLight8isDimmable = true
+						}
+						lightValues.push(dispatchedLight8Value);
+						dispatch(getSingleLightSuccess(dispatchedLight8Value, unit, 8, dispatchedLight8isDimmable));
 					}
+					dispatch(getAllLightsSuccess(lightValues, unit));
 				}
 			})
 			.catch((error) => {
@@ -181,8 +262,8 @@ export const getAllLightsSuccess = (lightValues, unit) => {
 		type: GET_ALLLIGHTS_SUCCESS,
 		payload: {
 			isLoaded: true,
-			switchValue,
 			sliderValue: valuesAvg,
+			switchValue,
 			UIsliderValue: valuesAvg,
 			UIswitchValue: switchValue,
 			unit
@@ -218,21 +299,22 @@ export const getAllLightsFail = () => {
 	};
 };
 
-export const getSingleLightSuccess = (value, unit, index) => {
+export const getSingleLightSuccess = (value, unit, index, isDimmable) => {
 	const switchValue = value > 0;
 	return {
 		type: GET_SINGLELIGHT_SUCCESS,
 		payload: {
 			index,
-			isLoaded: true,
-			switchValue,
+			isDimmable,
 			sliderValue: value,
+			switchValue,
+			isLoaded: true,
 			unit
 		}
 	};
 };
 
-export const setFanSpeed = (value = 0) => {
+export const setAllLightsSliderValue = (value = 0) => {
 	return (dispatch) => {
 		const host = AppConfig.device.host;
 		const objectType = 'multistate-value';
@@ -245,10 +327,9 @@ export const setFanSpeed = (value = 0) => {
 			'/' +
 			objectInstance.toString() +
 			'/properties/present-value';
-		// ajust to match FanSpeedCmd enum
-		const ajustedValue = value + 1;
+
 		const data = {
-			value: ajustedValue.toString()
+			value: value.toString()
 		};
 		const params = {
 			auth: {
@@ -260,7 +341,7 @@ export const setFanSpeed = (value = 0) => {
 		return axios
 			.post(url, data, params)
 			.then((response) => {
-				dispatch(setAllLightsSuccess(ajustedValue - 1)); // ajust to match slider range
+				dispatch(setAllLightsSuccess(value)); // ajust to match slider range
 			})
 			.catch((error) => {
 				console.log(error);
