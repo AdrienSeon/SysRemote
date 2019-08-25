@@ -73,7 +73,6 @@ class TemperatureScreen extends Component {
 	};
 
 	handleFanSpeedSliderValue = debounce((value) => {
-		console.log(value)
 		this.props.actions.setFanSpeed(value);
 	}, 200);
 
@@ -211,7 +210,7 @@ class TemperatureScreen extends Component {
 								style={styles.circularSlider}
 								value={this.props.UISetpointOffset.value}
 								dialRadius={130}
-								dialWidth={5}
+								dialWidth={7}
 								knobRadius={14}
 								knobColor={Colors.inverted}
 								startGradient="#5D87E7"
@@ -275,7 +274,7 @@ class TemperatureScreen extends Component {
 									minimumValue={1}
 									maximumValue={4}
 									step={1}
-									trackSizeProp={10}
+									trackSizeProp={15}
 									thumbSizeProp={20}
 									fanSpeedBackground
 									thumbTintColor={Colors.inverted}

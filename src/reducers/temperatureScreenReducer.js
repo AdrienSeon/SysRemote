@@ -93,7 +93,11 @@ export default (state = INITAL_STATE, action) => {
 		case GET_FANSPEED_FAIL:
 			return { ...state };
 		case SET_FANSPEED_SUCCESS:
-			return { ...state, fanSpeed: action.payload };
+			return {
+				...state,
+				fanSpeed: action.payload,
+				fanSpeedAuto: { ...state.fanSpeedAuto, value: false }
+			};
 		case SET_FANSPEED_FAIL:
 			return { ...state };
 		case GET_FANSPEED_AUTO_SUCCESS:

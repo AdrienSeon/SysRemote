@@ -158,7 +158,7 @@ export const getFanSpeedAuto = () => {
 			})
 			.catch((error) => {
 				console.log(error);
-				dispatch(getFanSpeedAutoSuccess());
+				dispatch(getFanSpeedAutoFail());
 			});
 	};
 };

@@ -30,7 +30,13 @@ export const GET_SETPOINT_FAIL = 'get_setpoint_fail';
 export const GET_ALLLIGHTS_SUCCESS = 'get_alllights_success';
 export const GET_SINGLELIGHT_SUCCESS = 'get_singlelight_success';
 export const GET_ALLLIGHTS_FAIL = 'get_alllights_fail';
+export const GET_LIGHTS_AUTO_SUCCESS = 'get_lights_auto_success';
+export const GET_LIGHTS_AUTO_FAIL = 'get_lights_auto_fail';
+export const SET_LIGHTS_AUTO_SUCCESS = 'set_lights_auto_success';
 export const SET_ALLLIGHTS_SUCCESS = 'set_alllights_success';
 export const SET_ALLLIGHTS_FAIL = 'set_alllights_fail';
 export const SET_ALLLIGHTSSLIDERVALUE_SUCCESS = 'set_alllightsslidervalue_success';
 export const SET_ALLLIGHTSSWITCHVALUE_SUCCESS = 'set_alllightsswitchvalue_success';
+export const SET_ALLLIGHTSUISLIDERVALUE_SUCCESS = 'set_alllightsuislidervalue_success';
+export const SET_ALLLIGHTSUISWITCHVALUE_SUCCESS = 'set_alllightsuiswitchvalue_success';
+
