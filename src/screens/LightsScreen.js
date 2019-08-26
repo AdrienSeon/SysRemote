@@ -206,7 +206,7 @@ class LightsScreen extends Component {
 
 function mapStateToProps({ lightsScreenReducer }) {
 	const { allLights, lightsAuto } = lightsScreenReducer;
-	console.log(JSON.stringify(store.getState(), 0, 4));
+	// console.log(JSON.stringify(store.getState(), 0, 4));
 	return {
 		allLights,
 		lightsAuto

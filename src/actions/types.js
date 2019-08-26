@@ -27,16 +27,20 @@ export const SET_UISETPOINT = 'set_uisetpoint';
 export const GET_SETPOINT_FAIL = 'get_setpoint_fail';
 
 // Lights screen
-export const GET_ALLLIGHTS_SUCCESS = 'get_alllights_success';
-export const GET_SINGLELIGHT_SUCCESS = 'get_singlelight_success';
-export const GET_ALLLIGHTS_FAIL = 'get_alllights_fail';
+export const GET_ALL_LIGHTS_SUCCESS = 'get_all_lights_success';
+export const GET_ALL_LIGHTS_FAIL = 'get_all_lights_fail';
 export const GET_LIGHTS_AUTO_SUCCESS = 'get_lights_auto_success';
 export const GET_LIGHTS_AUTO_FAIL = 'get_lights_auto_fail';
 export const SET_LIGHTS_AUTO_SUCCESS = 'set_lights_auto_success';
-export const SET_ALLLIGHTS_SUCCESS = 'set_alllights_success';
-export const SET_ALLLIGHTS_FAIL = 'set_alllights_fail';
-export const SET_ALLLIGHTSSLIDERVALUE_SUCCESS = 'set_alllightsslidervalue_success';
-export const SET_ALLLIGHTSSWITCHVALUE_SUCCESS = 'set_alllightsswitchvalue_success';
-export const SET_ALLLIGHTSUISLIDERVALUE_SUCCESS = 'set_alllightsuislidervalue_success';
-export const SET_ALLLIGHTSUISWITCHVALUE_SUCCESS = 'set_alllightsuiswitchvalue_success';
-
+export const SET_ALL_LIGHTS_SUCCESS = 'set_all_lights_success';
+export const SET_ALL_LIGHTS_FAIL = 'set_all_lights_fail';
+export const SET_ALL_LIGHTS_SLIDER_VALUE_SUCCESS = 'set_all_lights_slider_value_success';
+export const SET_ALL_LIGHTS_SWITCH_VALUE_SUCCESS = 'set_all_lights_switch_value_success';
+export const SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS = 'set_all_lights_ui_slider_value_success';
+export const SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS = 'set_all_lights_ui_switch_value_success';
+export const GET_SINGLE_LIGHT_SUCCESS = 'get_single_light_success';
+export const SET_SINGLE_LIGHT_SLIDER_VALUE_SUCCESS = 'set_single_light_slider_value_success';
+export const SET_SINGLE_LIGHT_SWITCH_VALUE_SUCCESS = 'set_single_light_switch_value_success';
+export const SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS = 'set_single_light_ui_slider_value_success';
+export const SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS = 'set_single_light_ui_switch_value_success';
+export const SET_SINGLE_LIGHT_FAIL = 'set_single_light_fail';

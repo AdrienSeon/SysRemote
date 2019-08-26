@@ -12,12 +12,18 @@ import {
 	TouchableNativeFeedback
 } from 'react-native';
 import { Header } from 'react-navigation';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import debounce from 'debounce';
+import * as Animatable from 'react-native-animatable';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import SelectNone from '../components/icons/SelectNone';
 import SingleLightCommand from '../components/SingleLightCommand';
 import Switch from '../components/Switch';
 import Slider from '../components/Slider';
+import * as Actions from '../actions';
+import store from '../store';
 
 const { width } = Dimensions.get('window');
 
@@ -124,6 +130,16 @@ class LightsListScreen extends Component {
 		}
 	}
 
+	debouncedSetSingleLightSliderValue = debounce((value, index) => {
+		console.log('launch this.props.actions.setSingleLightSliderValue(value, index); with value ' + value + ' and index ' + index)
+		this.props.actions.setSingleLightSliderValue(value, index);
+	}, 200);
+
+	debouncedSetSingleLightSwitchValue = debounce((value, index) => {
+		console.log('launch this.props.actions.setSingleLightSwitchValue(value, index); with value ' + value + ' and index ' + index)
+		this.props.actions.setSingleLightSwitchValue(value, index);
+	}, 200);
+
 	componentDidMount() {
 		this.props.navigation.setParams({ deselectAll: this.deselectAll });
 	}
@@ -141,6 +157,10 @@ class LightsListScreen extends Component {
 				this.changeLayout();
 			}
 		}
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
 	}
 
 	deselectAll = () => {
@@ -200,8 +220,8 @@ class LightsListScreen extends Component {
 			selected={item.selected}
 			name={item.name}
 			collapsed={this.state.collapsed}
-			switchValue={item.switchValue}
-			sliderValue={item.sliderValue}
+			switchValue={item.UIswitchValue}
+			sliderValue={item.UIsliderValue}
 			item={item}
 			onChildSliderValueChange={this.handleChildSliderValue}
 			onChildSwitchValueChange={this.handleChildSwitchValue}
@@ -235,20 +255,6 @@ class LightsListScreen extends Component {
 		}
 	};
 
-	handleChildSliderValue = (item, value) => {
-		const items = this.state.lightsData;
-		const index = items.indexOf(item);
-
-		items[index].sliderValue = value;
-
-		if (value > 0) {
-			items[index].switchValue = true;
-		} else {
-			items[index].switchValue = false;
-		}
-
-		this.setState({ lightsData: items });
-	};
 
 	handleMainSwitchValue = (value) => {
 		this.setState({ switchValue: value });
@@ -275,19 +281,18 @@ class LightsListScreen extends Component {
 		}
 	};
 
-	handleChildSwitchValue = (item, value) => {
-		const items = this.state.lightsData;
+	handleChildSliderValue = (item, value) => {
+		const items = this.props.lightsData;
 		const index = items.indexOf(item);
+		this.props.actions.setSingleLightUIsliderValue(value, index);
+		this.debouncedSetSingleLightSliderValue(value, index);
+	};
 
-		items[index].switchValue = value;
-
-		if (value) {
-			items[index].sliderValue = 100;
-		} else {
-			items[index].sliderValue = 0;
-		}
-
-		this.setState({ lightsData: items });
+	handleChildSwitchValue = (item, value) => {
+		const items = this.props.lightsData;
+		const index = items.indexOf(item);
+		this.props.actions.setSingleLightSwitchValue(value, index);
+		this.debouncedSetSingleLightSwitchValue(value, index);
 	};
 
 	render() {
@@ -307,7 +312,7 @@ class LightsListScreen extends Component {
 							contentContainerStyle={{
 								alignItems: 'center'
 							}}
-							data={this.state.lightsData}
+							data={this.props.lightsData}
 							extraData={this.state}
 							renderItem={this.renderItem}
 							numColumns={2}
@@ -361,6 +366,20 @@ class LightsListScreen extends Component {
 			</SafeAreaView>
 		);
 	}
+}
+
+function mapStateToProps({ lightsScreenReducer }) {
+	const { lightsData, } = lightsScreenReducer;
+	// console.log(JSON.stringify(store.getState(), 0, 4));
+	return {
+		lightsData,
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: bindActionCreators(Actions, dispatch)
+	};
 }
 
 const styles = StyleSheet.create({
@@ -424,4 +443,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default LightsListScreen;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(LightsListScreen);

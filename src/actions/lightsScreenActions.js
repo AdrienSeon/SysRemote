@@ -1,16 +1,21 @@
 import {
-	GET_ALLLIGHTS_SUCCESS,
-	GET_ALLLIGHTS_FAIL,
+	GET_ALL_LIGHTS_SUCCESS,
+	GET_ALL_LIGHTS_FAIL,
 	GET_LIGHTS_AUTO_SUCCESS,
 	GET_LIGHTS_AUTO_FAIL,
 	SET_LIGHTS_AUTO_SUCCESS,
-	GET_SINGLELIGHT_SUCCESS,
-	SET_ALLLIGHTSSLIDERVALUE_SUCCESS,
-	SET_ALLLIGHTSSWITCHVALUE_SUCCESS,
-	SET_ALLLIGHTSUISLIDERVALUE_SUCCESS,
-	SET_ALLLIGHTSUISWITCHVALUE_SUCCESS,
-	SET_ALLLIGHTS_SUCCESS,
-	SET_ALLLIGHTS_FAIL
+	SET_ALL_LIGHTS_SLIDER_VALUE_SUCCESS,
+	SET_ALL_LIGHTS_SWITCH_VALUE_SUCCESS,
+	SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS,
+	SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS,
+	SET_ALL_LIGHTS_SUCCESS,
+	SET_ALL_LIGHTS_FAIL,
+	GET_SINGLE_LIGHT_SUCCESS,
+	SET_SINGLE_LIGHT_SLIDER_VALUE_SUCCESS,
+	SET_SINGLE_LIGHT_SWITCH_VALUE_SUCCESS,
+	SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS,
+	SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS,
+	SET_SINGLE_LIGHT_FAIL
 } from './types';
 import AppConfig from '../constants/AppConfig';
 import axios from 'axios';
@@ -140,7 +145,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight1Value,
 								unit,
-								1,
+								0,
 								dispatchedLight1isDimmable
 							)
 						);
@@ -163,7 +168,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight2Value,
 								unit,
-								2,
+								1,
 								dispatchedLight2isDimmable
 							)
 						);
@@ -186,7 +191,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight3Value,
 								unit,
-								3,
+								2,
 								dispatchedLight3isDimmable
 							)
 						);
@@ -209,7 +214,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight4Value,
 								unit,
-								4,
+								3,
 								dispatchedLight4isDimmable
 							)
 						);
@@ -232,7 +237,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight5Value,
 								unit,
-								5,
+								4,
 								dispatchedLight5isDimmable
 							)
 						);
@@ -255,7 +260,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight6Value,
 								unit,
-								6,
+								5,
 								dispatchedLight6isDimmable
 							)
 						);
@@ -278,7 +283,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight7Value,
 								unit,
-								7,
+								6,
 								dispatchedLight7isDimmable
 							)
 						);
@@ -301,7 +306,7 @@ export const getAllLights = () => {
 							getSingleLightSuccess(
 								dispatchedLight8Value,
 								unit,
-								8,
+								7,
 								dispatchedLight8isDimmable
 							)
 						);
@@ -318,10 +323,9 @@ export const getAllLights = () => {
 
 export const getAllLightsSuccess = (lightValues, unit) => {
 	// let valuesAvg = lightValues.reduce((a, b) => a + b, 0) / lightValues.length; // Average
-	
 	const switchValue = lightValues[0] > 0;
 	return {
-		type: GET_ALLLIGHTS_SUCCESS,
+		type: GET_ALL_LIGHTS_SUCCESS,
 		payload: {
 			isLoaded: true,
 			sliderValue: lightValues[0],
@@ -336,7 +340,7 @@ export const getAllLightsSuccess = (lightValues, unit) => {
 export const setAllLightsUIswitchValue = (value) => {
 	const sliderValue = value ? 100 : 0;
 	return {
-		type: SET_ALLLIGHTSUISWITCHVALUE_SUCCESS,
+		type: SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS,
 		payload: {
 			UIsliderValue: sliderValue,
 			UIswitchValue: value
@@ -347,7 +351,7 @@ export const setAllLightsUIswitchValue = (value) => {
 export const setAllLightsUIsliderValue = (value) => {
 	const switchValue = value > 0;
 	return {
-		type: SET_ALLLIGHTSUISLIDERVALUE_SUCCESS,
+		type: SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS,
 		payload: {
 			UIsliderValue: value,
 			UIswitchValue: switchValue
@@ -357,22 +361,7 @@ export const setAllLightsUIsliderValue = (value) => {
 
 export const getAllLightsFail = () => {
 	return {
-		type: GET_ALLLIGHTS_FAIL
-	};
-};
-
-export const getSingleLightSuccess = (value, unit, index, isDimmable) => {
-	const switchValue = value > 0;
-	return {
-		type: GET_SINGLELIGHT_SUCCESS,
-		payload: {
-			index,
-			isDimmable,
-			sliderValue: value,
-			switchValue,
-			isLoaded: true,
-			unit
-		}
+		type: GET_ALL_LIGHTS_FAIL
 	};
 };
 
@@ -486,7 +475,7 @@ export const setAllLightsSliderValue = (value = 0) => {
 export const setAllLightsSliderValueSuccess = (value) => {
 	const switchValue = value > 0;
 	return {
-		type: SET_ALLLIGHTSSLIDERVALUE_SUCCESS,
+		type: SET_ALL_LIGHTS_SLIDER_VALUE_SUCCESS,
 		payload: {
 			sliderValue: value,
 			switchValue: switchValue
@@ -570,7 +559,7 @@ export const setAllLightsSwitchValue = (value = true) => {
 			'/' +
 			objectInstanceLight8.toString() +
 			'/properties/present-value';
-		const sentValue = value ? 100 : 0
+		const sentValue = value ? 100 : 0;
 		const data = {
 			value: sentValue.toString()
 		};
@@ -605,7 +594,7 @@ export const setAllLightsSwitchValue = (value = true) => {
 export const setAllLightsSwitchValueSuccess = (value) => {
 	const sliderValue = value ? 100 : 0;
 	return {
-		type: SET_ALLLIGHTSSWITCHVALUE_SUCCESS,
+		type: SET_ALL_LIGHTS_SWITCH_VALUE_SUCCESS,
 		payload: {
 			sliderValue: sliderValue,
 			switchValue: value
@@ -780,6 +769,188 @@ export const setLightsAutoSuccess = (value) => {
 
 export const setAllLightsFail = () => {
 	return {
-		type: SET_ALLLIGHTS_FAIL
+		type: SET_ALL_LIGHTS_FAIL
+	};
+};
+
+export const getSingleLightSuccess = (value, unit, index, isDimmable) => {
+	const switchValue = value > 0;
+	return {
+		type: GET_SINGLE_LIGHT_SUCCESS,
+		payload: {
+			index,
+			isDimmable,
+			sliderValue: value,
+			switchValue,
+			UIsliderValue: value,
+			UIswitchValue: switchValue,
+			isLoaded: true,
+			unit
+		}
+	};
+};
+
+export const setSingleLightSliderValue = (value = 0, index = 0) => {
+	return (dispatch) => {
+		const host = AppConfig.device.host;
+		const objectType = 'analogValue';
+		let objectInstance;
+		switch (index) {
+			case 0:
+				return (objectInstance = 200);
+			case 1:
+				return (objectInstance = 201);
+			case 2:
+				return (objectInstance = 202);
+			case 3:
+				return (objectInstance = 203);
+			case 4:
+				return (objectInstance = 214);
+			case 5:
+				return (objectInstance = 215);
+			case 6:
+				return (objectInstance = 216);
+			case 7:
+				return (objectInstance = 217);
+			default:
+				return (objectInstance = 200);
+		}
+		const url =
+			'http://' +
+			host +
+			'/api/rest/v1/protocols/bacnet/local/objects/' +
+			objectType +
+			'/' +
+			objectInstance.toString() +
+			'/properties/present-value';
+		const data = {
+			value: value.toString()
+		};
+		const params = {
+			auth: {
+				username: AppConfig.device.username,
+				password: AppConfig.device.password
+			}
+		};
+
+		return axios
+			.post(url, data, params)
+			.then((response) => {
+				dispatch(setSingleLightSliderValueSuccess(value, index));
+			})
+			.catch((error) => {
+				console.log(error);
+				dispatch(setSingleLightFail());
+			});
+	};
+};
+
+export const setSingleLightSliderValueSuccess = (value) => {
+	const switchValue = value > 0;
+	return {
+		type: SET_SINGLE_LIGHT_SLIDER_VALUE_SUCCESS,
+		payload: {
+			index,
+			sliderValue: value,
+			switchValue: switchValue
+		}
+	};
+};
+
+export const setSingleLightSwitchValue = (value = true, index = 0) => {
+	return (dispatch) => {
+		const host = AppConfig.device.host;
+		const objectType = 'analogValue';
+		let objectInstance;
+		switch (index) {
+			case 0:
+				return (objectInstance = 200);
+			case 1:
+				return (objectInstance = 201);
+			case 2:
+				return (objectInstance = 202);
+			case 3:
+				return (objectInstance = 203);
+			case 4:
+				return (objectInstance = 214);
+			case 5:
+				return (objectInstance = 215);
+			case 6:
+				return (objectInstance = 216);
+			case 7:
+				return (objectInstance = 217);
+			default:
+				return (objectInstance = 200);
+		}
+		const urlLight1 =
+			'http://' +
+			host +
+			'/api/rest/v1/protocols/bacnet/local/objects/' +
+			objectType +
+			'/' +
+			objectInstance.toString() +
+			'/properties/present-value';
+		const sentValue = value ? 100 : 0;
+		const data = {
+			value: sentValue.toString()
+		};
+		const params = {
+			auth: {
+				username: AppConfig.device.username,
+				password: AppConfig.device.password
+			}
+		};
+
+		return axios
+			.post(url, data, params)
+			.then((response) => {
+				dispatch(setSingleLightSwitchValueSuccess(value, index));
+			})
+			.catch((error) => {
+				console.log(error);
+				dispatch(setSingleLightFail());
+			});
+	};
+};
+
+export const setSingleLightSwitchValueSuccess = (value, index) => {
+	const sliderValue = value ? 100 : 0;
+	return {
+		type: SET_SINGLE_LIGHT_SWITCH_VALUE_SUCCESS,
+		payload: {
+			index,
+			sliderValue: sliderValue,
+			switchValue: value
+		}
+	};
+};
+
+export const setSingleLightUIsliderValue = (value, index) => {
+	const switchValue = value > 0;
+	return {
+		type: SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS,
+		payload: {
+			index,
+			UIsliderValue: value,
+			UIswitchValue: switchValue
+		}
+	};
+};
+
+export const setSingleLightUIswitchValue = (value, index) => {
+	const sliderValue = value ? 100 : 0;
+	return {
+		type: SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS,
+		payload: {
+			index,
+			UIsliderValue: sliderValue,
+			UIswitchValue: value
+		}
+	};
+};
+
+export const setSingleLightFail = () => {
+	return {
+		type: SET_SINGLE_LIGHT_FAIL
 	};
 };
