@@ -7,15 +7,17 @@ import {
 	SET_ALL_LIGHTS_SUCCESS,
 	SET_ALL_LIGHTS_SLIDER_VALUE_SUCCESS,
 	SET_ALL_LIGHTS_SWITCH_VALUE_SUCCESS,
-	SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS,
-	SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS,
+	SET_ALL_LIGHTS_UI_SLIDER_VALUE,
+	SET_ALL_LIGHTS_UI_SWITCH_VALUE,
 	SET_ALL_LIGHTS_FAIL,
 	GET_SINGLE_LIGHT_SUCCESS,
 	SET_SINGLE_LIGHT_SLIDER_VALUE_SUCCESS,
 	SET_SINGLE_LIGHT_SWITCH_VALUE_SUCCESS,
-	SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS,
-	SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS,
-	SET_SINGLE_LIGHT_FAIL
+	SET_SINGLE_LIGHT_UI_SLIDER_VALUE,
+	SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
+	SET_SINGLE_LIGHT_FAIL,
+	SET_SINGLE_LIGHT_SELECTED,
+	SET_DESELECT_ALL
 } from '../actions/types';
 import update from 'immutability-helper';
 
@@ -163,7 +165,7 @@ export default (state = INITAL_STATE, action) => {
 					switchValue: action.payload.switchValue
 				}
 			};
-		case SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS:
+		case SET_ALL_LIGHTS_UI_SLIDER_VALUE:
 			return {
 				...state,
 				allLights: {
@@ -182,7 +184,7 @@ export default (state = INITAL_STATE, action) => {
 					switchValue: action.payload.switchValue
 				}
 			};
-		case SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS:
+		case SET_ALL_LIGHTS_UI_SWITCH_VALUE:
 			return {
 				...state,
 				allLights: {
@@ -213,7 +215,7 @@ export default (state = INITAL_STATE, action) => {
 			const newSingleLightSliderData = update(state.lightsData, {
 				[action.payload.index]: {
 					sliderValue: { $set: action.payload.sliderValue },
-					switchValue: { $set: action.payload.switchValue },
+					switchValue: { $set: action.payload.switchValue }
 				}
 			});
 			return { ...state, lightsData: newSingleLightSliderData };
@@ -221,29 +223,71 @@ export default (state = INITAL_STATE, action) => {
 			const newSingleLightSwitchData = update(state.lightsData, {
 				[action.payload.index]: {
 					sliderValue: { $set: action.payload.sliderValue },
-					switchValue: { $set: action.payload.switchValue },
+					switchValue: { $set: action.payload.switchValue }
 				}
 			});
 			return { ...state, lightsData: newSingleLightSwitchData };
-		case SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS:
+		case SET_SINGLE_LIGHT_UI_SLIDER_VALUE:
 			const newUIsingleLightSliderData = update(state.lightsData, {
 				[action.payload.index]: {
 					UIsliderValue: { $set: action.payload.UIsliderValue },
-					UIswitchValue: { $set: action.payload.UIswitchValue },
+					UIswitchValue: { $set: action.payload.UIswitchValue }
 				}
 			});
 			return { ...state, lightsData: newUIsingleLightSliderData };
-		case SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS:
+		case SET_SINGLE_LIGHT_UI_SWITCH_VALUE:
 			const newUIsingleLightSwitchData = update(state.lightsData, {
 				[action.payload.index]: {
 					UIsliderValue: { $set: action.payload.UIsliderValue },
-					UIswitchValue: { $set: action.payload.UIswitchValue },
+					UIswitchValue: { $set: action.payload.UIswitchValue }
 				}
 			});
 			return { ...state, lightsData: newUIsingleLightSwitchData };
 		case SET_SINGLE_LIGHT_FAIL:
 			return { ...state };
+		case SET_SINGLE_LIGHT_SELECTED:
+			const newSingleLightSelectedData = update(state.lightsData, {
+				[action.payload.index]: {
+					selected: { $set: action.payload.selected }
+				}
+			});
+			return { ...state, lightsData: newSingleLightSelectedData };
+		case SET_DESELECT_ALL:
+			const newUnselectedData = update(state.lightsData, {
+				$apply: (items) => {
+					return items.map((item) => {
+						return update(item, {
+							selected: {
+								$set: false
+							}
+						});
+					});
+				}
+			});
+			return { ...state, lightsData: newUnselectedData };
 		default:
 			return state;
 	}
 };
+
+/*		case SET_DESELECT_ALL:
+			const newUnselectedData = update(state.lightsData, {
+				$apply: (items) => {
+					return items.map((item) => {
+						return update(item, {
+							subItems: {
+								$apply: (subItems) => {
+									return subItems.map((subItem) => {
+										return update(subItem, {
+											val: {
+												$set: false
+											}
+										});
+									});
+								}
+							}
+						});
+					});
+				}
+			});
+			return { ...state, lightsData: newUnselectedData };*/

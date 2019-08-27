@@ -6,16 +6,18 @@ import {
 	SET_LIGHTS_AUTO_SUCCESS,
 	SET_ALL_LIGHTS_SLIDER_VALUE_SUCCESS,
 	SET_ALL_LIGHTS_SWITCH_VALUE_SUCCESS,
-	SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS,
-	SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS,
+	SET_ALL_LIGHTS_UI_SLIDER_VALUE,
+	SET_ALL_LIGHTS_UI_SWITCH_VALUE,
 	SET_ALL_LIGHTS_SUCCESS,
 	SET_ALL_LIGHTS_FAIL,
 	GET_SINGLE_LIGHT_SUCCESS,
 	SET_SINGLE_LIGHT_SLIDER_VALUE_SUCCESS,
 	SET_SINGLE_LIGHT_SWITCH_VALUE_SUCCESS,
-	SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS,
-	SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS,
-	SET_SINGLE_LIGHT_FAIL
+	SET_SINGLE_LIGHT_UI_SLIDER_VALUE,
+	SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
+	SET_SINGLE_LIGHT_FAIL,
+	SET_SINGLE_LIGHT_SELECTED,
+	SET_DESELECT_ALL
 } from './types';
 import AppConfig from '../constants/AppConfig';
 import axios from 'axios';
@@ -114,18 +116,18 @@ export const getAllLights = () => {
 				const light8Error = response.data[8].error;
 
 				if (
-					light1Error &&
-					light2Error &&
-					light3Error &&
-					light4Error &&
-					light5Error &&
-					light6Error &&
-					light7Error &&
+					light1Error ||
+					light2Error ||
+					light3Error ||
+					light4Error ||
+					light5Error ||
+					light6Error ||
+					light7Error ||
 					light8Error
 				) {
 					dispatch(getAllLightsFail());
 				} else {
-					let lightValues = [];
+					let lightValuesAndisDimmable = [];
 
 					if (!light1Error) {
 						let dispatchedLight1Value;
@@ -140,7 +142,10 @@ export const getAllLights = () => {
 							dispatchedLight1Value = parseFloat(light1Value);
 							dispatchedLight1isDimmable = true;
 						}
-						lightValues.push(dispatchedLight1Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight1Value,
+							isDimmable: dispatchedLight1isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight1Value,
@@ -163,7 +168,10 @@ export const getAllLights = () => {
 							dispatchedLight2Value = parseFloat(light2Value);
 							dispatchedLight2isDimmable = true;
 						}
-						lightValues.push(dispatchedLight2Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight2Value,
+							isDimmable: dispatchedLight2isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight2Value,
@@ -186,7 +194,10 @@ export const getAllLights = () => {
 							dispatchedLight3Value = parseFloat(light3Value);
 							dispatchedLight3isDimmable = true;
 						}
-						lightValues.push(dispatchedLight3Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight3Value,
+							isDimmable: dispatchedLight3isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight3Value,
@@ -209,7 +220,10 @@ export const getAllLights = () => {
 							dispatchedLight4Value = parseFloat(light4Value);
 							dispatchedLight4isDimmable = true;
 						}
-						lightValues.push(dispatchedLight4Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight4Value,
+							isDimmable: dispatchedLight4isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight4Value,
@@ -232,7 +246,10 @@ export const getAllLights = () => {
 							dispatchedLight5Value = parseFloat(light5Value);
 							dispatchedLight5isDimmable = true;
 						}
-						lightValues.push(dispatchedLight5Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight5Value,
+							isDimmable: dispatchedLight5isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight5Value,
@@ -255,7 +272,10 @@ export const getAllLights = () => {
 							dispatchedLight6Value = parseFloat(light6Value);
 							dispatchedLight6isDimmable = true;
 						}
-						lightValues.push(dispatchedLight6Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight6Value,
+							isDimmable: dispatchedLight6isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight6Value,
@@ -278,7 +298,10 @@ export const getAllLights = () => {
 							dispatchedLight7Value = parseFloat(light7Value);
 							dispatchedLight7isDimmable = true;
 						}
-						lightValues.push(dispatchedLight7Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight7Value,
+							isDimmable: dispatchedLight7isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight7Value,
@@ -301,7 +324,10 @@ export const getAllLights = () => {
 							dispatchedLight8Value = parseFloat(light8Value);
 							dispatchedLight8isDimmable = true;
 						}
-						lightValues.push(dispatchedLight8Value);
+						lightValuesAndisDimmable.push({
+							value: dispatchedLight8Value,
+							isDimmable: dispatchedLight8isDimmable
+						});
 						dispatch(
 							getSingleLightSuccess(
 								dispatchedLight8Value,
@@ -311,7 +337,7 @@ export const getAllLights = () => {
 							)
 						);
 					}
-					dispatch(getAllLightsSuccess(lightValues, unit));
+					dispatch(getAllLightsSuccess(lightValuesAndisDimmable, unit));
 				}
 			})
 			.catch((error) => {
@@ -321,16 +347,18 @@ export const getAllLights = () => {
 	};
 };
 
-export const getAllLightsSuccess = (lightValues, unit) => {
-	// let valuesAvg = lightValues.reduce((a, b) => a + b, 0) / lightValues.length; // Average
-	const switchValue = lightValues[0] > 0;
+export const getAllLightsSuccess = (lightValuesAndisDimmable, unit) => {
+	const lightValuesAndisDimmableFiltered = lightValuesAndisDimmable.filter(({ isDimmable }) => isDimmable === true)
+	let valuesAvg =	lightValuesAndisDimmableFiltered.reduce((sum, record) => sum + record.value, 0) / lightValuesAndisDimmableFiltered.length;
+	valuesAvg = +valuesAvg.toFixed(0);
+	const switchValue = valuesAvg > 0;
 	return {
 		type: GET_ALL_LIGHTS_SUCCESS,
 		payload: {
 			isLoaded: true,
-			sliderValue: lightValues[0],
+			sliderValue: valuesAvg,
 			switchValue,
-			UIsliderValue: lightValues[0],
+			UIsliderValue: valuesAvg,
 			UIswitchValue: switchValue,
 			unit
 		}
@@ -340,7 +368,7 @@ export const getAllLightsSuccess = (lightValues, unit) => {
 export const setAllLightsUIswitchValue = (value) => {
 	const sliderValue = value ? 100 : 0;
 	return {
-		type: SET_ALL_LIGHTS_UI_SWITCH_VALUE_SUCCESS,
+		type: SET_ALL_LIGHTS_UI_SWITCH_VALUE,
 		payload: {
 			UIsliderValue: sliderValue,
 			UIswitchValue: value
@@ -351,7 +379,7 @@ export const setAllLightsUIswitchValue = (value) => {
 export const setAllLightsUIsliderValue = (value) => {
 	const switchValue = value > 0;
 	return {
-		type: SET_ALL_LIGHTS_UI_SLIDER_VALUE_SUCCESS,
+		type: SET_ALL_LIGHTS_UI_SLIDER_VALUE,
 		payload: {
 			UIsliderValue: value,
 			UIswitchValue: switchValue
@@ -605,16 +633,62 @@ export const setAllLightsSwitchValueSuccess = (value) => {
 export const getLightsAuto = () => {
 	return (dispatch) => {
 		const host = AppConfig.device.host;
-		const objectType = 'analog-value';
-		const objectInstance = '200';
+		const objectType = 'analogValue';
+		const objectInstanceLight1 = 200;
+		const objectInstanceLight2 = 201;
+		const objectInstanceLight3 = 202;
+		const objectInstanceLight4 = 203;
+		const objectInstanceLight5 = 214;
+		const objectInstanceLight6 = 215;
+		const objectInstanceLight7 = 215;
+		const objectInstanceLight8 = 217;
 		const url =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstance +
-			'/properties/present-value';
+			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
+		const data = {
+			encode: 'text',
+			propertyReferences: [
+				{
+					type: objectType,
+					instance: objectInstanceLight1,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight2,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight3,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight4,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight5,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight6,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight7,
+					property: 'presentValue'
+				},
+				{
+					type: objectType,
+					instance: objectInstanceLight8,
+					property: 'presentValue'
+				}
+			]
+		};
 		const params = {
 			auth: {
 				username: AppConfig.device.username,
@@ -623,9 +697,19 @@ export const getLightsAuto = () => {
 		};
 
 		return axios
-			.get(url, params)
+			.post(url, data, params)
 			.then((response) => {
-				const autoState = response.data.value === 'NaN' ? true : false;
+				const autoState =
+					response.data[0].value === 'NaN' &&
+					response.data[1].value === 'NaN' &&
+					response.data[2].value === 'NaN' &&
+					response.data[3].value === 'NaN' &&
+					response.data[4].value === 'NaN' &&
+					response.data[5].value === 'NaN' &&
+					response.data[6].value === 'NaN' &&
+					response.data[7].value === 'NaN'
+						? true
+						: false;
 				dispatch(getLightsAutoSuccess(autoState));
 			})
 			.catch((error) => {
@@ -797,23 +881,32 @@ export const setSingleLightSliderValue = (value = 0, index = 0) => {
 		let objectInstance;
 		switch (index) {
 			case 0:
-				return (objectInstance = 200);
+				objectInstance = 200;
+				break;
 			case 1:
-				return (objectInstance = 201);
+				objectInstance = 201;
+				break;
 			case 2:
-				return (objectInstance = 202);
+				objectInstance = 202;
+				break;
 			case 3:
-				return (objectInstance = 203);
+				objectInstance = 203;
+				break;
 			case 4:
-				return (objectInstance = 214);
+				objectInstance = 214;
+				break;
 			case 5:
-				return (objectInstance = 215);
+				objectInstance = 215;
+				break;
 			case 6:
-				return (objectInstance = 216);
+				objectInstance = 216;
+				break;
 			case 7:
-				return (objectInstance = 217);
+				objectInstance = 217;
+				break;
 			default:
-				return (objectInstance = 200);
+				objectInstance = 200;
+				break;
 		}
 		const url =
 			'http://' +
@@ -845,7 +938,7 @@ export const setSingleLightSliderValue = (value = 0, index = 0) => {
 	};
 };
 
-export const setSingleLightSliderValueSuccess = (value) => {
+export const setSingleLightSliderValueSuccess = (value, index) => {
 	const switchValue = value > 0;
 	return {
 		type: SET_SINGLE_LIGHT_SLIDER_VALUE_SUCCESS,
@@ -864,25 +957,34 @@ export const setSingleLightSwitchValue = (value = true, index = 0) => {
 		let objectInstance;
 		switch (index) {
 			case 0:
-				return (objectInstance = 200);
+				objectInstance = 200;
+				break;
 			case 1:
-				return (objectInstance = 201);
+				objectInstance = 201;
+				break;
 			case 2:
-				return (objectInstance = 202);
+				objectInstance = 202;
+				break;
 			case 3:
-				return (objectInstance = 203);
+				objectInstance = 203;
+				break;
 			case 4:
-				return (objectInstance = 214);
+				objectInstance = 214;
+				break;
 			case 5:
-				return (objectInstance = 215);
+				objectInstance = 215;
+				break;
 			case 6:
-				return (objectInstance = 216);
+				objectInstance = 216;
+				break;
 			case 7:
-				return (objectInstance = 217);
+				objectInstance = 217;
+				break;
 			default:
-				return (objectInstance = 200);
+				objectInstance = 200;
+				break;
 		}
-		const urlLight1 =
+		const url =
 			'http://' +
 			host +
 			'/api/rest/v1/protocols/bacnet/local/objects/' +
@@ -928,7 +1030,7 @@ export const setSingleLightSwitchValueSuccess = (value, index) => {
 export const setSingleLightUIsliderValue = (value, index) => {
 	const switchValue = value > 0;
 	return {
-		type: SET_SINGLE_LIGHT_UI_SLIDER_VALUE_SUCCESS,
+		type: SET_SINGLE_LIGHT_UI_SLIDER_VALUE,
 		payload: {
 			index,
 			UIsliderValue: value,
@@ -940,7 +1042,7 @@ export const setSingleLightUIsliderValue = (value, index) => {
 export const setSingleLightUIswitchValue = (value, index) => {
 	const sliderValue = value ? 100 : 0;
 	return {
-		type: SET_SINGLE_LIGHT_UI_SWITCH_VALUE_SUCCESS,
+		type: SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
 		payload: {
 			index,
 			UIsliderValue: sliderValue,
@@ -952,5 +1054,24 @@ export const setSingleLightUIswitchValue = (value, index) => {
 export const setSingleLightFail = () => {
 	return {
 		type: SET_SINGLE_LIGHT_FAIL
+	};
+};
+
+export const setSingleLightSelected = (value, index) => {
+	return {
+		type: SET_SINGLE_LIGHT_SELECTED,
+		payload: {
+			index,
+			selected: value
+		}
+	};
+};
+
+export const setDeselectAll = () => {
+	return {
+		type: SET_DESELECT_ALL,
+		payload: {
+			selected: false
+		}
 	};
 };

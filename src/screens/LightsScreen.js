@@ -161,7 +161,7 @@ class LightsScreen extends Component {
 									animationType="spring"
 									minimumValue={0}
 									maximumValue={100}
-									step={10}
+									step={1}
 									trackSizeProp={35}
 									thumbSizeProp={35}
 									minimumTrackTintColor="black"

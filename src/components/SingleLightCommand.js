@@ -166,7 +166,11 @@ class SingleLightCommand extends Component {
 								/>
 							</View>
 							{this.props.collapsed ? (
-								<View style={styles.switchContainer}>
+								<View
+									style={StyleSheet.flatten([
+										styles.switchContainer,
+										{ alignItems: this.props.isDimmable ? 'center' : 'flex-end'}
+									])}>
 									<Switch
 										onChange={this.handleSwitchValue}
 										value={this.props.switchValue}
@@ -237,7 +241,7 @@ class SingleLightCommand extends Component {
 							</Text>
 						</View>
 					</View>
-					{this.props.collapsed ? (
+					{this.props.collapsed && this.props.isDimmable ? (
 						<View style={styles.sliderContainer}>
 							<Slider
 								value={this.props.sliderValue}
@@ -272,6 +276,7 @@ class SingleLightCommand extends Component {
 SingleLightCommand.propTypes = {
 	selected: PropTypes.bool,
 	name: PropTypes.string,
+	isDimmable: PropTypes.bool,
 	onPressItem: PropTypes.func.isRequired
 };
 
@@ -317,8 +322,7 @@ const styles = StyleSheet.create({
 	},
 	switchContainer: {
 		flex: 1,
-		marginTop: 15,
-		alignItems: 'center'
+		marginTop: 15
 	},
 	switchTrackStyle: {
 		shadowColor: 'rgba(100, 100, 100, 0.1)',

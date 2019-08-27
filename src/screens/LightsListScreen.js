@@ -131,17 +131,20 @@ class LightsListScreen extends Component {
 	}
 
 	debouncedSetSingleLightSliderValue = debounce((value, index) => {
-		console.log('launch this.props.actions.setSingleLightSliderValue(value, index); with value ' + value + ' and index ' + index)
 		this.props.actions.setSingleLightSliderValue(value, index);
 	}, 200);
 
 	debouncedSetSingleLightSwitchValue = debounce((value, index) => {
-		console.log('launch this.props.actions.setSingleLightSwitchValue(value, index); with value ' + value + ' and index ' + index)
 		this.props.actions.setSingleLightSwitchValue(value, index);
 	}, 200);
 
 	componentDidMount() {
 		this.props.navigation.setParams({ deselectAll: this.deselectAll });
+				this.getData();
+
+		this.interval = setInterval(() => {
+			this.getData();
+		}, 30000);
 	}
 
 	componentDidUpdate(prevState) {
@@ -164,11 +167,12 @@ class LightsListScreen extends Component {
 	}
 
 	deselectAll = () => {
-		const items = this.state.lightsData;
+/*		const items = this.state.lightsData;
 		items.forEach((item) => {
 			item.selected = false;
 		});
-		this.setState({ lightsData: items });
+		this.setState({ lightsData: items });*/
+		this.props.actions.setDeselectAll();
 
 		this.setState(() => {
 			const selected = new Map(this.state.selected);
@@ -199,10 +203,9 @@ class LightsListScreen extends Component {
 	};
 
 	onPressItem = (item) => {
-		const items = this.state.lightsData;
+		const items = this.props.lightsData;
 		const index = items.indexOf(item);
-		items[index].selected = !items[index].selected;
-		this.setState({ lightsData: items });
+		this.props.actions.setSingleLightSelected(!item.selected, index);
 
 		this.setState((state) => {
 			const selected = new Map(state.selected);
@@ -222,6 +225,7 @@ class LightsListScreen extends Component {
 			collapsed={this.state.collapsed}
 			switchValue={item.UIswitchValue}
 			sliderValue={item.UIsliderValue}
+			isDimmable={item.isDimmable}
 			item={item}
 			onChildSliderValueChange={this.handleChildSliderValue}
 			onChildSwitchValueChange={this.handleChildSwitchValue}
@@ -291,10 +295,13 @@ class LightsListScreen extends Component {
 	handleChildSwitchValue = (item, value) => {
 		const items = this.props.lightsData;
 		const index = items.indexOf(item);
-		this.props.actions.setSingleLightSwitchValue(value, index);
+		this.props.actions.setSingleLightUIswitchValue(value, index);
 		this.debouncedSetSingleLightSwitchValue(value, index);
 	};
-
+	getData() {
+		this.props.actions.getAllLights();
+		this.props.actions.getLightsAuto();
+	}
 	render() {
 		return (
 			<SafeAreaView style={styles.safearea}>
