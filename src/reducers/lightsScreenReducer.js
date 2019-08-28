@@ -17,7 +17,9 @@ import {
 	SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
 	SET_SINGLE_LIGHT_FAIL,
 	SET_SINGLE_LIGHT_SELECTED,
-	SET_DESELECT_ALL
+	SET_DESELECT_ALL,
+	SET_SELECTED_LIGHTS_UI_SLIDER_VALUE,
+	SET_SELECTED_LIGHTS_UI_SWITCH_VALUE
 } from '../actions/types';
 import update from 'immutability-helper';
 
@@ -30,6 +32,11 @@ const INITAL_STATE = {
 		UIsliderValue: 0,
 		UIswitchValue: false,
 		unit: ''
+	},
+	selectedLights: {
+		isLoaded: false,
+		UIsliderValue: 0,
+		UIswitchValue: false
 	},
 	lightsAuto: {
 		isLoaded: false,
@@ -45,6 +52,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 200,
 			selected: false,
 			isLoaded: false
 		},
@@ -57,6 +65,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 201,
 			selected: false,
 			isLoaded: false
 		},
@@ -69,6 +78,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 202,
 			selected: false,
 			isLoaded: false
 		},
@@ -81,6 +91,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 203,
 			selected: false,
 			isLoaded: false
 		},
@@ -93,6 +104,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 214,
 			selected: false,
 			isLoaded: false
 		},
@@ -105,6 +117,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 215,
 			selected: false,
 			isLoaded: false
 		},
@@ -117,6 +130,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 216,
 			selected: false,
 			isLoaded: false
 		},
@@ -129,6 +143,7 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			UIswitchValue: false,
 			unit: '',
+			objectInstance: 217,
 			selected: false,
 			isLoaded: false
 		}
@@ -138,7 +153,15 @@ const INITAL_STATE = {
 export default (state = INITAL_STATE, action) => {
 	switch (action.type) {
 		case GET_ALL_LIGHTS_SUCCESS:
-			return { ...state, allLights: action.payload };
+			return {
+				...state,
+				allLights: action.payload,
+				selectedLights: {
+					...state.selectedLights,
+					UIsliderValue: action.payload.UIsliderValue,
+					UIswitchValue: action.payload.UIswitchValue
+				}
+			};
 		case GET_ALL_LIGHTS_FAIL:
 			return { ...state };
 		case GET_LIGHTS_AUTO_SUCCESS:
@@ -173,7 +196,12 @@ export default (state = INITAL_STATE, action) => {
 					UIsliderValue: action.payload.UIsliderValue,
 					UIswitchValue: action.payload.UIswitchValue
 				},
-				lightsAuto: { ...state.lightsAuto, value: false }
+				lightsAuto: { ...state.lightsAuto, value: false },
+				selectedLights: {
+					...state.selectedLights,
+					UIsliderValue: action.payload.UIsliderValue,
+					UIswitchValue: action.payload.UIswitchValue
+				}
 			};
 		case SET_ALL_LIGHTS_SWITCH_VALUE_SUCCESS:
 			return {
@@ -192,7 +220,12 @@ export default (state = INITAL_STATE, action) => {
 					UIsliderValue: action.payload.UIsliderValue,
 					UIswitchValue: action.payload.UIswitchValue
 				},
-				lightsAuto: { ...state.lightsAuto, value: false }
+				lightsAuto: { ...state.lightsAuto, value: false },
+				selectedLights: {
+					...state.selectedLights,
+					UIsliderValue: action.payload.UIsliderValue,
+					UIswitchValue: action.payload.UIswitchValue
+				}
 			};
 		case SET_ALL_LIGHTS_SUCCESS:
 			return { ...state, allLights: action.payload };
@@ -265,6 +298,24 @@ export default (state = INITAL_STATE, action) => {
 				}
 			});
 			return { ...state, lightsData: newUnselectedData };
+		case SET_SELECTED_LIGHTS_UI_SLIDER_VALUE:
+			return {
+				...state,
+				selectedLights: {
+					...state.selectedLights,
+					UIsliderValue: action.payload.UIsliderValue,
+					UIswitchValue: action.payload.UIswitchValue
+				}
+			};
+		case SET_SELECTED_LIGHTS_UI_SWITCH_VALUE:
+			return {
+				...state,
+				selectedLights: {
+					...state.selectedLights,
+					UIsliderValue: action.payload.UIsliderValue,
+					UIswitchValue: action.payload.UIswitchValue
+				}
+			};
 		default:
 			return state;
 	}

@@ -17,7 +17,9 @@ import {
 	SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
 	SET_SINGLE_LIGHT_FAIL,
 	SET_SINGLE_LIGHT_SELECTED,
-	SET_DESELECT_ALL
+	SET_DESELECT_ALL,
+	SET_SELECTED_LIGHTS_UI_SLIDER_VALUE,
+	SET_SELECTED_LIGHTS_UI_SWITCH_VALUE
 } from './types';
 import AppConfig from '../constants/AppConfig';
 import axios from 'axios';
@@ -348,8 +350,12 @@ export const getAllLights = () => {
 };
 
 export const getAllLightsSuccess = (lightValuesAndisDimmable, unit) => {
-	const lightValuesAndisDimmableFiltered = lightValuesAndisDimmable.filter(({ isDimmable }) => isDimmable === true)
-	let valuesAvg =	lightValuesAndisDimmableFiltered.reduce((sum, record) => sum + record.value, 0) / lightValuesAndisDimmableFiltered.length;
+	const lightValuesAndisDimmableFiltered = lightValuesAndisDimmable.filter(
+		({ isDimmable }) => isDimmable === true
+	);
+	let valuesAvg =
+		lightValuesAndisDimmableFiltered.reduce((sum, record) => sum + record.value, 0) /
+		lightValuesAndisDimmableFiltered.length;
 	valuesAvg = +valuesAvg.toFixed(0);
 	const switchValue = valuesAvg > 0;
 	return {
@@ -365,14 +371,9 @@ export const getAllLightsSuccess = (lightValuesAndisDimmable, unit) => {
 	};
 };
 
-export const setAllLightsUIswitchValue = (value) => {
-	const sliderValue = value ? 100 : 0;
+export const getAllLightsFail = () => {
 	return {
-		type: SET_ALL_LIGHTS_UI_SWITCH_VALUE,
-		payload: {
-			UIsliderValue: sliderValue,
-			UIswitchValue: value
-		}
+		type: GET_ALL_LIGHTS_FAIL
 	};
 };
 
@@ -387,9 +388,14 @@ export const setAllLightsUIsliderValue = (value) => {
 	};
 };
 
-export const getAllLightsFail = () => {
+export const setAllLightsUIswitchValue = (value) => {
+	const sliderValue = value ? 100 : 0;
 	return {
-		type: GET_ALL_LIGHTS_FAIL
+		type: SET_ALL_LIGHTS_UI_SWITCH_VALUE,
+		payload: {
+			UIsliderValue: sliderValue,
+			UIswitchValue: value
+		}
 	};
 };
 
@@ -1073,5 +1079,136 @@ export const setDeselectAll = () => {
 		payload: {
 			selected: false
 		}
+	};
+};
+
+export const setSelectedLightsUIsliderValue = (value) => {
+	const switchValue = value > 0;
+	return {
+		type: SET_SELECTED_LIGHTS_UI_SLIDER_VALUE,
+		payload: {
+			UIsliderValue: value,
+			UIswitchValue: switchValue
+		}
+	};
+};
+
+export const setSelectedLightsUIswitchValue = (value) => {
+	const sliderValue = value ? 100 : 0;
+	return {
+		type: SET_SELECTED_LIGHTS_UI_SWITCH_VALUE,
+		payload: {
+			UIsliderValue: sliderValue,
+			UIswitchValue: value
+		}
+	};
+};
+
+export const setSelectedLightsSliderValue = (value = 0) => {
+	return (dispatch, getState) => {
+		const host = AppConfig.device.host;
+		const objectType = 'analogValue';
+		const data = {
+			value: value.toString()
+		};
+		const params = {
+			auth: {
+				username: AppConfig.device.username,
+				password: AppConfig.device.password
+			}
+		};
+
+		let urlOfLightsToUpdate = [];
+		const { lightsData } = getState().lightsScreenReducer;
+
+		lightsData.forEach((light) => {
+			if (light.selected) {
+				const objectInstance = light.objectInstance;
+				const url =
+					'http://' +
+					host +
+					'/api/rest/v1/protocols/bacnet/local/objects/' +
+					objectType +
+					'/' +
+					objectInstance.toString() +
+					'/properties/present-value';
+
+				urlOfLightsToUpdate.push(url);
+			}
+		});
+
+		let promiseArray = urlOfLightsToUpdate.map((url) => axios.post(url, data, params));
+
+		return axios
+			.all(promiseArray)
+			.then((response) => {
+				lightsData.forEach((light, index) => {
+					if (light.selected) {
+						dispatch(setSingleLightSliderValueSuccess(value, index));
+					}
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+				dispatch(setSelectedLightsFail());
+			});
+	};
+};
+
+export const setSelectedLightsSwitchValue = (value = 0) => {
+	return (dispatch, getState) => {
+		const host = AppConfig.device.host;
+		const objectType = 'analogValue';
+		const sentValue = value ? 100 : 0;
+		const data = {
+			value: sentValue.toString()
+		};
+		const params = {
+			auth: {
+				username: AppConfig.device.username,
+				password: AppConfig.device.password
+			}
+		};
+
+		let urlOfLightsToUpdate = [];
+		const { lightsData } = getState().lightsScreenReducer;
+
+		lightsData.forEach((light) => {
+			if (light.selected) {
+				const objectInstance = light.objectInstance;
+				const url =
+					'http://' +
+					host +
+					'/api/rest/v1/protocols/bacnet/local/objects/' +
+					objectType +
+					'/' +
+					objectInstance.toString() +
+					'/properties/present-value';
+
+				urlOfLightsToUpdate.push(url);
+			}
+		});
+
+		let promiseArray = urlOfLightsToUpdate.map((url) => axios.post(url, data, params));
+
+		return axios
+			.all(promiseArray)
+			.then((response) => {
+				lightsData.forEach((light, index) => {
+					if (light.selected) {
+						dispatch(setSingleLightSwitchValueSuccess(value, index));
+					}
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+				dispatch(setSelectedLightsFail());
+			});
+	};
+};
+
+export const setSelectedLightsFail = () => {
+	return {
+		type: SET_SELECTED_LIGHTS_FAIL
 	};
 };

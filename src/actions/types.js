@@ -46,3 +46,5 @@ export const SET_SINGLE_LIGHT_UI_SWITCH_VALUE = 'set_single_light_ui_switch_valu
 export const SET_SINGLE_LIGHT_FAIL = 'set_single_light_fail';
 export const SET_SINGLE_LIGHT_SELECTED = 'set_single_light_selected';
 export const SET_DESELECT_ALL = 'set_deselect_all';
+export const SET_SELECTED_LIGHTS_UI_SLIDER_VALUE = 'set_selected_lights_ui_slider_value';
+export const SET_SELECTED_LIGHTS_UI_SWITCH_VALUE = 'set_selected_lights_ui_switch_value';

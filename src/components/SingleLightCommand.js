@@ -92,7 +92,13 @@ class SingleLightCommand extends Component {
 												: Colors.primaryText
 										}
 									])}>
-									{this.props.sliderValue + '%'}
+										{
+											this.props.isDimmable
+												? this.props.sliderValue + '%'
+												: this.props.switchValue
+													? 'On'
+													: 'Off'
+										}
 								</Text>
 							</View>
 						</View>
@@ -169,7 +175,11 @@ class SingleLightCommand extends Component {
 								<View
 									style={StyleSheet.flatten([
 										styles.switchContainer,
-										{ alignItems: this.props.isDimmable ? 'center' : 'flex-end'}
+										{
+											alignItems: this.props.isDimmable
+												? 'center'
+												: 'flex-end'
+										}
 									])}>
 									<Switch
 										onChange={this.handleSwitchValue}
@@ -211,7 +221,13 @@ class SingleLightCommand extends Component {
 													: Colors.primaryText
 											}
 										])}>
-										{this.props.sliderValue + '%'}
+										{
+											this.props.isDimmable
+												? this.props.sliderValue + '%'
+												: this.props.switchValue
+													? 'On'
+													: 'Off'
+										}
 									</Text>
 								</View>
 							)}

@@ -63,65 +63,7 @@ class LightsListScreen extends Component {
 			rightPannel: -100,
 			width,
 			layoutAnimationActive: false,
-			selected: (new Map(): Map<string, boolean>),
-			lightsData: [
-				{
-					id: 'light1',
-					name: 'Luminaire 1',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light2',
-					name: 'Luminaire 2',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light3',
-					name: 'Luminaire 3',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light4',
-					name: 'Luminaire 4',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light5',
-					name: 'Luminaire 5',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light6',
-					name: 'Luminaire 6',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light7',
-					name: 'Luminaire 7',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				},
-				{
-					id: 'light8',
-					name: 'Luminaire 8',
-					switchValue: true,
-					sliderValue: 80,
-					selected: false
-				}
-			]
+			selected: (new Map(): Map<string, boolean>)
 		};
 
 		if (Platform.OS === 'android') {
@@ -138,9 +80,17 @@ class LightsListScreen extends Component {
 		this.props.actions.setSingleLightSwitchValue(value, index);
 	}, 200);
 
+	debouncedSetSelectedLightSliderValue = debounce((value) => {
+		this.props.actions.setSelectedLightsSliderValue(value);
+	}, 200);
+
+	debouncedSetSelectedLightSwitchValue = debounce((value) => {
+		this.props.actions.setSelectedLightsSwitchValue(value);
+	}, 200);
+
 	componentDidMount() {
 		this.props.navigation.setParams({ deselectAll: this.deselectAll });
-				this.getData();
+		this.getData();
 
 		this.interval = setInterval(() => {
 			this.getData();
@@ -164,14 +114,10 @@ class LightsListScreen extends Component {
 
 	componentWillUnmount() {
 		clearInterval(this.interval);
+		this.deselectAll();
 	}
 
 	deselectAll = () => {
-/*		const items = this.state.lightsData;
-		items.forEach((item) => {
-			item.selected = false;
-		});
-		this.setState({ lightsData: items });*/
 		this.props.actions.setDeselectAll();
 
 		this.setState(() => {
@@ -235,54 +181,23 @@ class LightsListScreen extends Component {
 	keyExtractor = (item) => item.id;
 
 	handleMainSliderValue = (value) => {
-		this.setState({ sliderValue: value });
-
-		this.setState((state) => {
-			const lights = state.lightsData.map((light) => {
-				if (light.selected) {
-					light.sliderValue = value;
-					if (value > 0) {
-						light.switchValue = true
-					} else {
-						light.switchValue = false
-					}
-				}
-				return light;
-			});
-			return { lights };
+		this.props.actions.setSelectedLightsUIsliderValue(value);
+		this.props.lightsData.forEach((light, index) => {
+			if (light.selected) {
+				this.props.actions.setSingleLightUIsliderValue(value, index);
+				this.debouncedSetSelectedLightSliderValue(value);
+			}
 		});
-
-		if (value > 0) {
-			this.setState({ switchValue: true });
-		} else {
-			this.setState({ switchValue: false });
-		}
 	};
 
-
 	handleMainSwitchValue = (value) => {
-		this.setState({ switchValue: value });
-
-		this.setState((state) => {
-			const lights = state.lightsData.map((light) => {
-				if (light.selected) {
-					light.switchValue = value;
-					if (value) {
-						light.sliderValue = 100
-					} else {
-						light.sliderValue = 0
-					}
-				}
-				return light;
-			});
-			return { lights };
+		this.props.actions.setSelectedLightsUIswitchValue(value);
+		this.props.lightsData.forEach((light, index) => {
+			if (light.selected) {
+				this.props.actions.setSingleLightUIswitchValue(value, index);
+				this.debouncedSetSelectedLightSwitchValue(value);
+			}
 		});
-
-		if (value) {
-			this.setState({ sliderValue: 100 });
-		} else {
-			this.setState({ sliderValue: 0 });
-		}
 	};
 
 	handleChildSliderValue = (item, value) => {
@@ -337,7 +252,7 @@ class LightsListScreen extends Component {
 						<View style={styles.switchContainer}>
 							<Switch
 								onChange={this.handleMainSwitchValue}
-								value={this.state.switchValue}
+								value={this.props.selectedLights.UIswitchValue}
 								trackOnColor={Colors.primaryBrand}
 								trackOffColor={Colors.inverted}
 								knobOnColor={Colors.inverted}
@@ -350,7 +265,7 @@ class LightsListScreen extends Component {
 						</View>
 						<View style={styles.sliderContainer}>
 							<Slider
-								value={this.state.sliderValue}
+								value={this.props.selectedLights.UIsliderValue}
 								onValueChange={this.handleMainSliderValue}
 								animateTransitions
 								animationType="spring"
@@ -376,10 +291,10 @@ class LightsListScreen extends Component {
 }
 
 function mapStateToProps({ lightsScreenReducer }) {
-	const { lightsData, } = lightsScreenReducer;
-	// console.log(JSON.stringify(store.getState(), 0, 4));
+	const { lightsData, selectedLights } = lightsScreenReducer;
 	return {
 		lightsData,
+		selectedLights
 	};
 }
 

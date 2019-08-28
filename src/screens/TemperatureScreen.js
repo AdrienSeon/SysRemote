@@ -332,7 +332,6 @@ function mapStateToProps({ temperatureScreenReducer }) {
 		UISetpointOffset,
 		UISetpoint
 	} = temperatureScreenReducer;
-	// console.log(JSON.stringify(store.getState(), 0, 4));
 	return {
 		fanSpeed,
 		fanSpeedAuto,
