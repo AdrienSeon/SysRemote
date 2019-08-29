@@ -78,7 +78,13 @@ class SingleLightCommand extends Component {
 												.sliderValue / 100})`
 										}
 									])}
-									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
+									color={
+										this.props.isDimmable
+											? `rgba(255, 220, 133, ${this.props.sliderValue / 100})`
+											: this.props.switchValue
+											? `rgba(255, 220, 133, 1)`
+											: `rgba(255, 220, 133, 0)`
+									}
 									size={48}
 								/>
 							</View>
@@ -92,13 +98,11 @@ class SingleLightCommand extends Component {
 												: Colors.primaryText
 										}
 									])}>
-										{
-											this.props.isDimmable
-												? this.props.sliderValue + '%'
-												: this.props.switchValue
-													? 'On'
-													: 'Off'
-										}
+									{this.props.isDimmable
+										? this.props.sliderValue + '%'
+										: this.props.switchValue
+										? 'On'
+										: 'Off'}
 								</Text>
 							</View>
 						</View>
@@ -167,7 +171,13 @@ class SingleLightCommand extends Component {
 												.sliderValue / 100})`
 										}
 									])}
-									color={`rgba(255, 220, 133, ${this.props.sliderValue / 100})`}
+									color={
+										this.props.isDimmable
+											? `rgba(255, 220, 133, ${this.props.sliderValue / 100})`
+											: this.props.switchValue
+											? `rgba(255, 220, 133, 1)`
+											: `rgba(255, 220, 133, 0)`
+									}
 									size={48}
 								/>
 							</View>
@@ -221,13 +231,11 @@ class SingleLightCommand extends Component {
 													: Colors.primaryText
 											}
 										])}>
-										{
-											this.props.isDimmable
-												? this.props.sliderValue + '%'
-												: this.props.switchValue
-													? 'On'
-													: 'Off'
-										}
+										{this.props.isDimmable
+											? this.props.sliderValue + '%'
+											: this.props.switchValue
+											? 'On'
+											: 'Off'}
 									</Text>
 								</View>
 							)}

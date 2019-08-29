@@ -17,7 +17,7 @@ import {
 	SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
 	SET_SINGLE_LIGHT_FAIL,
 	SET_SINGLE_LIGHT_SELECTED,
-	SET_DESELECT_ALL,
+	SET_DESELECT_ALL_LIGHTS,
 	SET_SELECTED_LIGHTS_UI_SLIDER_VALUE,
 	SET_SELECTED_LIGHTS_UI_SWITCH_VALUE
 } from './types';
@@ -354,7 +354,7 @@ export const getAllLightsSuccess = (lightValuesAndisDimmable, unit) => {
 		({ isDimmable }) => isDimmable === true
 	);
 	let valuesAvg =
-		lightValuesAndisDimmableFiltered.reduce((sum, record) => sum + record.value, 0) /
+		lightValuesAndisDimmableFiltered.reduce((sum, light) => sum + light.value, 0) /
 		lightValuesAndisDimmableFiltered.length;
 	valuesAvg = +valuesAvg.toFixed(0);
 	const switchValue = valuesAvg > 0;
@@ -1073,9 +1073,9 @@ export const setSingleLightSelected = (value, index) => {
 	};
 };
 
-export const setDeselectAll = () => {
+export const setDeselectAllLights = () => {
 	return {
-		type: SET_DESELECT_ALL,
+		type: SET_DESELECT_ALL_LIGHTS,
 		payload: {
 			selected: false
 		}

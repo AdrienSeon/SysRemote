@@ -17,7 +17,7 @@ import {
 	SET_SINGLE_LIGHT_UI_SWITCH_VALUE,
 	SET_SINGLE_LIGHT_FAIL,
 	SET_SINGLE_LIGHT_SELECTED,
-	SET_DESELECT_ALL,
+	SET_DESELECT_ALL_LIGHTS,
 	SET_SELECTED_LIGHTS_UI_SLIDER_VALUE,
 	SET_SELECTED_LIGHTS_UI_SWITCH_VALUE
 } from '../actions/types';
@@ -285,7 +285,7 @@ export default (state = INITAL_STATE, action) => {
 				}
 			});
 			return { ...state, lightsData: newSingleLightSelectedData };
-		case SET_DESELECT_ALL:
+		case SET_DESELECT_ALL_LIGHTS:
 			const newUnselectedData = update(state.lightsData, {
 				$apply: (items) => {
 					return items.map((item) => {

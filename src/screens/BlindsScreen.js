@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
-import { Platform, SafeAreaView, View, StyleSheet, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import {
+	Platform,
+	SafeAreaView,
+	View,
+	StyleSheet,
+	TouchableOpacity,
+	TouchableNativeFeedback
+} from 'react-native';
 import { Header } from 'react-navigation';
-import * as Animatable from "react-native-animatable";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import debounce from 'debounce';
+import * as Animatable from 'react-native-animatable';
 import Colors from '../constants/Colors';
 import MenuIcon from '../components/icons/Menu';
 import BlindsIconAnimated from '../components/icons/BlindsAnimated';
@@ -11,11 +21,13 @@ import BlindsRightIcon from '../components/icons/BlindsRight';
 import NextIcon from '../components/icons/Next';
 import Slider from '../components/Slider';
 import BlindsOrientationButton from '../components/BlindsOrientationButton';
+import * as Actions from '../actions';
+import store from '../store';
 
 class BlindsScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Stores',
-		headerLeft: (
+		headerLeft:
 			Platform.OS === 'ios' ? (
 				<TouchableOpacity activeOpacity={0.5} onPress={() => navigation.openDrawer()}>
 					<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
@@ -27,7 +39,6 @@ class BlindsScreen extends Component {
 					<MenuIcon style={styles.menuBtn} color={Colors.primaryText} size={32} />
 				</TouchableNativeFeedback>
 			)
-		)
 	});
 
 	constructor(props) {
@@ -55,6 +66,36 @@ class BlindsScreen extends Component {
 		};
 	}
 
+	debouncedSetAllBlindsSliderValue = debounce((value) => {
+		this.props.actions.setAllBlindsSliderValue(value);
+	}, 200);
+
+	componentDidMount() {
+		this.getData();
+
+		this.interval = setInterval(() => {
+			this.getData();
+		}, 30000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
+	getData() {
+		this.props.actions.getAllBlinds();
+		//this.props.actions.getBlindsAuto();
+	}
+
+	handleSliderValue = (value) => {
+		this.props.actions.setAllBlindsUIsliderValue(value);
+		this.debouncedSetAllBlindsSliderValue(value);
+	};
+
+	handleBlindsAuto = () => {
+		this.props.actions.setBlindsAuto();
+	};
+
 	handleOrientationPress = (item) => {
 		const items = this.state.orientationButtons;
 
@@ -72,90 +113,118 @@ class BlindsScreen extends Component {
 		return (
 			<SafeAreaView style={styles.safearea}>
 				<View style={styles.container}>
-					<Animatable.View animation="fadeIn" delay={300} duration={300} easing='ease-out' useNativeDriver style={styles.listButtonContainer}>
-						<TouchableOpacity
-							style={styles.listButtonTouchable}
-							onPress={() => this.props.navigation.navigate('BlindsList')}
-							activeOpacity={0.7}>
-							<View style={styles.listButton}>
-								<View style={styles.listButtonLeftPart}>
-									<BlindsIconAnimated
-										style={styles.listButtonBlindsIcon}
-										color={Colors.primaryBrand}
-										size={128}
-										opacityRow2={this.state.sliderValue > 16.66 ? 2 : 0}
-										opacityRow3={this.state.sliderValue > 16.66 * 3 ? 1 : 0}
-										opacityRow4={this.state.sliderValue > 16.66 * 4 ? 1 : 0}
-										opacityRow5={this.state.sliderValue > 16.66 * 5 ? 1 : 0}
-										opacityRow6={this.state.sliderValue > 16.66 * 6 ? 1 : 0}
-									/>
+					{this.props.allBlinds.isLoaded && (
+						<Animatable.View
+							animation="fadeIn"
+							duration={300}
+							easing="ease-out"
+							useNativeDriver
+							style={styles.listButtonContainer}>
+							<TouchableOpacity
+								style={styles.listButtonTouchable}
+								onPress={() => this.props.navigation.navigate('BlindsList')}
+								activeOpacity={0.7}>
+								<View style={styles.listButton}>
+									<View style={styles.listButtonLeftPart}>
+										<BlindsIconAnimated
+											style={styles.listButtonBlindsIcon}
+											color={Colors.primaryBrand}
+											size={128}
+											opacityRow2={this.props.allBlinds.UIsliderValue > 16.66 ? 2 : 0}
+											opacityRow3={this.props.allBlinds.UIsliderValue > 16.66 * 3 ? 1 : 0}
+											opacityRow4={this.props.allBlinds.UIsliderValue > 16.66 * 4 ? 1 : 0}
+											opacityRow5={this.props.allBlinds.UIsliderValue > 16.66 * 5 ? 1 : 0}
+											opacityRow6={this.props.allBlinds.UIsliderValue > 16.66 * 6 ? 1 : 0}
+										/>
+									</View>
+									<View style={styles.listButtonRightPart}>
+										<NextIcon
+											style={styles.nextIcon}
+											color={Colors.inverted}
+											size={32}
+										/>
+									</View>
 								</View>
-								<View style={styles.listButtonRightPart}>
-									<NextIcon
-										style={styles.nextIcon}
-										color={Colors.inverted}
-										size={32}
-									/>
-								</View>
+							</TouchableOpacity>
+						</Animatable.View>
+					)}
+					{this.props.allBlinds.isLoaded && (
+						<Animatable.View
+							animation="fadeIn"
+							duration={300}
+							easing="ease-out"
+							useNativeDriver
+							style={styles.blindsCommands}>
+							<View style={styles.orientationContainer}>
+								{this.state.orientationButtons.map((item) => {
+									const Icon = item.icon;
+									return (
+										<BlindsOrientationButton
+											key={item.key}
+											onPressItem={this.handleOrientationPress}
+											checked={item.checked}
+											item={item}
+											checkedComponent={
+												<Icon
+													backgroundColor={Colors.primaryBrand}
+													iconColor={Colors.inverted}
+													size={48}
+												/>
+											}
+											uncheckedComponent={
+												<Icon
+													backgroundColor={Colors.inverted}
+													iconColor={Colors.primaryBrand}
+													size={48}
+												/>
+											}
+										/>
+									);
+								})}
 							</View>
-						</TouchableOpacity>
-					</Animatable.View>
-					<Animatable.View animation="fadeIn" delay={500} duration={300} easing='ease-out' useNativeDriver style={styles.blindsCommands}>
-						<View style={styles.orientationContainer}>
-							{this.state.orientationButtons.map((item) => {
-								const Icon = item.icon;
-								return (
-									<BlindsOrientationButton
-										key={item.key}
-										onPressItem={this.handleOrientationPress}
-										checked={item.checked}
-										item={item}
-										checkedComponent={
-											<Icon
-												backgroundColor={Colors.primaryBrand}
-												iconColor={Colors.inverted}
-												size={48}
-											/>
-										}
-										uncheckedComponent={
-											<Icon
-												backgroundColor={Colors.inverted}
-												iconColor={Colors.primaryBrand}
-												size={48}
-											/>
-										}
-									/>
-								);
-							})}
-						</View>
-						<View style={styles.sliderContainer}>
-							<Slider
-								value={this.state.sliderValue}
-								onValueChange={(value) => this.setState({ sliderValue: value })}
-								animateTransitions
-								animationType="spring"
-								minimumValue={0}
-								maximumValue={100}
-								step={1}
-								trackSizeProp={35}
-								thumbSizeProp={35}
-								maximumTrackTintColor={Colors.inverted}
-								blindsBackground
-								orientation="vertical"
-								showValueIndicator
-								valueIndicatorPosition="left"
-								valueIndicatorTextColor={Colors.tertiaryText}
-								valueIndicatorStyle={styles.sliderValueIndicatorStyle}
-								style={styles.slider}
-								thumbTintColor={Colors.inverted}
-								thumbStyle={styles.sliderthumbStyle}
-							/>
-						</View>
-					</Animatable.View>
+							<View style={styles.sliderContainer}>
+								<Slider
+									value={this.props.allBlinds.UIsliderValue}
+									onValueChange={this.handleSliderValue}
+									animateTransitions
+									animationType="spring"
+									minimumValue={0}
+									maximumValue={100}
+									step={1}
+									trackSizeProp={35}
+									thumbSizeProp={35}
+									maximumTrackTintColor={Colors.inverted}
+									blindsBackground
+									orientation="vertical"
+									showValueIndicator
+									valueIndicatorPosition="left"
+									valueIndicatorTextColor={Colors.tertiaryText}
+									valueIndicatorStyle={styles.sliderValueIndicatorStyle}
+									style={styles.slider}
+									thumbTintColor={Colors.inverted}
+									thumbStyle={styles.sliderthumbStyle}
+								/>
+							</View>
+						</Animatable.View>
+					)}
 				</View>
 			</SafeAreaView>
 		);
 	}
+}
+
+function mapStateToProps({ blindsScreenReducer }) {
+	const { allBlinds, blindsAuto } = blindsScreenReducer;
+	return {
+		allBlinds,
+		blindsAuto
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: bindActionCreators(Actions, dispatch)
+	};
 }
 
 const styles = StyleSheet.create({
@@ -259,4 +328,7 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default BlindsScreen;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(BlindsScreen);

@@ -15,7 +15,6 @@ import { Header } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import * as Animatable from 'react-native-animatable';
 import Colors from '../constants/Colors';
 import BackIcon from '../components/icons/Back';
 import SelectNone from '../components/icons/SelectNone';
@@ -118,7 +117,7 @@ class LightsListScreen extends Component {
 	}
 
 	deselectAll = () => {
-		this.props.actions.setDeselectAll();
+		this.props.actions.setDeselectAllLights();
 
 		this.setState(() => {
 			const selected = new Map(this.state.selected);
