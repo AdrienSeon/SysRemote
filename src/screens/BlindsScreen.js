@@ -3,6 +3,7 @@ import {
 	Platform,
 	SafeAreaView,
 	View,
+	Text,
 	StyleSheet,
 	TouchableOpacity,
 	TouchableNativeFeedback
@@ -84,7 +85,7 @@ class BlindsScreen extends Component {
 
 	getData() {
 		this.props.actions.getAllBlinds();
-		//this.props.actions.getBlindsAuto();
+		this.props.actions.getBlindsAuto();
 	}
 
 	handleSliderValue = (value) => {
@@ -130,11 +131,29 @@ class BlindsScreen extends Component {
 											style={styles.listButtonBlindsIcon}
 											color={Colors.primaryBrand}
 											size={128}
-											opacityRow2={this.props.allBlinds.UIsliderValue > 16.66 ? 2 : 0}
-											opacityRow3={this.props.allBlinds.UIsliderValue > 16.66 * 3 ? 1 : 0}
-											opacityRow4={this.props.allBlinds.UIsliderValue > 16.66 * 4 ? 1 : 0}
-											opacityRow5={this.props.allBlinds.UIsliderValue > 16.66 * 5 ? 1 : 0}
-											opacityRow6={this.props.allBlinds.UIsliderValue > 16.66 * 6 ? 1 : 0}
+											opacityRow2={
+												this.props.allBlinds.UIsliderValue > 16.66 ? 2 : 0
+											}
+											opacityRow3={
+												this.props.allBlinds.UIsliderValue > 16.66 * 3
+													? 1
+													: 0
+											}
+											opacityRow4={
+												this.props.allBlinds.UIsliderValue > 16.66 * 4
+													? 1
+													: 0
+											}
+											opacityRow5={
+												this.props.allBlinds.UIsliderValue > 16.66 * 5
+													? 1
+													: 0
+											}
+											opacityRow6={
+												this.props.allBlinds.UIsliderValue > 16.66 * 6
+													? 1
+													: 0
+											}
 										/>
 									</View>
 									<View style={styles.listButtonRightPart}>
@@ -148,41 +167,79 @@ class BlindsScreen extends Component {
 							</TouchableOpacity>
 						</Animatable.View>
 					)}
-					{this.props.allBlinds.isLoaded && (
-						<Animatable.View
-							animation="fadeIn"
-							duration={300}
-							easing="ease-out"
-							useNativeDriver
-							style={styles.blindsCommands}>
-							<View style={styles.orientationContainer}>
-								{this.state.orientationButtons.map((item) => {
-									const Icon = item.icon;
-									return (
-										<BlindsOrientationButton
-											key={item.key}
-											onPressItem={this.handleOrientationPress}
-											checked={item.checked}
-											item={item}
-											checkedComponent={
-												<Icon
-													backgroundColor={Colors.primaryBrand}
-													iconColor={Colors.inverted}
-													size={48}
-												/>
-											}
-											uncheckedComponent={
-												<Icon
-													backgroundColor={Colors.inverted}
-													iconColor={Colors.primaryBrand}
-													size={48}
-												/>
-											}
-										/>
-									);
-								})}
-							</View>
-							<View style={styles.sliderContainer}>
+
+					<View style={styles.blindsCommands}>
+						<View style={styles.leftBlindsCommands}>
+							{this.props.blindsAuto.isLoaded && (
+								<Animatable.View
+									animation="fadeIn"
+									duration={300}
+									easing="ease-out"
+									useNativeDriver
+									style={styles.autoIconWrapper}>
+									<TouchableOpacity
+										style={StyleSheet.flatten([
+											styles.autoIconContainer,
+											this.props.blindsAuto.value
+												? styles.autoIconActive
+												: styles.autoIconInactive
+										])}
+										onPress={this.handleBlindsAuto}
+										disabled={this.props.blindsAuto.value}>
+										<Text
+											style={StyleSheet.flatten([
+												styles.autoIconText,
+												this.props.blindsAuto.value
+													? styles.autoIconActive
+													: styles.autoIconInactive
+											])}>
+											A
+										</Text>
+									</TouchableOpacity>
+								</Animatable.View>
+							)}
+							{this.props.allBlinds.isLoaded && (
+								<Animatable.View
+									animation="fadeIn"
+									duration={300}
+									easing="ease-out"
+									useNativeDriver
+									style={styles.orientationContainer}>
+									{this.state.orientationButtons.map((item) => {
+										const Icon = item.icon;
+										return (
+											<BlindsOrientationButton
+												key={item.key}
+												onPressItem={this.handleOrientationPress}
+												checked={item.checked}
+												item={item}
+												checkedComponent={
+													<Icon
+														backgroundColor={Colors.primaryBrand}
+														iconColor={Colors.inverted}
+														size={48}
+													/>
+												}
+												uncheckedComponent={
+													<Icon
+														backgroundColor={Colors.inverted}
+														iconColor={Colors.primaryBrand}
+														size={48}
+													/>
+												}
+											/>
+										);
+									})}
+								</Animatable.View>
+							)}
+						</View>
+						{this.props.allBlinds.isLoaded && (
+							<Animatable.View
+								animation="fadeIn"
+								duration={300}
+								easing="ease-out"
+								useNativeDriver
+								style={styles.sliderContainer}>
 								<Slider
 									value={this.props.allBlinds.UIsliderValue}
 									onValueChange={this.handleSliderValue}
@@ -204,9 +261,9 @@ class BlindsScreen extends Component {
 									thumbTintColor={Colors.inverted}
 									thumbStyle={styles.sliderthumbStyle}
 								/>
-							</View>
-						</Animatable.View>
-					)}
+							</Animatable.View>
+						)}
+					</View>
 				</View>
 			</SafeAreaView>
 		);
@@ -292,11 +349,16 @@ const styles = StyleSheet.create({
 		marginLeft: 20,
 		marginRight: 20
 	},
-	orientationContainer: {
+	leftBlindsCommands: {
 		flex: 2,
+		flexDirection: 'column'
+	},
+	orientationContainer: {
+		flex: 1,
 		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-around'
+		alignItems: 'flex-start',
+		justifyContent: 'space-around',
+		marginTop: 20
 	},
 	sliderContainer: {
 		flex: 1,
@@ -325,6 +387,42 @@ const styles = StyleSheet.create({
 		fontFamily: 'OpenSans',
 		fontSize: 14,
 		top: -7
+	},
+	autoIconWrapper: {
+		flex: 1,
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+		marginBottom: 20
+	},
+	autoIconContainer: {
+		shadowColor: 'rgba(108, 204, 53, 0.2)',
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowRadius: 3,
+		shadowOpacity: 1,
+		borderStyle: 'solid',
+		borderWidth: 1,
+		borderColor: 'rgb(108, 204, 53)',
+		width: 32,
+		height: 32,
+		borderRadius: 16,
+		overflow: 'hidden'
+	},
+	autoIconText: {
+		fontFamily: 'OpenSans',
+		fontSize: 16,
+		lineHeight: 29,
+		textAlign: 'center'
+	},
+	autoIconActive: {
+		backgroundColor: 'rgb(108, 204, 53)',
+		color: Colors.inverted
+	},
+	autoIconInactive: {
+		backgroundColor: Colors.inverted,
+		color: 'rgb(108, 204, 53)'
 	}
 });
 

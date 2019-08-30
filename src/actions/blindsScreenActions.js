@@ -5,21 +5,16 @@ import {
 	GET_BLINDS_AUTO_FAIL,
 	SET_BLINDS_AUTO_SUCCESS,
 	SET_ALL_BLINDS_SLIDER_VALUE_SUCCESS,
-	SET_ALL_BLINDS_SWITCH_VALUE_SUCCESS,
 	SET_ALL_BLINDS_UI_SLIDER_VALUE,
-	SET_ALL_BLINDS_UI_SWITCH_VALUE,
 	SET_ALL_BLINDS_SUCCESS,
 	SET_ALL_BLINDS_FAIL,
 	GET_SINGLE_BLIND_SUCCESS,
 	SET_SINGLE_BLIND_SLIDER_VALUE_SUCCESS,
-	SET_SINGLE_BLIND_SWITCH_VALUE_SUCCESS,
 	SET_SINGLE_BLIND_UI_SLIDER_VALUE,
-	SET_SINGLE_BLIND_UI_SWITCH_VALUE,
 	SET_SINGLE_BLIND_FAIL,
 	SET_SINGLE_BLIND_SELECTED,
 	SET_DESELECT_ALL_BLINDS,
-	SET_SELECTED_BLINDS_UI_SLIDER_VALUE,
-	SET_SELECTED_BLINDS_UI_SWITCH_VALUE
+	SET_SELECTED_BLINDS_UI_SLIDER_VALUE
 } from './types';
 import AppConfig from '../constants/AppConfig';
 import axios from 'axios';
@@ -28,22 +23,30 @@ export const getAllBlinds = () => {
 	return (dispatch) => {
 		const host = AppConfig.device.host;
 		const objectType = 'analogOutput';
-		const objectInstanceBlindTrans1 = 8241;
-		const objectInstanceBlindRot1 = 8251;
-		const objectInstanceBlindTrans2 = 8242;
-		const objectInstanceBlindRot2 = 8252;
-		const objectInstanceBlindTrans3 = 8243;
-		const objectInstanceBlindRot3 = 8253;
-		const objectInstanceBlindTrans4 = 8244;
-		const objectInstanceBlindRot4 = 8254;
-		const objectInstanceBlindTrans5 = 8441;
-		const objectInstanceBlindRot5 = 8451;
-		const objectInstanceBlindTrans6 = 8442;
-		const objectInstanceBlindRot6 = 8452;
-		const objectInstanceBlindTrans7 = 8443;
-		const objectInstanceBlindRot7 = 8453;
-		const objectInstanceBlindTrans8 = 8444;
-		const objectInstanceBlindRot8 = 8454;
+		const objectInstanceBlind1Trans = 8241;
+		const objectInstanceBlind1Rot = 8251;
+		const objectInstanceBlind2Trans = 8242;
+		const objectInstanceBlind2Rot = 8252;
+		const objectInstanceBlind3Trans = 8243;
+		const objectInstanceBlind3Rot = 8253;
+		const objectInstanceBlind4Trans = 8244;
+		const objectInstanceBlind4Rot = 8254;
+		const objectInstanceBlind5Trans = 999;
+		const objectInstanceBlind5Rot = 999;
+		const objectInstanceBlind6Trans = 999;
+		const objectInstanceBlind6Rot = 999;
+		const objectInstanceBlind7Trans = 999;
+		const objectInstanceBlind7Rot = 999;
+		const objectInstanceBlind8Trans = 999;
+		const objectInstanceBlind8Rot = 999;
+		/*		const objectInstanceBlind5Trans = 8441;
+		const objectInstanceBlind5Rot = 8451;
+		const objectInstanceBlind6Trans = 8442;
+		const objectInstanceBlind6Rot = 8452;
+		const objectInstanceBlind7Trans = 8443;
+		const objectInstanceBlind7Rot = 8453;
+		const objectInstanceBlind8Trans = 8444;
+		const objectInstanceBlind8Rot = 8454;*/
 		const url =
 			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
 		const data = {
@@ -51,92 +54,92 @@ export const getAllBlinds = () => {
 			propertyReferences: [
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans1,
+					instance: objectInstanceBlind1Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans1,
+					instance: objectInstanceBlind1Trans,
 					property: 'units'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot1,
+					instance: objectInstanceBlind1Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot1,
+					instance: objectInstanceBlind1Rot,
 					property: 'units'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans2,
+					instance: objectInstanceBlind2Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot2,
+					instance: objectInstanceBlind2Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans3,
+					instance: objectInstanceBlind3Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot3,
+					instance: objectInstanceBlind3Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans4,
+					instance: objectInstanceBlind4Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot4,
+					instance: objectInstanceBlind4Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans5,
+					instance: objectInstanceBlind5Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot5,
+					instance: objectInstanceBlind5Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans6,
+					instance: objectInstanceBlind6Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot6,
+					instance: objectInstanceBlind6Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans7,
+					instance: objectInstanceBlind7Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot7,
+					instance: objectInstanceBlind7Rot,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindTrans8,
+					instance: objectInstanceBlind8Trans,
 					property: 'presentValue'
 				},
 				{
 					type: objectType,
-					instance: objectInstanceBlindRot8,
+					instance: objectInstanceBlind8Rot,
 					property: 'presentValue'
 				}
 			]
@@ -151,7 +154,7 @@ export const getAllBlinds = () => {
 		return axios
 			.post(url, data, params)
 			.then((response) => {
-				const responseResult = [
+				const responseResults = [
 					{
 						translation: {
 							value: response.data[0].value,
@@ -252,7 +255,7 @@ export const getAllBlinds = () => {
 
 				let blindTransAndRot = [];
 
-				responseResult.forEach((blind, index) => {
+				responseResults.forEach((blind, index) => {
 					if (!(blind.translation.error || blind.rotation.error)) {
 						blindTransAndRot.push({
 							translation: parseFloat(blind.translation.value),
@@ -273,8 +276,8 @@ export const getAllBlinds = () => {
 					dispatch(
 						getAllBlindsSuccess(
 							blindTransAndRot,
-							responseResult[0].translation.unit,
-							responseResult[0].rotation.unit
+							responseResults[0].translation.unit,
+							responseResults[0].rotation.unit
 						)
 					);
 				} else {
@@ -315,93 +318,11 @@ export const getAllBlindsFail = () => {
 	};
 };
 
-export const setAllBlindsUIsliderValue = (value) => {
-	const switchValue = value > 0;
-	return {
-		type: SET_ALL_BLINDS_UI_SLIDER_VALUE,
-		payload: {
-			UIsliderValue: value,
-			UIswitchValue: switchValue
-		}
-	};
-};
-
 export const setAllBlindsSliderValue = (value = 0) => {
-	return (dispatch) => {
+	return (dispatch, getState) => {
 		const host = AppConfig.device.host;
-		const objectType = 'analogValue';
-		const objectInstanceBlind1 = 200;
-		const objectInstanceBlind2 = 201;
-		const objectInstanceBlind3 = 202;
-		const objectInstanceBlind4 = 203;
-		const objectInstanceBlind5 = 214;
-		const objectInstanceBlind6 = 215;
-		const objectInstanceBlind7 = 216;
-		const objectInstanceBlind8 = 217;
-		const urlBlind1 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind1.toString() +
-			'/properties/present-value';
-		const urlBlind2 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind2.toString() +
-			'/properties/present-value';
-		const urlBlind3 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind3.toString() +
-			'/properties/present-value';
-		const urlBlind4 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind4.toString() +
-			'/properties/present-value';
-		const urlBlind5 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind5.toString() +
-			'/properties/present-value';
-		const urlBlind6 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind6.toString() +
-			'/properties/present-value';
-		const urlBlind7 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind7.toString() +
-			'/properties/present-value';
-		const urlBlind8 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind8.toString() +
-			'/properties/present-value';
+		const objectTypeTrans = 'analogValue';
+		const { blindsData } = getState().blindsScreenReducer;
 		const data = {
 			value: value.toString()
 		};
@@ -412,17 +333,25 @@ export const setAllBlindsSliderValue = (value = 0) => {
 			}
 		};
 
+		let urlOfBlindsToUpdate = [];
+		blindsData.forEach((blind) => {
+			if (blind.isLoaded) {
+				const urlTrans =
+					'http://' +
+					host +
+					'/api/rest/v1/protocols/bacnet/local/objects/' +
+					objectTypeTrans +
+					'/' +
+					blind.objectInstanceTrans.toString() +
+					'/properties/present-value';
+				urlOfBlindsToUpdate.push(urlTrans);
+			}
+		});
+
+		let promiseArray = urlOfBlindsToUpdate.map((url) => axios.post(url, data, params));
+
 		return axios
-			.all([
-				axios.post(urlBlind1, data, params),
-				axios.post(urlBlind2, data, params),
-				axios.post(urlBlind3, data, params),
-				axios.post(urlBlind4, data, params),
-				axios.post(urlBlind5, data, params),
-				axios.post(urlBlind6, data, params),
-				axios.post(urlBlind7, data, params),
-				axios.post(urlBlind8, data, params)
-			])
+			.all(promiseArray)
 			.then((response) => {
 				dispatch(setAllBlindsSliderValueSuccess(value));
 			})
@@ -434,12 +363,19 @@ export const setAllBlindsSliderValue = (value = 0) => {
 };
 
 export const setAllBlindsSliderValueSuccess = (value) => {
-	const switchValue = value > 0;
 	return {
 		type: SET_ALL_BLINDS_SLIDER_VALUE_SUCCESS,
 		payload: {
-			sliderValue: value,
-			switchValue: switchValue
+			sliderValue: value
+		}
+	};
+};
+
+export const setAllBlindsUIsliderValue = (value) => {
+	return {
+		type: SET_ALL_BLINDS_UI_SLIDER_VALUE,
+		payload: {
+			UIsliderValue: value
 		}
 	};
 };
@@ -447,58 +383,107 @@ export const setAllBlindsSliderValueSuccess = (value) => {
 export const getBlindsAuto = () => {
 	return (dispatch) => {
 		const host = AppConfig.device.host;
-		const objectType = 'analogValue';
-		const objectInstanceBlind1 = 200;
-		const objectInstanceBlind2 = 201;
-		const objectInstanceBlind3 = 202;
-		const objectInstanceBlind4 = 203;
-		const objectInstanceBlind5 = 214;
-		const objectInstanceBlind6 = 215;
-		const objectInstanceBlind7 = 215;
-		const objectInstanceBlind8 = 217;
+		const objectTypeTrans = 'analogValue';
+		const objectTypeRot = 'multistateValue';
+		const objectInstanceBlind1Trans = 204;
+		const objectInstanceBlind1Rot = 51;
+		const objectInstanceBlind2Trans = 205;
+		const objectInstanceBlind2Rot = 52;
+		const objectInstanceBlind3Trans = 206;
+		const objectInstanceBlind3Rot = 53;
+		const objectInstanceBlind4Trans = 207;
+		const objectInstanceBlind4Rot = 54;
+		const objectInstanceBlind5Trans = 999;
+		const objectInstanceBlind5Rot = 999;
+		const objectInstanceBlind6Trans = 999;
+		const objectInstanceBlind6Rot = 999;
+		const objectInstanceBlind7Trans = 999;
+		const objectInstanceBlind7Rot = 999;
+		const objectInstanceBlind8Trans = 999;
+		const objectInstanceBlind8Rot = 999;
 		const url =
 			'http://' + host + '/api/rest/v1/protocols/bacnet/local/objects/read-property-multiple';
 		const data = {
 			encode: 'text',
 			propertyReferences: [
 				{
-					type: objectType,
-					instance: objectInstanceBlind1,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind1Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind2,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind2Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind3,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind3Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind4,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind4Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind5,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind5Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind6,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind6Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind7,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind7Trans,
 					property: 'presentValue'
 				},
 				{
-					type: objectType,
-					instance: objectInstanceBlind8,
+					type: objectTypeTrans,
+					instance: objectInstanceBlind8Trans,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind1Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind2Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind3Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind4Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind5Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind6Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind7Rot,
+					property: 'presentValue'
+				},
+				{
+					type: objectTypeRot,
+					instance: objectInstanceBlind8Rot,
 					property: 'presentValue'
 				}
 			]
@@ -513,18 +498,124 @@ export const getBlindsAuto = () => {
 		return axios
 			.post(url, data, params)
 			.then((response) => {
+				const responseResults = [
+					{
+						translation: {
+							value: response.data[0].value,
+							error: response.data[0].error
+						},
+						rotation: {
+							value: response.data[8].value,
+							error: response.data[8].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[1].value,
+							error: response.data[1].error
+						},
+						rotation: {
+							value: response.data[9].value,
+							error: response.data[9].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[2].value,
+							error: response.data[2].error
+						},
+						rotation: {
+							value: response.data[10].value,
+							error: response.data[10].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[3].value,
+							error: response.data[3].error
+						},
+						rotation: {
+							value: response.data[11].value,
+							error: response.data[11].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[4].value,
+							error: response.data[4].error
+						},
+						rotation: {
+							value: response.data[12].value,
+							error: response.data[12].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[5].value,
+							error: response.data[5].error
+						},
+						rotation: {
+							value: response.data[13].value,
+							error: response.data[13].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[6].value,
+							error: response.data[6].error
+						},
+						rotation: {
+							value: response.data[14].value,
+							error: response.data[14].error
+						}
+					},
+					{
+						translation: {
+							value: response.data[7].value,
+							error: response.data[7].error
+						},
+						rotation: {
+							value: response.data[15].value,
+							error: response.data[15].error
+						}
+					}
+				];
+
 				const autoState =
-					response.data[0].value === 'NaN' &&
-					response.data[1].value === 'NaN' &&
-					response.data[2].value === 'NaN' &&
-					response.data[3].value === 'NaN' &&
-					response.data[4].value === 'NaN' &&
-					response.data[5].value === 'NaN' &&
-					response.data[6].value === 'NaN' &&
-					response.data[7].value === 'NaN'
+					(responseResults[0].translation.value === 'NaN' ||
+						responseResults[0].translation.error) &&
+					(responseResults[1].translation.value === 'NaN' ||
+						responseResults[1].translation.error) &&
+					(responseResults[2].translation.value === 'NaN' ||
+						responseResults[2].translation.error) &&
+					(responseResults[3].translation.value === 'NaN' ||
+						responseResults[3].translation.error) &&
+					(responseResults[4].translation.value === 'NaN' ||
+						responseResults[4].translation.error) &&
+					(responseResults[5].translation.value === 'NaN' ||
+						responseResults[5].translation.error) &&
+					(responseResults[6].translation.value === 'NaN' ||
+						responseResults[6].translation.error) &&
+					(responseResults[7].translation.value === 'NaN' ||
+						responseResults[7].translation.error) &&
+					(responseResults[0].rotation.value === 1 ||
+						responseResults[0].rotation.error) &&
+					(responseResults[1].rotation.value === 1 ||
+						responseResults[1].rotation.error) &&
+					(responseResults[2].rotation.value === 1 ||
+						responseResults[2].rotation.error) &&
+					(responseResults[3].rotation.value === 1 ||
+						responseResults[3].rotation.error) &&
+					(responseResults[4].rotation.value === 1 ||
+						responseResults[4].rotation.error) &&
+					(responseResults[5].rotation.value === 1 ||
+						responseResults[5].rotation.error) &&
+					(responseResults[6].rotation.value === 1 ||
+						responseResults[6].rotation.error) &&
+					(responseResults[7].rotation.value === 1 || responseResults[7].rotation.error)
 						? true
 						: false;
-				dispatch(getBlindsAutoSuccess(autoState));
+				dispatch(getBlindsAutoSuccess(autoState, responseResults));
 			})
 			.catch((error) => {
 				console.log(error);
@@ -533,11 +624,11 @@ export const getBlindsAuto = () => {
 	};
 };
 
-export const getBlindsAutoSuccess = (value) => {
+export const getBlindsAutoSuccess = (value, test) => {
 	return {
 		type: GET_BLINDS_AUTO_SUCCESS,
 		payload: {
-			isLoaded: true,
+			isLoaded: test,
 			value
 		}
 	};
@@ -550,81 +641,11 @@ export const getBlindsAutoFail = () => {
 };
 
 export const setBlindsAuto = (value = true) => {
-	return (dispatch) => {
+	return (dispatch, getState) => {
 		const host = AppConfig.device.host;
-		const objectType = 'analogValue';
-		const objectInstanceBlind1 = 200;
-		const objectInstanceBlind2 = 201;
-		const objectInstanceBlind3 = 202;
-		const objectInstanceBlind4 = 203;
-		const objectInstanceBlind5 = 214;
-		const objectInstanceBlind6 = 215;
-		const objectInstanceBlind7 = 216;
-		const objectInstanceBlind8 = 217;
-		const urlBlind1 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind1.toString() +
-			'/properties/present-value';
-		const urlBlind2 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind2.toString() +
-			'/properties/present-value';
-		const urlBlind3 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind3.toString() +
-			'/properties/present-value';
-		const urlBlind4 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind4.toString() +
-			'/properties/present-value';
-		const urlBlind5 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind5.toString() +
-			'/properties/present-value';
-		const urlBlind6 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind6.toString() +
-			'/properties/present-value';
-		const urlBlind7 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind7.toString() +
-			'/properties/present-value';
-		const urlBlind8 =
-			'http://' +
-			host +
-			'/api/rest/v1/protocols/bacnet/local/objects/' +
-			objectType +
-			'/' +
-			objectInstanceBlind8.toString() +
-			'/properties/present-value';
+		const objectTypeTrans = 'analogValue';
+		const objectTypeRot = 'multistateValue';
+		const { blindsData } = getState().blindsScreenReducer;
 		const data = {
 			value: 'null'
 		};
@@ -635,17 +656,35 @@ export const setBlindsAuto = (value = true) => {
 			}
 		};
 
+		let urlOfBlindsToUpdate = [];
+		blindsData.forEach((blind) => {
+			if (blind.isLoaded) {
+				const urlTrans =
+					'http://' +
+					host +
+					'/api/rest/v1/protocols/bacnet/local/objects/' +
+					objectTypeTrans +
+					'/' +
+					blind.objectInstanceTrans.toString() +
+					'/properties/present-value';
+				urlOfBlindsToUpdate.push(urlTrans);
+
+				const urlRot =
+					'http://' +
+					host +
+					'/api/rest/v1/protocols/bacnet/local/objects/' +
+					objectTypeRot +
+					'/' +
+					blind.objectInstanceRot.toString() +
+					'/properties/present-value';
+				urlOfBlindsToUpdate.push(urlRot);
+			}
+		});
+
+		let promiseArray = urlOfBlindsToUpdate.map((url) => axios.post(url, data, params));
+
 		return axios
-			.all([
-				axios.post(urlBlind1, data, params),
-				axios.post(urlBlind2, data, params),
-				axios.post(urlBlind3, data, params),
-				axios.post(urlBlind4, data, params),
-				axios.post(urlBlind5, data, params),
-				axios.post(urlBlind6, data, params),
-				axios.post(urlBlind7, data, params),
-				axios.post(urlBlind8, data, params)
-			])
+			.all(promiseArray)
 			.then((response) => {
 				dispatch(setBlindsAutoSuccess(true));
 			})
@@ -806,12 +845,10 @@ export const setDeselectAllBlinds = () => {
 };
 
 export const setSelectedBlindsUIsliderValue = (value) => {
-	const switchValue = value > 0;
 	return {
 		type: SET_SELECTED_BLINDS_UI_SLIDER_VALUE,
 		payload: {
-			UIsliderValue: value,
-			UIswitchValue: switchValue
+			UIsliderValue: value
 		}
 	};
 };

@@ -6,20 +6,15 @@ import {
 	SET_BLINDS_AUTO_SUCCESS,
 	SET_ALL_BLINDS_SUCCESS,
 	SET_ALL_BLINDS_SLIDER_VALUE_SUCCESS,
-	SET_ALL_BLINDS_SWITCH_VALUE_SUCCESS,
 	SET_ALL_BLINDS_UI_SLIDER_VALUE,
-	SET_ALL_BLINDS_UI_SWITCH_VALUE,
 	SET_ALL_BLINDS_FAIL,
 	GET_SINGLE_BLIND_SUCCESS,
 	SET_SINGLE_BLIND_SLIDER_VALUE_SUCCESS,
-	SET_SINGLE_BLIND_SWITCH_VALUE_SUCCESS,
 	SET_SINGLE_BLIND_UI_SLIDER_VALUE,
-	SET_SINGLE_BLIND_UI_SWITCH_VALUE,
 	SET_SINGLE_BLIND_FAIL,
 	SET_SINGLE_BLIND_SELECTED,
 	SET_DESELECT_ALL_BLINDS,
 	SET_SELECTED_BLINDS_UI_SLIDER_VALUE,
-	SET_SELECTED_BLINDS_UI_SWITCH_VALUE
 } from '../actions/types';
 import update from 'immutability-helper';
 
@@ -36,7 +31,6 @@ const INITAL_STATE = {
 	selectedBlinds: {
 		isLoaded: false,
 		UIsliderValue: 0,
-		UIswitchValue: false
 	},
 	blindsAuto: {
 		isLoaded: false,
@@ -51,7 +45,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 204,
+			objectInstanceRot: 51,
 			selected: false,
 			isLoaded: false
 		},
@@ -63,7 +58,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 205,
+			objectInstanceRot: 52,
 			selected: false,
 			isLoaded: false
 		},
@@ -75,7 +71,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 206,
+			objectInstanceRot: 53,
 			selected: false,
 			isLoaded: false
 		},
@@ -87,7 +84,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 207,
+			objectInstanceRot: 54,
 			selected: false,
 			isLoaded: false
 		},
@@ -99,7 +97,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 999,
+			objectInstanceRot: 999,
 			selected: false,
 			isLoaded: false
 		},
@@ -111,7 +110,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 999,
+			objectInstanceRot: 999,
 			selected: false,
 			isLoaded: false
 		},
@@ -123,7 +123,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 999,
+			objectInstanceRot: 999,
 			selected: false,
 			isLoaded: false
 		},
@@ -135,7 +136,8 @@ const INITAL_STATE = {
 			UIsliderValue: 0,
 			transUnit: '',
 			rotUnit: '',
-			objectInstance: 200,
+			objectInstanceTrans: 999,
+			objectInstanceRot: 999,
 			selected: false,
 			isLoaded: false
 		}
@@ -151,7 +153,6 @@ export default (state = INITAL_STATE, action) => {
 				selectedBlinds: {
 					...state.selectedBlinds,
 					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
 				}
 			};
 		case GET_ALL_BLINDS_FAIL:
@@ -177,7 +178,6 @@ export default (state = INITAL_STATE, action) => {
 				allBlinds: {
 					...state.allBlinds,
 					sliderValue: action.payload.sliderValue,
-					switchValue: action.payload.switchValue
 				}
 			};
 		case SET_ALL_BLINDS_UI_SLIDER_VALUE:
@@ -186,37 +186,11 @@ export default (state = INITAL_STATE, action) => {
 				allBlinds: {
 					...state.allBlinds,
 					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
 				},
 				blindsAuto: { ...state.blindsAuto, value: false },
 				selectedBlinds: {
 					...state.selectedBlinds,
 					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
-				}
-			};
-		case SET_ALL_BLINDS_SWITCH_VALUE_SUCCESS:
-			return {
-				...state,
-				allBlinds: {
-					...state.allBlinds,
-					sliderValue: action.payload.sliderValue,
-					switchValue: action.payload.switchValue
-				}
-			};
-		case SET_ALL_BLINDS_UI_SWITCH_VALUE:
-			return {
-				...state,
-				allBlinds: {
-					...state.allBlinds,
-					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
-				},
-				blindsAuto: { ...state.blindsAuto, value: false },
-				selectedBlinds: {
-					...state.selectedBlinds,
-					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
 				}
 			};
 		case SET_ALL_BLINDS_SUCCESS:
@@ -239,34 +213,16 @@ export default (state = INITAL_STATE, action) => {
 			const newSingleBlindSliderData = update(state.blindsData, {
 				[action.payload.index]: {
 					sliderValue: { $set: action.payload.sliderValue },
-					switchValue: { $set: action.payload.switchValue }
 				}
 			});
 			return { ...state, blindsData: newSingleBlindSliderData };
-		case SET_SINGLE_BLIND_SWITCH_VALUE_SUCCESS:
-			const newSingleBlindSwitchData = update(state.blindsData, {
-				[action.payload.index]: {
-					sliderValue: { $set: action.payload.sliderValue },
-					switchValue: { $set: action.payload.switchValue }
-				}
-			});
-			return { ...state, blindsData: newSingleBlindSwitchData };
 		case SET_SINGLE_BLIND_UI_SLIDER_VALUE:
 			const newUIsingleBlindSliderData = update(state.blindsData, {
 				[action.payload.index]: {
 					UIsliderValue: { $set: action.payload.UIsliderValue },
-					UIswitchValue: { $set: action.payload.UIswitchValue }
 				}
 			});
 			return { ...state, blindsData: newUIsingleBlindSliderData };
-		case SET_SINGLE_BLIND_UI_SWITCH_VALUE:
-			const newUIsingleBlindSwitchData = update(state.blindsData, {
-				[action.payload.index]: {
-					UIsliderValue: { $set: action.payload.UIsliderValue },
-					UIswitchValue: { $set: action.payload.UIswitchValue }
-				}
-			});
-			return { ...state, blindsData: newUIsingleBlindSwitchData };
 		case SET_SINGLE_BLIND_FAIL:
 			return { ...state };
 		case SET_SINGLE_BLIND_SELECTED:
@@ -295,16 +251,6 @@ export default (state = INITAL_STATE, action) => {
 				selectedBlinds: {
 					...state.selectedBlinds,
 					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
-				}
-			};
-		case SET_SELECTED_BLINDS_UI_SWITCH_VALUE:
-			return {
-				...state,
-				selectedBlinds: {
-					...state.selectedBlinds,
-					UIsliderValue: action.payload.UIsliderValue,
-					UIswitchValue: action.payload.UIswitchValue
 				}
 			};
 		default:
